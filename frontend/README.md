@@ -1,6 +1,7 @@
 # Response System to City Disaster  
+## Frontend Repository  
 Advanced Software Engineering - Group10  
-This is the repository for the ASE project of Group 10.  
+This is the frontend repository for the ASE project of Group 10.  
 
 # Group Members  
 KAIYU CHEN - chenka@tcd.ie  
@@ -18,9 +19,6 @@ This system involves citizens of Dublin City reporting a disaster at any locatio
 The project is divided into two parts: the front-end and the back-end. The front-end is developed using React, and the back-end is developed using Django. The front-end and back-end are connected through RESTful APIs.  
 
 # How to run the project  
-## Back-end
-
-## Front-end
 
 ## Available Scripts
 
@@ -64,4 +62,3 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
-
