@@ -1,8 +1,13 @@
-# Response System to City Disaster  
+# Response System to City Disaster - RSCD
 Advanced Software Engineering - Group10  
+
 This is the repository for the ASE project of Group 10.  
 
+You can visit the live demo here: [https://rscd.iocky.com](https://rscd.iocky.com) or [https://mine.bf](https://mine.bf) (mine.bf link may only be available for a limited time.)
+
 # Group Members  
+To contact all group members, please send an email to: [group10@iocky.com](mailto:group10@iocky.com)
+
 KAIYU CHEN - chenka@tcd.ie  
 DEHAO DONG - ddong@tcd.ie  
 JIAWEI SHEN - shenj3@tcd.ie  
@@ -55,10 +60,3 @@ npm run build
 ```
 npm run lint
 ```
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-

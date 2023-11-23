@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "private": true,
   "scripts": {
-    "build": "vue-cli-service build",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
     "e2e": "node test/e2e/runner.js",
     "lint": "vue-cli-service lint",
     "lint-fix": "vue-cli-service lint --fix",
