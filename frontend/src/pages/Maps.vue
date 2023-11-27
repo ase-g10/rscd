@@ -8,20 +8,45 @@
 </template>
 
 <script>
+import { test, test2 } from '@/api/test';
+
 export default {
   data() {
     return {
       map: null,
       marker: null,
       infoWindow: null,
+      testData: null,
+      test2Data: null,
     };
   },
   mounted() {
+    console.log(this.fetchTestData(2, 3));
+    console.log(this.fetchTest2Data(233));
     console.log("Mounted - loading Google Maps Script");
     this.loadGoogleMapsScript();
     window.initMap = this.initMap.bind(this);
   },
   methods: {
+    fetchTestData(year, month) {
+      test({ /* params */ }, year, month)
+        .then(response => {
+          this.testData = response.data;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    },
+    fetchTest2Data(userId) {
+      test2(userId)
+        .then(response => {
+          this.test2Data = response.data;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    },
+
     getCurrentLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -60,6 +85,7 @@ export default {
       document.head.appendChild(script);
     },
     initMap() {
+      console.log("后端 URL:", this.$backendUrl);
       console.log("Initializing map...");
       const defaultLatlng = { lat: 53.3437935, lng: -6.254571599999999 }; // TCD
       const mapOptions = {
