@@ -36,24 +36,24 @@
 export default {
   data() {
     return {
-      title: "Team members",
-      members: [
-        {
-          image: require("@/assets/img/faces/face-0.jpg"),
-          name: "Dj Khaled",
-          status: "Offline",
-        },
-        {
-          image: require("@/assets/img/faces/face-1.jpg"),
-          name: "Creative Tim",
-          status: "Available",
-        },
-        {
-          image: require("@/assets/img/faces/face-1.jpg"),
-          name: "Flume",
-          status: "Busy",
-        },
-      ],
+      // title: "Team members",
+      // members: [
+      //   {
+      //     image: require("@/assets/img/faces/face-0.jpg"),
+      //     name: "Dj Khaled",
+      //     status: "Offline",
+      //   },
+      //   {
+      //     image: require("@/assets/img/faces/face-1.jpg"),
+      //     name: "Creative Tim",
+      //     status: "Available",
+      //   },
+      //   {
+      //     image: require("@/assets/img/faces/face-1.jpg"),
+      //     name: "Flume",
+      //     status: "Busy",
+      //   },
+      // ],
     };
   },
   methods: {

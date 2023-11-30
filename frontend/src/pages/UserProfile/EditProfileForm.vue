@@ -3,7 +3,7 @@
     <div>
       <form @submit.prevent>
         <div class="row">
-          <div class="col-md-5">
+          <!-- <div class="col-md-5">
             <fg-input
               type="text"
               label="Company"
@@ -12,7 +12,7 @@
               v-model="user.company"
             >
             </fg-input>
-          </div>
+          </div> -->
           <div class="col-md-3">
             <fg-input
               type="text"
@@ -25,7 +25,7 @@
           <div class="col-md-4">
             <fg-input
               type="email"
-              label="Username"
+              label="Email"
               placeholder="Email"
               v-model="user.email"
             >
@@ -125,15 +125,15 @@ export default {
   data() {
     return {
       user: {
-        company: "RSCD Dashboard",
-        username: "michael23",
+        // company: "RSCD Dashboard",
+        username: "group10",
         email: "",
-        firstName: "Chet",
-        lastName: "Faker",
-        address: "Melbourne, Australia",
-        city: "Melbourne",
+        firstName: "First",
+        lastName: "Last",
+        address: "Trinity",
+        city: "Dublin",
         postalCode: "",
-        aboutMe: `We must accept finite disappointment, but hold on to infinite hope.`,
+        // aboutMe: `We must accept finite disappointment, but hold on to infinite hope.`,
       },
     };
   },

@@ -11,19 +11,19 @@
           alt="..."
         />
         <h4 class="title">
-          Chet Faker
+          Group 10
           <br />
           <a href="#">
-            <small>@chetfaker</small>
+            <small>@Group10</small>
           </a>
         </h4>
       </div>
-      <p class="description text-center">
+      <!-- <p class="description text-center">
         "I like the way you work it
         <br />
         No diggity <br />
         I wanna bag it up"
-      </p>
+      </p> -->
     </div>
     <hr />
     <div class="text-center">
@@ -48,18 +48,18 @@ export default {
   data() {
     return {
       details: [
-        {
-          title: "12",
-          subTitle: "Files",
-        },
-        {
-          title: "2GB",
-          subTitle: "Used",
-        },
-        {
-          title: "24,6$",
-          subTitle: "Spent",
-        },
+        // {
+        //   title: "12",
+        //   subTitle: "Files",
+        // },
+        // {
+        //   title: "2GB",
+        //   subTitle: "Used",
+        // },
+        // {
+        //   title: "24,6$",
+        //   subTitle: "Spent",
+        // },
       ],
     };
   },
