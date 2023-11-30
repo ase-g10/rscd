@@ -1,13 +1,21 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
 
 class User(models.Model):
-    username = models.CharField(max_length=255)
-    email = models.EmailField()
-    password = models.CharField(max_length=255)  # 注意: Django 通常使用密码哈希，而不是明文
+    username = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)
     status = models.SmallIntegerField()
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     is_delete = models.BooleanField(default=False)
 
     class Meta:
-        db_table = 'user'  # 指定数据库表名
+        db_table = 'user'
+
+    def save(self, *args, **kwargs):
+        self.password = make_password(self.password)
+        super().save(*args, **kwargs)
+
+    def verify_password(self, raw_password):
+        return check_password(raw_password, self.password)
