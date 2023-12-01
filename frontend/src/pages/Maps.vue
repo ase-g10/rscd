@@ -28,11 +28,10 @@
           </label>
           <input type="text" id="address" v-model="currentAddress" class="input input-bordered w-full" />
         </div>
-        
+
         <div class="card-actions justify-end mt-4">
           <button @click="getCurrentLocation" class="btn btn-secondary">Get Current Location</button>
           <button @click="codeAddress" class="btn btn-secondary">Geocode Address</button>
-          <button @click="submitDisaster" class="btn btn-primary">Submit Disaster</button>
         </div>
       </div>
     </div>
@@ -85,6 +84,10 @@ export default {
               });
             }
 
+            this.geocodeLatLng(position.coords.latitude, position.coords.longitude);
+            this.currentLat = position.coords.latitude.toFixed(5);
+            this.currentLng = position.coords.longitude.toFixed(5);
+
             this.infoWindow.setPosition(pos);
             this.infoWindow.setContent('Current location');
             this.infoWindow.open(this.map, this.marker);
@@ -112,60 +115,60 @@ export default {
         center: defaultLatlng,
         scrollwheel: false,
         styles: [
-        {
-          featureType: "water",
-          stylers: [{ saturation: 43 }, { lightness: -11 }, { hue: "#0088ff" }],
-        },
-        {
-          featureType: "road",
-          elementType: "geometry.fill",
-          stylers: [
-            { hue: "#ff0000" },
-            { saturation: -100 },
-            { lightness: 99 },
-          ],
-        },
-        {
-          featureType: "road",
-          elementType: "geometry.stroke",
-          stylers: [{ color: "#808080" }, { lightness: 54 }],
-        },
-        {
-          featureType: "landscape.man_made",
-          elementType: "geometry.fill",
-          stylers: [{ color: "#ece2d9" }],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "geometry.fill",
-          stylers: [{ color: "#ccdca1" }],
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#767676" }],
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.stroke",
-          stylers: [{ color: "#ffffff" }],
-        },
-        { featureType: "poi", stylers: [{ visibility: "off" }] },
-        {
-          featureType: "landscape.natural",
-          elementType: "geometry.fill",
-          stylers: [{ visibility: "on" }, { color: "#b8cb93" }],
-        },
-        { featureType: "poi.park", stylers: [{ visibility: "on" }] },
-        {
-          featureType: "poi.sports_complex",
-          stylers: [{ visibility: "on" }],
-        },
-        { featureType: "poi.medical", stylers: [{ visibility: "on" }] },
-        {
-          featureType: "poi.business",
-          stylers: [{ visibility: "simplified" }],
-        },
+          {
+            featureType: "water",
+            stylers: [{ saturation: 43 }, { lightness: -11 }, { hue: "#0088ff" }],
+          },
+          {
+            featureType: "road",
+            elementType: "geometry.fill",
+            stylers: [
+              { hue: "#ff0000" },
+              { saturation: -100 },
+              { lightness: 99 },
+            ],
+          },
+          {
+            featureType: "road",
+            elementType: "geometry.stroke",
+            stylers: [{ color: "#808080" }, { lightness: 54 }],
+          },
+          {
+            featureType: "landscape.man_made",
+            elementType: "geometry.fill",
+            stylers: [{ color: "#ece2d9" }],
+          },
+          {
+            featureType: "poi.park",
+            elementType: "geometry.fill",
+            stylers: [{ color: "#ccdca1" }],
+          },
+          {
+            featureType: "road",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#767676" }],
+          },
+          {
+            featureType: "road",
+            elementType: "labels.text.stroke",
+            stylers: [{ color: "#ffffff" }],
+          },
+          { featureType: "poi", stylers: [{ visibility: "off" }] },
+          {
+            featureType: "landscape.natural",
+            elementType: "geometry.fill",
+            stylers: [{ visibility: "on" }, { color: "#b8cb93" }],
+          },
+          { featureType: "poi.park", stylers: [{ visibility: "on" }] },
+          {
+            featureType: "poi.sports_complex",
+            stylers: [{ visibility: "on" }],
+          },
+          { featureType: "poi.medical", stylers: [{ visibility: "on" }] },
+          {
+            featureType: "poi.business",
+            stylers: [{ visibility: "simplified" }],
+          },
         ]
       };
 
@@ -254,40 +257,9 @@ export default {
         }
       });
     },
-    submitDisaster() {
-    const data = {
-      latitude: this.currentLat,
-      longitude: this.currentLng,
-    };
-
-    submitDisasterLocation(data)
-      .then(response => {
-        this.$notify({
-          component: NotificationTemplate,
-          icon: "ti-check",
-          horizontalAlign: "right",
-          verticalAlign: "top",
-          type: "success",
-          message: 'Location successfully submitted'
-        });
-        console.log('Location submitted:', response);
-      })
-      .catch(error => {
-        this.$notify({
-          component: NotificationTemplate,
-          icon: "ti-close",
-          horizontalAlign: "right",
-          verticalAlign: "top",
-          type: "danger",
-          message: 'Failed to submit location'
-        });
-        console.error('Error submitting location:', error);
-      });
-  },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>
 

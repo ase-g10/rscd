@@ -46,7 +46,8 @@
                     <label class="label" for="disasterDescription">
                         <span class="label-text">Disaster Description:</span>
                     </label>
-                    <textarea id="disasterDescription" v-model="disasterDescription" class="input input-bordered w-full"></textarea>
+                    <textarea id="disasterDescription" v-model="disasterDescription"
+                        class="input input-bordered w-full"></textarea>
                 </div>
 
                 <div class="card-actions justify-end mt-4">
@@ -290,9 +291,9 @@ export default {
                         horizontalAlign: "right",
                         verticalAlign: "top",
                         type: "success",
-                        message: 'Location successfully submitted'
+                        message: 'Disaster successfully submitted' + response
                     });
-                    console.log('Location submitted:', response);
+                    console.log('Disaster submitted:', response);
                 })
                 .catch(error => {
                     this.$notify({
@@ -301,9 +302,9 @@ export default {
                         horizontalAlign: "right",
                         verticalAlign: "top",
                         type: "danger",
-                        message: 'Failed to submit location'
+                        message: 'Failed to submit the disaster. ' + error
                     });
-                    console.error('Error submitting location:', error);
+                    console.error('Error submitting disaster:', error);
                 });
         },
     },
@@ -322,8 +323,8 @@ export default {
     }
 
     .input[readonly] {
-    color: black;
-}
+        color: black;
+    }
 }
 </style>
   
