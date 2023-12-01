@@ -133,6 +133,13 @@ export default {
               });
             }
 
+            this.geocodeLatLng(
+              position.coords.latitude,
+              position.coords.longitude
+            );
+            this.currentLat = position.coords.latitude.toFixed(5);
+            this.currentLng = position.coords.longitude.toFixed(5);
+
             this.infoWindow.setPosition(pos);
             this.infoWindow.setContent("Current location");
             this.infoWindow.open(this.map, this.marker);
@@ -156,7 +163,7 @@ export default {
       document.head.appendChild(script);
     },
     initMap() {
-      console.log("Backend URL:", this.$backendUrl);
+      console.log("后端 URL:", this.$backendUrl);
       console.log("Initializing map...");
       const defaultLatlng = { lat: 53.3437935, lng: -6.254571599999999 }; // TCD
       const mapOptions = {
@@ -242,8 +249,8 @@ export default {
               position.coords.latitude,
               position.coords.longitude
             );
-            this.currentLat = pos.lat.toFixed(5); // update latitude
-            this.currentLng = pos.lng.toFixed(5); // update longitude
+            this.currentLat = pos.lat.toFixed(5); // 更新纬度
+            this.currentLng = pos.lng.toFixed(5); // 更新经度
             this.map.setCenter(pos);
 
             this.marker = new window.google.maps.Marker({
@@ -292,7 +299,7 @@ export default {
       infoWindow.open(this.map);
     },
     codeAddress() {
-      const address = this.currentAddress; // use v-model address
+      const address = this.currentAddress; // 使用 v-model 绑定的地址值
       const geocoder = new google.maps.Geocoder();
 
       geocoder.geocode({ address: address }, (results, status) => {
