@@ -84,6 +84,10 @@ export default {
               });
             }
 
+            this.geocodeLatLng(position.coords.latitude, position.coords.longitude);
+            this.currentLat = position.coords.latitude.toFixed(5);
+            this.currentLng = position.coords.longitude.toFixed(5);
+
             this.infoWindow.setPosition(pos);
             this.infoWindow.setContent('Current location');
             this.infoWindow.open(this.map, this.marker);
