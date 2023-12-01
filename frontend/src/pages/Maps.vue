@@ -62,6 +62,8 @@
 </template>
 
 <script>
+import loadGoogleMapsScript from "@/utils/googleMapsLoader";
+
 export default {
   data() {
     return {
@@ -76,8 +78,7 @@ export default {
   },
   mounted() {
     console.log("Mounted - loading Google Maps Script");
-    this.loadGoogleMapsScript();
-    window.initMap = this.initMap.bind(this);
+    loadGoogleMapsScript(this.initMap.bind(this));
   },
   methods: {
     getCurrentLocation() {
