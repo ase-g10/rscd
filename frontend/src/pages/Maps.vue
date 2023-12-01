@@ -45,6 +45,7 @@
 
 <script>
 import { submitDisasterLocation } from '@/api/disaster';
+import NotificationTemplate from "./Notifications/NotificationTemplate";
 
 export default {
   data() {
@@ -254,29 +255,35 @@ export default {
       });
     },
     submitDisaster() {
-      const data = {
-        latitude: this.currentLat,
-        longitude: this.currentLng,
-      };
+    const data = {
+      latitude: this.currentLat,
+      longitude: this.currentLng,
+    };
 
-      submitDisasterLocation(data)
-        .then(response => {
-          this.submitMessage = 'Location successfully submitted';
-          setTimeout(() => {
-            this.submitMessage = '';
-          }, 10000);  // 10秒后清除消息
-          console.log('Location submitted:', response);
-          alert('Location successfully submitted');
-        })
-        .catch(error => {
-          this.submitMessage = 'Failed to submit location';
-          setTimeout(() => {
-            this.submitMessage = '';
-          }, 10000);  // 10秒后清除消息
-          console.error('Error submitting location:', error);
-          alert('Failed to submit location');
+    submitDisasterLocation(data)
+      .then(response => {
+        this.$notify({
+          component: NotificationTemplate,
+          icon: "ti-check",
+          horizontalAlign: "right",
+          verticalAlign: "top",
+          type: "success",
+          message: 'Location successfully submitted'
         });
-    },
+        console.log('Location submitted:', response);
+      })
+      .catch(error => {
+        this.$notify({
+          component: NotificationTemplate,
+          icon: "ti-close",
+          horizontalAlign: "right",
+          verticalAlign: "top",
+          type: "danger",
+          message: 'Failed to submit location'
+        });
+        console.error('Error submitting location:', error);
+      });
+  },
   },
 };
 </script>
