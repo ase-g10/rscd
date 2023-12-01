@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App";
 import router from "./router/index";
 import axios from "axios";
+import './assets/css/tailwind.css';
 
 import rscdDashboard from "./plugins/rscdDashboard";
 import "vue-notifyjs/themes/default.css";
