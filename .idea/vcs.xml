@@ -1,14 +1,20 @@
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/rscd" vcs="Git" />
   </component>
 =======
+>>>>>>> 1a6daff28088bed67f79b66ff18fbf39d64ce7eb
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
+<<<<<<< HEAD
+=======
 >>>>>>> 79d902f09f70df64624c87b2b3efecdeefc3a872
+>>>>>>> 1a6daff28088bed67f79b66ff18fbf39d64ce7eb
 </project>
