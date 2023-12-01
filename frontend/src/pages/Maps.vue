@@ -123,14 +123,8 @@ export default {
         this.handleLocationError(false, this.infoWindow, this.map.getCenter());
       }
     },
-    loadGoogleMapsScript() {
-      const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GOOGLE_MAP_API}&callback=initMap`;
-      script.async = true;
-      document.head.appendChild(script);
-    },
     initMap() {
-      console.log("后端 URL:", this.$backendUrl);
+      console.log("Backend URL:", this.$backendUrl);
       console.log("Initializing map...");
       const defaultLatlng = { lat: 53.3437935, lng: -6.254571599999999 }; // TCD
       const mapOptions = {
