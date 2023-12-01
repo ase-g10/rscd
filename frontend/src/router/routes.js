@@ -10,6 +10,7 @@ import Icons from "@/pages/Icons.vue";
 import Maps from "@/pages/Maps.vue";
 import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
+import ReportDisaster from "@/pages/ReportDisaster.vue";
 
 const routes = [
   {
@@ -51,6 +52,11 @@ const routes = [
         path: "table-list",
         name: "table-list",
         component: TableList,
+      },
+      {
+        path: "report-disaster",
+        name: "report-disaster",
+        component: ReportDisaster,
       },
     ],
   },
