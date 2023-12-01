@@ -368,18 +368,5 @@ export default {
 </script>
 
 <style>
-.input[readonly] {
-  background-color: #f4f3ef;
-}
-
-@media (prefers-color-scheme: dark) {
-  .input {
-    color: white;
-    background-color: #212120;
-  }
-
-  .input[readonly] {
-    color: black;
-  }
-}
+@import "@/assets/css/mapsStyles.css";
 </style>

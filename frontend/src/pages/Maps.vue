@@ -299,4 +299,6 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+@import "@/assets/css/mapsStyles.css";
+</style>
