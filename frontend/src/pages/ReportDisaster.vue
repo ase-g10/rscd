@@ -291,7 +291,7 @@ export default {
                         horizontalAlign: "right",
                         verticalAlign: "top",
                         type: "success",
-                        message: 'Disaster successfully submitted' + response
+                        message: 'Disaster successfully submitted! ' + response.data.message
                     });
                     console.log('Disaster submitted:', response);
                 })
