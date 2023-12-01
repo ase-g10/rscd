@@ -1,14 +1,29 @@
 <template>
   <card class="card-map" title="Google Maps">
+    <div>
+      <label for="latitude">Latitude:</label>
+      <input type="text" id="latitude" v-model="currentLat" readonly>
+
+      <label for="longitude">Longitude:</label>
+      <input type="text" id="longitude" v-model="currentLng" readonly>
+
+      <label for="address">Address:</label>
+      <input type="text" id="address" v-model="currentAddress">
+    </div>
+
     <button @click="getCurrentLocation">Get Current Location</button>
+    <button @click="codeAddress">Geocode Address</button>
+    <button @click="submitDisaster">Submit Disaster</button>
+
     <div class="map">
       <div id="map"></div>
     </div>
   </card>
 </template>
 
+
 <script>
-import { test, test2 } from '@/api/test';
+import { submitDisasterLocation } from '@/api/disaster';
 
 export default {
   data() {
@@ -16,36 +31,18 @@ export default {
       map: null,
       marker: null,
       infoWindow: null,
-      testData: null,
-      test2Data: null,
+      currentLat: '',
+      currentLng: '',
+      currentAddress: '',
+      submitMessage: '',
     };
   },
   mounted() {
-    console.log(this.fetchTestData(2, 3));
-    console.log(this.fetchTest2Data(233));
     console.log("Mounted - loading Google Maps Script");
     this.loadGoogleMapsScript();
     window.initMap = this.initMap.bind(this);
   },
   methods: {
-    fetchTestData(year, month) {
-      test({ /* params */ }, year, month)
-        .then(response => {
-          this.testData = response.data;
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    },
-    fetchTest2Data(userId) {
-      test2(userId)
-        .then(response => {
-          this.test2Data = response.data;
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    },
 
     getCurrentLocation() {
       if (navigator.geolocation) {
@@ -160,6 +157,9 @@ export default {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
+            this.geocodeLatLng(position.coords.latitude, position.coords.longitude);
+            this.currentLat = pos.lat.toFixed(5); // 更新纬度
+            this.currentLng = pos.lng.toFixed(5); // 更新经度
             this.map.setCenter(pos);
 
             this.marker = new window.google.maps.Marker({
@@ -179,6 +179,21 @@ export default {
         this.handleLocationError(false, this.infoWindow, this.map.getCenter());
       }
     },
+    geocodeLatLng(lat, lng) {
+      const geocoder = new google.maps.Geocoder();
+      const latlng = { lat: lat, lng: lng };
+      geocoder.geocode({ location: latlng }, (results, status) => {
+        if (status === "OK") {
+          if (results[0]) {
+            this.currentAddress = results[0].formatted_address;
+          } else {
+            window.alert("No address found");
+          }
+        } else {
+          window.alert("Geocoder failed due to: " + status);
+        }
+      });
+    },
     handleLocationError(browserHasGeolocation, infoWindow, pos) {
       infoWindow.setPosition(pos);
       infoWindow.setContent(
@@ -187,6 +202,59 @@ export default {
           : "Error: Your browser doesn't support geolocation."
       );
       infoWindow.open(this.map);
+    },
+    codeAddress() {
+      const address = this.currentAddress; // 使用 v-model 绑定的地址值
+      const geocoder = new google.maps.Geocoder();
+
+      geocoder.geocode({ 'address': address }, (results, status) => {
+        if (status == 'OK') {
+          const location = results[0].geometry.location;
+          this.map.setCenter(location);
+
+          if (this.marker) {
+            this.marker.setPosition(location);
+          } else {
+            this.marker = new google.maps.Marker({
+              position: location,
+              map: this.map,
+            });
+          }
+
+          this.currentLat = location.lat().toFixed(5);
+          this.currentLng = location.lng().toFixed(5);
+
+          this.infoWindow.setPosition(location);
+          this.infoWindow.setContent(results[0].formatted_address);
+          this.infoWindow.open(this.map, this.marker);
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    },
+    submitDisaster() {
+      const data = {
+        latitude: this.currentLat,
+        longitude: this.currentLng,
+      };
+
+      submitDisasterLocation(data)
+        .then(response => {
+          this.submitMessage = 'Location successfully submitted';
+          setTimeout(() => {
+            this.submitMessage = '';
+          }, 10000);  // 10秒后清除消息
+          console.log('Location submitted:', response);
+          alert('Location successfully submitted');
+        })
+        .catch(error => {
+          this.submitMessage = 'Failed to submit location';
+          setTimeout(() => {
+            this.submitMessage = '';
+          }, 10000);  // 10秒后清除消息
+          console.error('Error submitting location:', error);
+          alert('Failed to submit location');
+        });
     },
   },
 };
