@@ -2,15 +2,26 @@ from django.shortcuts import render
 from django.views import View
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+# from .serializers import ItemSerializer
+
+# Create your views here.
+# def post_location(request):
+#
+#     return JsonResponse({"message": "OK"})
 
 
 from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 
 class DisasterView(viewsets.ViewSet):
-    @action(detail=False, methods=['post', 'get'])
-    def post_location(self, request, pk=None):
+    @action(detail=False, methods=['post'])
+    def postLocation(self, request,pk=None):
         try:
             # 将请求的 JSON 转换成 Python 字典
             data = request.data
