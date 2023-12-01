@@ -16,8 +16,8 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-env_file = os.path.join(BASE_DIR.parent, '.env')
-config = Config(RepositoryEnv(env_file))
+# env_file = os.path.join(BASE_DIR.parent, '.env')
+# config = Config(RepositoryEnv(env_file))
 import sys
 sys.path.insert(0, os.path.join(BASE_DIR, 'ASE_Group10'))
 
