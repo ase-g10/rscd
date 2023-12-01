@@ -1,25 +1,46 @@
 <template>
-  <card class="card-map" title="Google Maps">
-    <div>
-      <label for="latitude">Latitude:</label>
-      <input type="text" id="latitude" v-model="currentLat" readonly>
+  <div>
+    <div class="card card-compact bg-base-100 shadow-xl p-4">
+      <div class="card-body">
+        <!-- Flex container adjusted to wrap items if not enough space -->
+        <div class="flex flex-wrap justify-between gap-4 mb-4">
+          <!-- Latitude -->
+          <div class="flex-1 min-w-0">
+            <label class="label" for="latitude">
+              <span class="label-text">Latitude:</span>
+            </label>
+            <input type="text" id="latitude" v-model="currentLat" readonly class="input input-bordered w-full" />
+          </div>
 
-      <label for="longitude">Longitude:</label>
-      <input type="text" id="longitude" v-model="currentLng" readonly>
+          <!-- Longitude -->
+          <div class="flex-1 min-w-0">
+            <label class="label" for="longitude">
+              <span class="label-text">Longitude:</span>
+            </label>
+            <input type="text" id="longitude" v-model="currentLng" readonly class="input input-bordered w-full" />
+          </div>
+        </div>
 
-      <label for="address">Address:</label>
-      <input type="text" id="address" v-model="currentAddress">
+        <!-- Address with flex-auto to take up the remaining space -->
+        <div class="flex-auto mb-4">
+          <label class="label" for="address">
+            <span class="label-text">Address:</span>
+          </label>
+          <input type="text" id="address" v-model="currentAddress" class="input input-bordered w-full" />
+        </div>
+        
+        <div class="card-actions justify-end mt-4">
+          <button @click="getCurrentLocation" class="btn btn-secondary">Get Current Location</button>
+          <button @click="codeAddress" class="btn btn-secondary">Geocode Address</button>
+          <button @click="submitDisaster" class="btn btn-primary">Submit Disaster</button>
+        </div>
+      </div>
     </div>
 
-    <button @click="getCurrentLocation">Get Current Location</button>
-    <button @click="codeAddress">Geocode Address</button>
-    <button @click="submitDisaster">Submit Disaster</button>
-
-    <div class="map">
-      <div id="map"></div>
-    </div>
-  </card>
+    <div class="map h-96" id="map"></div>
+  </div>
 </template>
+
 
 
 <script>
@@ -261,7 +282,5 @@ export default {
 </script>
 
 <style>
-.map {
-  height: 400px;
-}
 </style>
+
