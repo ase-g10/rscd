@@ -16,13 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from Disaster_Response.views import post_location
+from rest_framework.routers import DefaultRouter, SimpleRouter
+from rscd.backend.Disaster_Response.views import DisasterView
 
 
-router = DefaultRouter()
-router.register(r'api/postLocation', post_location)
-
+router = SimpleRouter()
+router.register(r'api/postLocation', DisasterView, basename="disaster")
+for url in router.urls:
+    print(url)
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
