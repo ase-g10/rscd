@@ -9,7 +9,13 @@
             <label class="label" for="latitude">
               <span class="label-text">Latitude:</span>
             </label>
-            <input type="text" id="latitude" v-model="currentLat" readonly class="input input-bordered w-full" />
+            <input
+              type="text"
+              id="latitude"
+              v-model="currentLat"
+              readonly
+              class="input input-bordered w-full"
+            />
           </div>
 
           <!-- Longitude -->
@@ -17,7 +23,13 @@
             <label class="label" for="longitude">
               <span class="label-text">Longitude:</span>
             </label>
-            <input type="text" id="longitude" v-model="currentLng" readonly class="input input-bordered w-full" />
+            <input
+              type="text"
+              id="longitude"
+              v-model="currentLng"
+              readonly
+              class="input input-bordered w-full"
+            />
           </div>
         </div>
 
@@ -26,12 +38,21 @@
           <label class="label" for="address">
             <span class="label-text">Address:</span>
           </label>
-          <input type="text" id="address" v-model="currentAddress" class="input input-bordered w-full" />
+          <input
+            type="text"
+            id="address"
+            v-model="currentAddress"
+            class="input input-bordered w-full"
+          />
         </div>
 
         <div class="card-actions justify-end mt-4">
-          <button @click="getCurrentLocation" class="btn btn-secondary">Get Current Location</button>
-          <button @click="codeAddress" class="btn btn-secondary">Geocode Address</button>
+          <button @click="getCurrentLocation" class="btn btn-secondary">
+            Get Current Location
+          </button>
+          <button @click="codeAddress" class="btn btn-secondary">
+            Geocode Address
+          </button>
         </div>
       </div>
     </div>
@@ -40,22 +61,17 @@
   </div>
 </template>
 
-
-
 <script>
-import { submitDisasterLocation } from '@/api/disaster';
-import NotificationTemplate from "./Notifications/NotificationTemplate";
-
 export default {
   data() {
     return {
       map: null,
       marker: null,
       infoWindow: null,
-      currentLat: '',
-      currentLng: '',
-      currentAddress: '',
-      submitMessage: '',
+      currentLat: "",
+      currentLng: "",
+      currentAddress: "",
+      submitMessage: "",
     };
   },
   mounted() {
@@ -64,7 +80,6 @@ export default {
     window.initMap = this.initMap.bind(this);
   },
   methods: {
-
     getCurrentLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -84,16 +99,23 @@ export default {
               });
             }
 
-            this.geocodeLatLng(position.coords.latitude, position.coords.longitude);
+            this.geocodeLatLng(
+              position.coords.latitude,
+              position.coords.longitude
+            );
             this.currentLat = position.coords.latitude.toFixed(5);
             this.currentLng = position.coords.longitude.toFixed(5);
 
             this.infoWindow.setPosition(pos);
-            this.infoWindow.setContent('Current location');
+            this.infoWindow.setContent("Current location");
             this.infoWindow.open(this.map, this.marker);
           },
           () => {
-            this.handleLocationError(true, this.infoWindow, this.map.getCenter());
+            this.handleLocationError(
+              true,
+              this.infoWindow,
+              this.map.getCenter()
+            );
           }
         );
       } else {
@@ -101,7 +123,7 @@ export default {
       }
     },
     loadGoogleMapsScript() {
-      const script = document.createElement('script');
+      const script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GOOGLE_MAP_API}&callback=initMap`;
       script.async = true;
       document.head.appendChild(script);
@@ -117,7 +139,11 @@ export default {
         styles: [
           {
             featureType: "water",
-            stylers: [{ saturation: 43 }, { lightness: -11 }, { hue: "#0088ff" }],
+            stylers: [
+              { saturation: 43 },
+              { lightness: -11 },
+              { hue: "#0088ff" },
+            ],
           },
           {
             featureType: "road",
@@ -169,10 +195,13 @@ export default {
             featureType: "poi.business",
             stylers: [{ visibility: "simplified" }],
           },
-        ]
+        ],
       };
 
-      this.map = new window.google.maps.Map(document.getElementById('map'), mapOptions);
+      this.map = new window.google.maps.Map(
+        document.getElementById("map"),
+        mapOptions
+      );
       this.infoWindow = new window.google.maps.InfoWindow();
 
       if (navigator.geolocation) {
@@ -182,7 +211,10 @@ export default {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            this.geocodeLatLng(position.coords.latitude, position.coords.longitude);
+            this.geocodeLatLng(
+              position.coords.latitude,
+              position.coords.longitude
+            );
             this.currentLat = pos.lat.toFixed(5); // 更新纬度
             this.currentLng = pos.lng.toFixed(5); // 更新经度
             this.map.setCenter(pos);
@@ -193,11 +225,15 @@ export default {
             });
 
             this.infoWindow.setPosition(pos);
-            this.infoWindow.setContent('Current location');
+            this.infoWindow.setContent("Current location");
             this.infoWindow.open(this.map, this.marker);
           },
           () => {
-            this.handleLocationError(true, this.infoWindow, this.map.getCenter());
+            this.handleLocationError(
+              true,
+              this.infoWindow,
+              this.map.getCenter()
+            );
           }
         );
       } else {
@@ -223,7 +259,7 @@ export default {
       infoWindow.setPosition(pos);
       infoWindow.setContent(
         browserHasGeolocation
-          ? 'Error: The Geolocation service failed.'
+          ? "Error: The Geolocation service failed."
           : "Error: Your browser doesn't support geolocation."
       );
       infoWindow.open(this.map);
@@ -232,8 +268,8 @@ export default {
       const address = this.currentAddress; // 使用 v-model 绑定的地址值
       const geocoder = new google.maps.Geocoder();
 
-      geocoder.geocode({ 'address': address }, (results, status) => {
-        if (status == 'OK') {
+      geocoder.geocode({ address: address }, (results, status) => {
+        if (status == "OK") {
           const location = results[0].geometry.location;
           this.map.setCenter(location);
 
@@ -253,7 +289,9 @@ export default {
           this.infoWindow.setContent(results[0].formatted_address);
           this.infoWindow.open(this.map, this.marker);
         } else {
-          alert('Geocode was not successful for the following reason: ' + status);
+          alert(
+            "Geocode was not successful for the following reason: " + status
+          );
         }
       });
     },
@@ -262,4 +300,3 @@ export default {
 </script>
 
 <style></style>
-
