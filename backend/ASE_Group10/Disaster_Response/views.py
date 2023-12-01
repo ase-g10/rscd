@@ -21,7 +21,7 @@ import json
 
 class DisasterView(viewsets.ViewSet):
     @action(detail=False, methods=['post'])
-    def post_Location(self, request,pk=None):
+    def postLocation(self, request,pk=None):
         try:
             # 将请求的 JSON 转换成 Python 字典
             data = request.data

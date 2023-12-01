@@ -17,11 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter, SimpleRouter
-from rscd.backend.Disaster_Response.views import DisasterView
+from Disaster_Response.views import DisasterView
 
 
 router = SimpleRouter()
-router.register(r'api/postLocation', DisasterView, basename="disaster")
+router.register(r'api/disaster', DisasterView, basename="disaster")
 for url in router.urls:
     print(url)
 urlpatterns = [

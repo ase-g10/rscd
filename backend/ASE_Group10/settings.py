@@ -29,6 +29,35 @@ SECRET_KEY = "django-insecure-%esv63zlkz0!s#f4h0af-$yo!f1nrhfx$8#8*93zpwt4+9cowl
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# 允许所有域名跨域
+CORS_ORIGIN_ALLOW_ALL = True
+# 实际请求所允许的请求方式列表。默认为：
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+# 发出实际请求时可以使用的非标准HTTP标头的列表。默认为:
+CORS_ALLOW_HEADERS = (
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Pragma',
+)
+
+# url结尾自动加/
+APPEND_SLASH = True  # 默认是True
 
 ALLOWED_HOSTS = []
 
@@ -45,6 +74,7 @@ INSTALLED_APPS = [
     'rest_framework',
     # 'users',
     'Disaster_Response',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +85,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = "ASE_Group10.urls"
