@@ -2,8 +2,8 @@ import axios from 'axios';
 
 // 创建 axios 实例
 const service = axios.create({
-  // baseURL: process.env.VUE_APP_BACKEND_URL, // 基础 URL，从环境变量中读取
-  baseURL: 'http://localhost:8000', // 基础 URL，从环境变量中读取
+  baseURL: process.env.VUE_APP_BACKEND_URL, // 基础 URL，从环境变量中读取
+  // baseURL: 'http://localhost:8000', // 基础 URL，从环境变量中读取
   timeout: 10000 // 请求超时时间
 });
 
