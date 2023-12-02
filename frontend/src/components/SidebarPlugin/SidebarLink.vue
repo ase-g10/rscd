@@ -1,9 +1,9 @@
 <template>
   <component
-    :is="tag"
-    @click.native="hideSidebar"
-    class="nav-item"
     v-bind="$attrs"
+    :is="tag"
+    @click="hideSidebar"
+    class="nav-item"
     tag="li"
   >
     <a class="nav-link">
@@ -14,9 +14,18 @@
     </a>
   </component>
 </template>
+
 <script>
+function inheriltClassAndStyle() {
+  const attrs = this.$attrs
+  attrs.class && this.$el.classList.add(attrs.class)
+  attrs.style &&
+    Object.entries(attrs.style).forEach(([k, v]) => {
+      this.$el.style[k] = v
+    })
+}
 export default {
-  name: "sidebar-link",
+  name: 'sidebar-link',
   inheritAttrs: false,
   inject: {
     autoClose: {
@@ -34,32 +43,32 @@ export default {
     icon: String,
     tag: {
       type: String,
-      default: "router-link",
+      default: 'router-link',
     },
   },
   methods: {
     hideSidebar() {
       if (this.autoClose) {
-        this.$sidebar.displaySidebar(false);
+        this.$sidebar.displaySidebar(false)
       }
     },
     isActive() {
-      return this.$el.classList.contains("active");
+      return this.$el.classList.contains('active')
     },
+  },
+  beforeUnmount() {
+    if (this.$el && this.$el.parentNode) {
+      this.$el.parentNode.removeChild(this.$el)
+    }
+    if (this.removeLink) {
+      this.removeLink(this)
+    }
   },
   mounted() {
     if (this.addLink) {
-      this.addLink(this);
+      this.addLink(this)
     }
+    inheriltClassAndStyle.call(this)
   },
-  beforeDestroy() {
-    if (this.$el && this.$el.parentNode) {
-      this.$el.parentNode.removeChild(this.$el);
-    }
-    if (this.removeLink) {
-      this.removeLink(this);
-    }
-  },
-};
+}
 </script>
-<style></style>

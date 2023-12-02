@@ -1,67 +1,70 @@
-import DashboardLayout from "@/layout/dashboard/DashboardLayout.vue";
+import DashboardLayout from '@/layout/dashboard/DashboardLayout.vue'
 // GeneralViews
-import NotFound from "@/pages/NotFoundPage.vue";
+import NotFound from '@/pages/NotFoundPage.vue'
 
 // Admin pages
-import Dashboard from "@/pages/Dashboard.vue";
-import UserProfile from "@/pages/UserProfile.vue";
-import Notifications from "@/pages/Notifications.vue";
-import Icons from "@/pages/Icons.vue";
-import Maps from "@/pages/Maps.vue";
-import Typography from "@/pages/Typography.vue";
-import TableList from "@/pages/TableList.vue";
-import ReportDisaster from "@/pages/ReportDisaster.vue";
+import Dashboard from '@/pages/Dashboard.vue'
+import UserProfile from '@/pages/UserProfile.vue'
+import Notifications from '@/pages/Notifications.vue'
+import Icons from '@/pages/Icons.vue'
+import Maps from '@/pages/Maps.vue'
+import Typography from '@/pages/Typography.vue'
+import TableList from '@/pages/TableList.vue'
+import ReportDisaster from '@/pages/ReportDisaster.vue'
 
 const routes = [
   {
-    path: "/",
+    path: '/',
     component: DashboardLayout,
-    redirect: "/maps",
+    redirect: '/maps',
     children: [
       {
-        path: "dashboard",
-        name: "dashboard",
+        path: 'dashboard',
+        name: 'dashboard',
         component: Dashboard,
       },
       {
-        path: "stats",
-        name: "stats",
+        path: 'stats',
+        name: 'stats',
         component: UserProfile,
       },
       {
-        path: "notifications",
-        name: "notifications",
+        path: 'notifications',
+        name: 'notifications',
         component: Notifications,
       },
       {
-        path: "icons",
-        name: "icons",
+        path: 'icons',
+        name: 'icons',
         component: Icons,
       },
       {
-        path: "maps",
-        name: "maps",
+        path: 'maps',
+        name: 'maps',
         component: Maps,
       },
       {
-        path: "typography",
-        name: "typography",
+        path: 'typography',
+        name: 'typography',
         component: Typography,
       },
       {
-        path: "table-list",
-        name: "table-list",
+        path: 'table-list',
+        name: 'table-list',
         component: TableList,
       },
       {
-        path: "report-disaster",
-        name: "report-disaster",
+        path: 'report-disaster',
+        name: 'report-disaster',
         component: ReportDisaster,
       },
     ],
   },
-  { path: "*", component: NotFound },
-];
+  {
+    path: '/:catchAll(.*)',
+    component: NotFound,
+  },
+]
 
 /**
  * Asynchronously load view (Webpack Lazy loading compatible)
@@ -72,4 +75,4 @@ function view(name) {
    return res;
 };**/
 
-export default routes;
+export default routes

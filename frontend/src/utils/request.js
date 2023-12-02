@@ -1,11 +1,11 @@
-import axios from "axios";
+import axios from 'axios'
 
 // 创建 axios 实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BACKEND_URL, // 基础 URL，从环境变量中读取
   // baseURL: 'http://localhost:8000', // 基础 URL，从环境变量中读取
   timeout: 10000, // 请求超时时间
-});
+})
 
 // 请求拦截器
 service.interceptors.request.use(
@@ -15,13 +15,13 @@ service.interceptors.request.use(
     // if (localStorage.getItem('token')) {
     //   config.headers.Authorization = localStorage.getItem('token');
     // }
-    return config;
+    return config
   },
   (error) => {
     // 请求错误处理
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
-);
+)
 
 // 响应拦截器
 service.interceptors.response.use(
@@ -41,7 +41,7 @@ service.interceptors.response.use(
     //     return Promise.reject();
     // }
     // return res;
-    return response;
+    return response
   },
   (error) => {
     // 响应错误处理
@@ -60,8 +60,8 @@ service.interceptors.response.use(
     //     self.location='/login';
     //     resetTokenAndClearUser();
     // }
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
-);
+)
 
-export default service;
+export default service

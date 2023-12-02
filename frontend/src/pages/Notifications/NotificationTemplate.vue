@@ -2,6 +2,6 @@
 
 <script>
 export default {
-  name: "notification-template",
-};
+  name: 'notification-template',
+}
 </script>

@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-12">
       <card>
-        <template slot="header">
+        <template v-slot:header>
           <h4 class="card-title">RSCD Dashboard Headings</h4>
           <p class="card-category">
             Created using
@@ -75,8 +75,8 @@
           </div>
           <div class="typo-line">
             <!--
-               there are also "text-info", "text-success", "text-warning", "text-danger" clases for the text
-               -->
+                 there are also "text-info", "text-success", "text-warning", "text-danger" clases for the text
+                 -->
             <p class="category">Coloured Text</p>
             <p class="text-primary">
               Text Primary - Light Bootstrap Table Heading and complex bootstrap
@@ -187,7 +187,7 @@
               <code> &lt;code&gt;...&lt;/code&gt;</code>tag.
             </p>
             <pre>
-1. #This is an example of preformatted text. 2. #Here is another line of code</pre
+  1. #This is an example of preformatted text. 2. #Here is another line of code</pre
             >
           </div>
         </div>
@@ -195,7 +195,7 @@
     </div>
   </div>
 </template>
+
 <script>
-export default {};
+export default {}
 </script>
-<style></style>

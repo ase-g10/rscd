@@ -19,13 +19,13 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
-  name: "card",
+  name: 'card',
   props: {
     title: String,
     subTitle: String,
   },
-};
+}
 </script>
-<style></style>
