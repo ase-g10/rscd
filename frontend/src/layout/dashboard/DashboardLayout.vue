@@ -2,22 +2,29 @@
   <div class="wrapper">
     <side-bar>
       <template v-slot:links>
-        <sidebar-link to="/maps" name="Map" icon="ti-map" />
+        <!-- 以下链接的 name 属性与路由配置中的 name 属性相匹配 -->
+        <sidebar-link to="/maps" name="maps" icon="ti-map" />
         <sidebar-link
           to="/report-disaster"
-          name="Report Disaster"
+          name="report-disaster"
           icon="ti-alert"
         />
-        <!-- <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" /> -->
-        <sidebar-link to="/stats" name="User Profile" icon="ti-user" />
+        <!-- 如果有 dashboard 路由，取消以下注释
+        <sidebar-link to="/dashboard" name="dashboard" icon="ti-panel" /> 
+        -->
+        <sidebar-link to="/stats" name="stats" icon="ti-user" />
         <sidebar-link
           to="/table-list"
-          name="Table List"
+          name="table-list"
           icon="ti-view-list-alt"
         />
-        <!-- <sidebar-link to="/typography" name="Typography" icon="ti-text" /> -->
-        <!-- <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" /> -->
-        <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" />
+        <!-- 如果有 typography 路由，取消以下注释
+        <sidebar-link to="/typography" name="typography" icon="ti-text" />
+        -->
+        <!-- 如果有 icons 路由，取消以下注释
+        <sidebar-link to="/icons" name="icons" icon="ti-pencil-alt2" />
+        -->
+        <sidebar-link to="/notifications" name="notifications" icon="ti-bell" />
       </template>
       <mobile-menu>
         <li class="nav-item">
@@ -58,10 +65,10 @@
 </template>
 
 <script>
-import TopNavbar from './TopNavbar.vue'
-import ContentFooter from './ContentFooter.vue'
-import DashboardContent from './Content.vue'
-import MobileMenu from './MobileMenu'
+import TopNavbar from "./TopNavbar.vue";
+import ContentFooter from "./ContentFooter.vue";
+import DashboardContent from "./Content.vue";
+import MobileMenu from "./MobileMenu";
 export default {
   components: {
     TopNavbar,
@@ -72,9 +79,9 @@ export default {
   methods: {
     toggleSidebar() {
       if (this.$sidebar.showSidebar) {
-        this.$sidebar.displaySidebar(false)
+        this.$sidebar.displaySidebar(false);
       }
     },
   },
-}
+};
 </script>
