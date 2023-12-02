@@ -20,6 +20,7 @@
     <slot></slot>
   </component>
 </template>
+
 <script>
 export default {
   name: "p-button",
@@ -50,4 +51,3 @@ export default {
   },
 };
 </script>
-<style></style>

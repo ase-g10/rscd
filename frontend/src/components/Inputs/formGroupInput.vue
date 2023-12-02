@@ -11,9 +11,9 @@
       </span>
     </slot>
     <input
+      v-bind="$attrs"
       :value="value"
       @input="$emit('input', $event.target.value)"
-      v-bind="$attrs"
       class="form-control"
       aria-describedby="addon-right addon-left"
     />
@@ -25,8 +25,20 @@
     </slot>
   </div>
 </template>
+
 <script>
+function inheriltClassAndStyle() {
+  const attrs = this.$attrs;
+  attrs.class && this.$el.classList.add(attrs.class);
+  attrs.style &&
+    Object.entries(attrs.style).forEach(([k, v]) => {
+      this.$el.style[k] = v;
+    });
+}
 export default {
+  mounted() {
+    inheriltClassAndStyle.call(this);
+  },
   inheritAttrs: false,
   name: "fg-input",
   props: {
@@ -46,6 +58,6 @@ export default {
       );
     },
   },
+  emits: ["update:value"],
 };
 </script>
-<style></style>

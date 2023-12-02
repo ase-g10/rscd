@@ -2,10 +2,12 @@
   <div class="row">
     <div class="col-12">
       <card :title="table1.title" :subTitle="table1.subTitle">
-        <div slot="raw-content" class="table-responsive">
-          <rscd--table :data="table1.data" :columns="table1.columns">
-          </rscd--table>
-        </div>
+        <template v-slot:raw-content>
+          <div class="table-responsive">
+            <rscd--table :data="table1.data" :columns="table1.columns">
+            </rscd--table>
+          </div>
+        </template>
       </card>
     </div>
 
@@ -25,6 +27,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { RSCDTable } from "@/components";
 const tableColumns = ["Id", "Name", "Salary", "Country", "City"];
@@ -68,6 +71,7 @@ const tableData = [
 
 export default {
   components: {
+    // eslint-disable-next-line vue/no-unused-components
     RSCDTable,
   },
   data() {
@@ -88,4 +92,3 @@ export default {
   },
 };
 </script>
-<style></style>

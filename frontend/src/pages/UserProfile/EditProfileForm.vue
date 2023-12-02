@@ -4,21 +4,21 @@
       <form @submit.prevent>
         <div class="row">
           <!-- <div class="col-md-5">
-            <fg-input
-              type="text"
-              label="Company"
-              :disabled="true"
-              placeholder="RSCD Dashboard"
-              v-model="user.company"
-            >
-            </fg-input>
-          </div> -->
+              <fg-input
+                type="text"
+                label="Company"
+                :disabled="true"
+                placeholder="RSCD Dashboard"
+                v-model="user.company"
+              >
+              </fg-input>
+            </div> -->
           <div class="col-md-3">
             <fg-input
               type="text"
               label="Username"
               placeholder="Username"
-              v-model="user.username"
+              v-model:value="user.username"
             >
             </fg-input>
           </div>
@@ -27,7 +27,7 @@
               type="email"
               label="Email"
               placeholder="Email"
-              v-model="user.email"
+              v-model:value="user.email"
             >
             </fg-input>
           </div>
@@ -39,7 +39,7 @@
               type="text"
               label="First Name"
               placeholder="First Name"
-              v-model="user.firstName"
+              v-model:value="user.firstName"
             >
             </fg-input>
           </div>
@@ -48,7 +48,7 @@
               type="text"
               label="Last Name"
               placeholder="Last Name"
-              v-model="user.lastName"
+              v-model:value="user.lastName"
             >
             </fg-input>
           </div>
@@ -60,7 +60,7 @@
               type="text"
               label="Address"
               placeholder="Home Address"
-              v-model="user.address"
+              v-model:value="user.address"
             >
             </fg-input>
           </div>
@@ -72,7 +72,7 @@
               type="text"
               label="City"
               placeholder="City"
-              v-model="user.city"
+              v-model:value="user.city"
             >
             </fg-input>
           </div>
@@ -81,7 +81,7 @@
               type="text"
               label="Country"
               placeholder="Country"
-              v-model="user.country"
+              v-model:value="user.country"
             >
             </fg-input>
           </div>
@@ -90,7 +90,7 @@
               type="number"
               label="Postal Code"
               placeholder="ZIP Code"
-              v-model="user.postalCode"
+              v-model:value="user.postalCode"
             >
             </fg-input>
           </div>
@@ -111,7 +111,7 @@
           </div>
         </div>
         <div class="text-center">
-          <p-button type="info" round @click.native.prevent="updateProfile">
+          <p-button type="info" round @click.prevent="updateProfile">
             Update Profile
           </p-button>
         </div>
@@ -120,6 +120,7 @@
     </div>
   </card>
 </template>
+
 <script>
 export default {
   data() {
@@ -127,7 +128,7 @@ export default {
       user: {
         // company: "RSCD Dashboard",
         username: "group10",
-        email: "",
+        email: "group10@iocky.com",
         firstName: "First",
         lastName: "Last",
         address: "Trinity",
@@ -144,4 +145,3 @@ export default {
   },
 };
 </script>
-<style></style>

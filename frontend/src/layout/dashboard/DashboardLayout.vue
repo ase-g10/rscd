@@ -1,19 +1,30 @@
 <template>
   <div class="wrapper">
     <side-bar>
-      <template slot="links">
-        <sidebar-link to="/maps" name="Map" icon="ti-map" />
-        <sidebar-link to="/report-disaster" name="Report Disaster" icon="ti-alert" />
-        <!-- <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" /> -->
-        <sidebar-link to="/stats" name="User Profile" icon="ti-user" />
+      <template v-slot:links>
+        <!-- 以下链接的 name 属性与路由配置中的 name 属性相匹配 -->
+        <sidebar-link to="/maps" name="maps" icon="ti-map" />
+        <sidebar-link
+          to="/report-disaster"
+          name="report-disaster"
+          icon="ti-alert"
+        />
+        <!-- 如果有 dashboard 路由，取消以下注释
+        <sidebar-link to="/dashboard" name="dashboard" icon="ti-panel" /> 
+        -->
+        <sidebar-link to="/stats" name="stats" icon="ti-user" />
         <sidebar-link
           to="/table-list"
-          name="Table List"
+          name="table-list"
           icon="ti-view-list-alt"
         />
-        <!-- <sidebar-link to="/typography" name="Typography" icon="ti-text" /> -->
-        <!-- <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" /> -->
-        <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" />
+        <!-- 如果有 typography 路由，取消以下注释
+        <sidebar-link to="/typography" name="typography" icon="ti-text" />
+        -->
+        <!-- 如果有 icons 路由，取消以下注释
+        <sidebar-link to="/icons" name="icons" icon="ti-pencil-alt2" />
+        -->
+        <sidebar-link to="/notifications" name="notifications" icon="ti-bell" />
       </template>
       <mobile-menu>
         <li class="nav-item">
@@ -46,13 +57,13 @@
     <div class="main-panel">
       <top-navbar></top-navbar>
 
-      <dashboard-content @click.native="toggleSidebar"> </dashboard-content>
+      <dashboard-content @click="toggleSidebar"> </dashboard-content>
 
       <content-footer></content-footer>
     </div>
   </div>
 </template>
-<style lang="scss"></style>
+
 <script>
 import TopNavbar from "./TopNavbar.vue";
 import ContentFooter from "./ContentFooter.vue";

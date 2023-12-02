@@ -1,6 +1,6 @@
 <template>
   <card>
-    <template slot="header">
+    <template v-slot:header>
       <h4 v-if="$slots.title || title" class="card-title">
         <slot name="title">
           {{ title }}
@@ -27,6 +27,7 @@
     </div>
   </card>
 </template>
+
 <script>
 import Card from "./Card.vue";
 export default {
@@ -103,4 +104,3 @@ export default {
   },
 };
 </script>
-<style></style>

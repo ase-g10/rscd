@@ -1,11 +1,10 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import * as VueRouter from "vue-router";
 import routes from "./routes";
-Vue.use(VueRouter);
 
 // configure router
-const router = new VueRouter({
-  routes, // short for routes: routes
+const router = VueRouter.createRouter({
+  history: VueRouter.createWebHashHistory(),
+  routes: routes,
   linkActiveClass: "active",
 });
 

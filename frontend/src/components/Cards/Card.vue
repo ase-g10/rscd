@@ -19,6 +19,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: "card",
@@ -28,4 +29,3 @@ export default {
   },
 };
 </script>
-<style></style>

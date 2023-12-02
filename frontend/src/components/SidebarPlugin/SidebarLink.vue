@@ -1,9 +1,9 @@
 <template>
   <component
-    :is="tag"
-    @click.native="hideSidebar"
-    class="nav-item"
     v-bind="$attrs"
+    :is="tag"
+    @click="hideSidebar"
+    class="nav-item"
     tag="li"
   >
     <a class="nav-link">
@@ -14,7 +14,16 @@
     </a>
   </component>
 </template>
+
 <script>
+function inheriltClassAndStyle() {
+  const attrs = this.$attrs;
+  attrs.class && this.$el.classList.add(attrs.class);
+  attrs.style &&
+    Object.entries(attrs.style).forEach(([k, v]) => {
+      this.$el.style[k] = v;
+    });
+}
 export default {
   name: "sidebar-link",
   inheritAttrs: false,
@@ -44,15 +53,10 @@ export default {
       }
     },
     isActive() {
-      return this.$el.classList.contains("active");
+      return this.$route.path === this.$attrs.to;
     },
   },
-  mounted() {
-    if (this.addLink) {
-      this.addLink(this);
-    }
-  },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.$el && this.$el.parentNode) {
       this.$el.parentNode.removeChild(this.$el);
     }
@@ -60,6 +64,11 @@ export default {
       this.removeLink(this);
     }
   },
+  mounted() {
+    if (this.addLink) {
+      this.addLink(this);
+    }
+    inheriltClassAndStyle.call(this);
+  },
 };
 </script>
-<style></style>

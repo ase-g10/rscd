@@ -24,7 +24,10 @@
     </ul>
   </component>
 </template>
+
 <script>
+// eslint-disable-next-line no-unused-vars
+import { $on, $off, $once, $emit } from "../utils/gogocodeTransfer";
 export default {
   props: {
     tag: {
@@ -43,12 +46,13 @@ export default {
   methods: {
     toggleDropDown() {
       this.isOpen = !this.isOpen;
-      this.$emit("change", this.isOpen);
+      $emit(this, "change", this.isOpen);
     },
     closeDropDown() {
       this.isOpen = false;
-      this.$emit("change", false);
+      $emit(this, "change", false);
     },
   },
+  emits: ["change"],
 };
 </script>

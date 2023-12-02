@@ -5,16 +5,16 @@
     :data-active-color="activeColor"
   >
     <!--
-            Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black | darkblue"
-            Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
-        -->
+              Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black | darkblue"
+              Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
+          -->
     <!-- -->
     <div class="sidebar-wrapper" id="style-3">
       <div class="logo">
         <a href="#" class="simple-text">
           <!-- <div class="logo-img">
-            <img src="@/assets/img/vue-logo.png" alt="" />
-          </div> -->
+              <img src="@/assets/img/vue-logo.png" alt="" />
+            </div> -->
           {{ title }}
         </a>
       </div>
@@ -36,6 +36,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import MovingArrow from "./MovingArrow.vue";
 import SidebarLink from "./SidebarLink";
@@ -93,7 +94,9 @@ export default {
      * @returns {{transform: string}}
      */
     arrowMovePx() {
-      return this.linkHeight * this.activeLinkIndex;
+      let result = this.linkHeight * this.activeLinkIndex;
+      // console.log("arrowMovePx: ", result);
+      return result;
     },
   },
   data() {
@@ -108,14 +111,20 @@ export default {
   },
   methods: {
     findActiveLink() {
-      this.links.forEach((link, index) => {
-        if (link.isActive()) {
-          this.activeLinkIndex = index;
-        }
-      });
+      let activeIndex = this.links.findIndex((link) => link.isActive()) + 1;
+      if (activeIndex === this.links.length) {
+        activeIndex = 0;
+      }
+      // console.log("activeIndex: ", activeIndex);
+      if (activeIndex !== -1) {
+        this.activeLinkIndex = activeIndex;
+      }
     },
+
     addLink(link) {
-      const index = this.$slots.links.indexOf(link.$vnode);
+      const index = (this.$slots.links && this.$slots.links()).indexOf(
+        link.$vnode
+      );
       this.links.splice(index, 0, link);
     },
     removeLink(link) {
@@ -126,10 +135,10 @@ export default {
     },
   },
   mounted() {
+    this.findActiveLink();
     this.$watch("$route", this.findActiveLink, {
       immediate: true,
     });
   },
 };
 </script>
-<style></style>

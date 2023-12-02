@@ -60,7 +60,10 @@ const routes = [
       },
     ],
   },
-  { path: "*", component: NotFound },
+  {
+    path: "/:catchAll(.*)",
+    component: NotFound,
+  },
 ];
 
 /**

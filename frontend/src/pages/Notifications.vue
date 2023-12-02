@@ -76,58 +76,34 @@
         </div>
         <div class="row d-flex justify-content-center">
           <div class="col-md-3">
-            <p-button
-              round
-              outline
-              block
-              @click.native="notifyVue('top', 'left')"
+            <p-button round outline block @click="notifyVue('top', 'left')"
               >Top Left</p-button
             >
           </div>
           <div class="col-md-3">
-            <p-button
-              round
-              outline
-              block
-              @click.native="notifyVue('top', 'center')"
+            <p-button round outline block @click="notifyVue('top', 'center')"
               >Top Center</p-button
             >
           </div>
           <div class="col-md-3">
-            <p-button
-              round
-              outline
-              block
-              @click.native="notifyVue('top', 'right')"
+            <p-button round outline block @click="notifyVue('top', 'right')"
               >Top Right</p-button
             >
           </div>
         </div>
         <div class="row d-flex justify-content-center">
           <div class="col-md-3">
-            <p-button
-              round
-              outline
-              block
-              @click.native="notifyVue('bottom', 'left')"
+            <p-button round outline block @click="notifyVue('bottom', 'left')"
               >Bottom Left</p-button
             >
           </div>
           <div class="col-md-3">
-            <p-button
-              round
-              outline
-              block
-              @click.native="notifyVue('bottom', 'center')"
+            <p-button round outline block @click="notifyVue('bottom', 'center')"
               >Bottom Center</p-button
             >
           </div>
           <div class="col-md-3">
-            <p-button
-              round
-              outline
-              block
-              @click.native="notifyVue('bottom', 'right')"
+            <p-button round outline block @click="notifyVue('bottom', 'right')"
               >Bottom Right</p-button
             >
           </div>
@@ -136,6 +112,7 @@
     </div>
   </card>
 </template>
+
 <script>
 import NotificationTemplate from "./Notifications/NotificationTemplate";
 
@@ -157,9 +134,11 @@ export default {
         horizontalAlign: horizontalAlign,
         verticalAlign: verticalAlign,
         type: this.type[color],
+        title: "Notification Title", // 这里设置通知标题
+        text: "This is a notification message", // 这里设置通知内容
+        dangerouslySetInnerHtml: true, // 如果你需要渲染 HTML，确保设置这个属性
       });
     },
   },
 };
 </script>
-<style></style>

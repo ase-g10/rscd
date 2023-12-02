@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-12">
       <card>
-        <template slot="header">
+        <template v-slot:header>
           <h4 class="card-title">320+ Themify Icons</h4>
           <p class="card-category">
             Handcrafted by our friends from
@@ -1477,7 +1477,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {};
 </script>
-<style></style>

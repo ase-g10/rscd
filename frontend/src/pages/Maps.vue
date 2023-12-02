@@ -236,6 +236,7 @@ export default {
       }
     },
     geocodeLatLng(lat, lng) {
+      // eslint-disable-next-line no-undef
       const geocoder = new google.maps.Geocoder();
       const latlng = { lat: lat, lng: lng };
       geocoder.geocode({ location: latlng }, (results, status) => {
@@ -261,6 +262,7 @@ export default {
     },
     codeAddress() {
       const address = this.currentAddress; // 使用 v-model 绑定的地址值
+      // eslint-disable-next-line no-undef
       const geocoder = new google.maps.Geocoder();
 
       geocoder.geocode({ address: address }, (results, status) => {
@@ -271,6 +273,7 @@ export default {
           if (this.marker) {
             this.marker.setPosition(location);
           } else {
+            // eslint-disable-next-line no-undef
             this.marker = new google.maps.Marker({
               position: location,
               map: this.map,

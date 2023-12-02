@@ -334,25 +334,30 @@ export default {
 
       submitDisasterLocation(data)
         .then((response) => {
+          console.log("Response:", response);
           this.$notify({
             component: NotificationTemplate,
             icon: "ti-check",
             horizontalAlign: "right",
             verticalAlign: "top",
             type: "success",
-            message:
-              "Disaster successfully submitted! " + response.data.message,
+            title: "Disaster submitted",
+            text: `${response.data.message}`,
+            dangerouslySetInnerHtml: true,
           });
           console.log("Disaster submitted:", response);
         })
         .catch((error) => {
+          console.log("Error:", error);
           this.$notify({
             component: NotificationTemplate,
             icon: "ti-close",
             horizontalAlign: "right",
             verticalAlign: "top",
-            type: "danger",
-            message: "Failed to submit the disaster. " + error,
+            type: "error",
+            title: "Error",
+            text: "Failed to submit the disaster. " + error.message, // 使用 error.message 来获取错误信息
+            dangerouslySetInnerHtml: true,
           });
           console.error("Error submitting disaster:", error);
         });
