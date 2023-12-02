@@ -78,9 +78,7 @@ export default {
   },
   methods: {
     toggleSidebar() {
-      if (this.$sidebar.showSidebar) {
-        this.$sidebar.displaySidebar(false);
-      }
+      this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
     },
   },
 };

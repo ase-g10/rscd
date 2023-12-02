@@ -69,6 +69,7 @@ export default {
       this.activeNotifications = false;
     },
     toggleSidebar() {
+      console.log(this.$sidebar.showSidebar);
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
     },
     hideSidebar() {
