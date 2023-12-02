@@ -1,7 +1,8 @@
 import Sidebar from "./SideBar.vue";
 import SidebarLink from "./SidebarLink";
+import { reactive } from 'vue';
 
-const SidebarStore = {
+const SidebarStore = reactive({
   showSidebar: false,
   sidebarLinks: [
     { to: "/maps", name: "maps", icon: "ti-map", title: "Maps" },
@@ -31,7 +32,7 @@ const SidebarStore = {
   displaySidebar(value) {
     this.showSidebar = value;
   },
-};
+},);
 
 const SidebarPlugin = {
   install(app) {
@@ -41,4 +42,10 @@ const SidebarPlugin = {
   },
 };
 
-export default SidebarPlugin;
+export default {
+  install(app) {
+    app.config.globalProperties.$sidebar = SidebarStore;
+    app.component('side-bar', Sidebar);
+    app.component('sidebar-link', SidebarLink);
+  },
+};

@@ -1,6 +1,6 @@
 import Notify from "@kyvg/vue3-notification"; // 导入 notification 组件
 
-import SideBar from "@/components/SidebarPlugin";
+import SidebarPlugin from '@/components/SidebarPlugin';
 import GlobalComponents from "./globalComponents";
 import GlobalDirectives from "./globalDirectives";
 import "es6-promise/auto";
@@ -14,7 +14,7 @@ export default {
   install(Vue) {
     Vue.use(GlobalComponents);
     Vue.use(GlobalDirectives);
-    Vue.use(SideBar);
+    Vue.use(SidebarPlugin);
     Vue.use(Notify);
   },
 };
