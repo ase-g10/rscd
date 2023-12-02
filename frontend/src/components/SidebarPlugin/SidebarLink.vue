@@ -53,7 +53,7 @@ export default {
       }
     },
     isActive() {
-      return this.$el.classList.contains('active')
+      return this.$route.path === this.$attrs.to;
     },
   },
   beforeUnmount() {

@@ -38,28 +38,34 @@
 </template>
 
 <script>
-import MovingArrow from './MovingArrow.vue'
-import SidebarLink from './SidebarLink'
+import MovingArrow from "./MovingArrow.vue";
+import SidebarLink from "./SidebarLink";
 export default {
   props: {
     title: {
       type: String,
-      default: 'RSCD Dashboard',
+      default: "RSCD Dashboard",
     },
     backgroundColor: {
       type: String,
-      default: 'black',
+      default: "black",
       validator: (value) => {
-        let acceptedValues = ['white', 'black', 'darkblue']
-        return acceptedValues.indexOf(value) !== -1
+        let acceptedValues = ["white", "black", "darkblue"];
+        return acceptedValues.indexOf(value) !== -1;
       },
     },
     activeColor: {
       type: String,
-      default: 'success',
+      default: "success",
       validator: (value) => {
-        let acceptedValues = ['primary', 'info', 'success', 'warning', 'danger']
-        return acceptedValues.indexOf(value) !== -1
+        let acceptedValues = [
+          "primary",
+          "info",
+          "success",
+          "warning",
+          "danger",
+        ];
+        return acceptedValues.indexOf(value) !== -1;
       },
     },
     sidebarLinks: {
@@ -76,7 +82,7 @@ export default {
       autoClose: this.autoClose,
       addLink: this.addLink,
       removeLink: this.removeLink,
-    }
+    };
   },
   components: {
     MovingArrow,
@@ -88,7 +94,9 @@ export default {
      * @returns {{transform: string}}
      */
     arrowMovePx() {
-      return this.linkHeight * this.activeLinkIndex
+      let result = this.linkHeight * this.activeLinkIndex;
+      // console.log("arrowMovePx: ", result);
+      return result;
     },
   },
   data() {
@@ -99,33 +107,38 @@ export default {
       isWindows: false,
       hasAutoHeight: false,
       links: [],
-    }
+    };
   },
   methods: {
     findActiveLink() {
-      this.links.forEach((link, index) => {
-        if (link.isActive()) {
-          this.activeLinkIndex = index
-        }
-      })
+      let activeIndex = this.links.findIndex((link) => link.isActive()) + 1;
+      if (activeIndex === this.links.length) {
+        activeIndex = 0;
+      }
+      // console.log("activeIndex: ", activeIndex);
+      if (activeIndex !== -1) {
+        this.activeLinkIndex = activeIndex;
+      }
     },
+
     addLink(link) {
       const index = (this.$slots.links && this.$slots.links()).indexOf(
         link.$vnode
-      )
-      this.links.splice(index, 0, link)
+      );
+      this.links.splice(index, 0, link);
     },
     removeLink(link) {
-      const index = this.links.indexOf(link)
+      const index = this.links.indexOf(link);
       if (index > -1) {
-        this.links.splice(index, 1)
+        this.links.splice(index, 1);
       }
     },
   },
   mounted() {
-    this.$watch('$route', this.findActiveLink, {
+    this.findActiveLink();
+    this.$watch("$route", this.findActiveLink, {
       immediate: true,
-    })
+    });
   },
-}
+};
 </script>
