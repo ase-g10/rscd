@@ -55,21 +55,21 @@ export default {
       //     status: "Busy",
       //   },
       // ],
-    }
+    };
   },
   methods: {
     getStatusClass(status) {
       switch (status) {
-        case 'Offline':
-          return 'text-muted'
-        case 'Available':
-          return 'text-success'
-        case 'Busy':
-          return 'text-danger'
+        case "Offline":
+          return "text-muted";
+        case "Available":
+          return "text-success";
+        case "Busy":
+          return "text-danger";
         default:
-          return 'text-success'
+          return "text-success";
       }
     },
   },
-}
+};
 </script>
