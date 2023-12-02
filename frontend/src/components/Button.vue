@@ -23,11 +23,11 @@
 
 <script>
 export default {
-  name: 'p-button',
+  name: "p-button",
   props: {
     tag: {
       type: String,
-      default: 'button',
+      default: "button",
     },
     round: Boolean,
     icon: Boolean,
@@ -37,17 +37,17 @@ export default {
     disabled: Boolean,
     type: {
       type: String,
-      default: 'default',
+      default: "default",
     },
     nativeType: {
       type: String,
-      default: 'button',
+      default: "button",
     },
     size: {
       type: String,
-      default: '',
+      default: "",
     },
     simple: Boolean,
   },
-}
+};
 </script>

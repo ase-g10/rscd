@@ -26,12 +26,13 @@
 </template>
 
 <script>
-import { $on, $off, $once, $emit } from '../utils/gogocodeTransfer'
+// eslint-disable-next-line no-unused-vars
+import { $on, $off, $once, $emit } from "../utils/gogocodeTransfer";
 export default {
   props: {
     tag: {
       type: String,
-      default: 'li',
+      default: "li",
     },
     title: String,
     icon: String,
@@ -40,18 +41,18 @@ export default {
   data() {
     return {
       isOpen: false,
-    }
+    };
   },
   methods: {
     toggleDropDown() {
-      this.isOpen = !this.isOpen
-      $emit(this, 'change', this.isOpen)
+      this.isOpen = !this.isOpen;
+      $emit(this, "change", this.isOpen);
     },
     closeDropDown() {
-      this.isOpen = false
-      $emit(this, 'change', false)
+      this.isOpen = false;
+      $emit(this, "change", false);
     },
   },
-  emits: ['change'],
-}
+  emits: ["change"],
+};
 </script>

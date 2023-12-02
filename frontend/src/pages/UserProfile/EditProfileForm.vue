@@ -127,21 +127,21 @@ export default {
     return {
       user: {
         // company: "RSCD Dashboard",
-        username: 'group10',
-        email: '',
-        firstName: 'First',
-        lastName: 'Last',
-        address: 'Trinity',
-        city: 'Dublin',
-        postalCode: '',
+        username: "group10",
+        email: "group10@iocky.com",
+        firstName: "First",
+        lastName: "Last",
+        address: "Trinity",
+        city: "Dublin",
+        postalCode: "",
         // aboutMe: `We must accept finite disappointment, but hold on to infinite hope.`,
       },
-    }
+    };
   },
   methods: {
     updateProfile() {
-      alert('Your data: ' + JSON.stringify(this.user))
+      alert("Your data: " + JSON.stringify(this.user));
     },
   },
-}
+};
 </script>

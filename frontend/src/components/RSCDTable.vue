@@ -9,7 +9,7 @@
       <tr v-for="(item, index) in data" :key="index">
         <slot :row="item">
           <template v-for="(column, index) in columns">
-            <td v-if="hasValue(item, column)">
+            <td v-if="hasValue(item, column)" :key="`${index}-${column}`">
               {{ itemValue(item, column) }}
             </td>
           </template>
@@ -21,35 +21,35 @@
 
 <script>
 export default {
-  name: 'rscd--table',
+  name: "rscd--table",
   props: {
     columns: Array,
     data: Array,
     type: {
       type: String, // striped | hover
-      default: 'striped',
+      default: "striped",
     },
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     subTitle: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   computed: {
     tableClass() {
-      return `table-${this.type}`
+      return `table-${this.type}`;
     },
   },
   methods: {
     hasValue(item, column) {
-      return item[column.toLowerCase()] !== 'undefined'
+      return item[column.toLowerCase()] !== "undefined";
     },
     itemValue(item, column) {
-      return item[column.toLowerCase()]
+      return item[column.toLowerCase()];
     },
   },
-}
+};
 </script>

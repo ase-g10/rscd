@@ -93,8 +93,8 @@
 </template>
 
 <script>
-import { StatsCard, ChartCard } from '@/components/index'
-import Chartist from 'chartist'
+import { StatsCard, ChartCard } from "@/components/index";
+import Chartist from "chartist";
 export default {
   components: {
     StatsCard,
@@ -107,49 +107,49 @@ export default {
     return {
       statsCards: [
         {
-          type: 'warning',
-          icon: 'ti-server',
-          title: 'Capacity',
-          value: '105GB',
-          footerText: 'Updated now',
-          footerIcon: 'ti-reload',
+          type: "warning",
+          icon: "ti-server",
+          title: "Capacity",
+          value: "105GB",
+          footerText: "Updated now",
+          footerIcon: "ti-reload",
         },
         {
-          type: 'success',
-          icon: 'ti-wallet',
-          title: 'Revenue',
-          value: '$1,345',
-          footerText: 'Last day',
-          footerIcon: 'ti-calendar',
+          type: "success",
+          icon: "ti-wallet",
+          title: "Revenue",
+          value: "$1,345",
+          footerText: "Last day",
+          footerIcon: "ti-calendar",
         },
         {
-          type: 'danger',
-          icon: 'ti-pulse',
-          title: 'Errors',
-          value: '23',
-          footerText: 'In the last hour',
-          footerIcon: 'ti-timer',
+          type: "danger",
+          icon: "ti-pulse",
+          title: "Errors",
+          value: "23",
+          footerText: "In the last hour",
+          footerIcon: "ti-timer",
         },
         {
-          type: 'info',
-          icon: 'ti-twitter-alt',
-          title: 'Followers',
-          value: '+45',
-          footerText: 'Updated now',
-          footerIcon: 'ti-reload',
+          type: "info",
+          icon: "ti-twitter-alt",
+          title: "Followers",
+          value: "+45",
+          footerText: "Updated now",
+          footerIcon: "ti-reload",
         },
       ],
       usersChart: {
         data: {
           labels: [
-            '9:00AM',
-            '12:00AM',
-            '3:00PM',
-            '6:00PM',
-            '9:00PM',
-            '12:00PM',
-            '3:00AM',
-            '6:00AM',
+            "9:00AM",
+            "12:00AM",
+            "3:00PM",
+            "6:00PM",
+            "9:00PM",
+            "12:00PM",
+            "3:00AM",
+            "6:00AM",
           ],
           series: [
             [287, 385, 490, 562, 594, 626, 698, 895, 952],
@@ -161,7 +161,7 @@ export default {
           low: 0,
           high: 1000,
           showArea: true,
-          height: '245px',
+          height: "245px",
           axisX: {
             showGrid: false,
           },
@@ -175,18 +175,18 @@ export default {
       activityChart: {
         data: {
           labels: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'Mai',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "Mai",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
           ],
           series: [
             [542, 543, 520, 680, 653, 753, 326, 434, 568, 610, 756, 895],
@@ -198,17 +198,17 @@ export default {
           axisX: {
             showGrid: false,
           },
-          height: '245px',
+          height: "245px",
         },
       },
       preferencesChart: {
         data: {
-          labels: ['62%', '32%', '6%'],
+          labels: ["62%", "32%", "6%"],
           series: [62, 32, 6],
         },
         options: {},
       },
-    }
+    };
   },
-}
+};
 </script>

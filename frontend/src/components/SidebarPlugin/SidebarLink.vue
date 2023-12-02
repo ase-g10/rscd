@@ -17,15 +17,15 @@
 
 <script>
 function inheriltClassAndStyle() {
-  const attrs = this.$attrs
-  attrs.class && this.$el.classList.add(attrs.class)
+  const attrs = this.$attrs;
+  attrs.class && this.$el.classList.add(attrs.class);
   attrs.style &&
     Object.entries(attrs.style).forEach(([k, v]) => {
-      this.$el.style[k] = v
-    })
+      this.$el.style[k] = v;
+    });
 }
 export default {
-  name: 'sidebar-link',
+  name: "sidebar-link",
   inheritAttrs: false,
   inject: {
     autoClose: {
@@ -43,13 +43,13 @@ export default {
     icon: String,
     tag: {
       type: String,
-      default: 'router-link',
+      default: "router-link",
     },
   },
   methods: {
     hideSidebar() {
       if (this.autoClose) {
-        this.$sidebar.displaySidebar(false)
+        this.$sidebar.displaySidebar(false);
       }
     },
     isActive() {
@@ -58,17 +58,17 @@ export default {
   },
   beforeUnmount() {
     if (this.$el && this.$el.parentNode) {
-      this.$el.parentNode.removeChild(this.$el)
+      this.$el.parentNode.removeChild(this.$el);
     }
     if (this.removeLink) {
-      this.removeLink(this)
+      this.removeLink(this);
     }
   },
   mounted() {
     if (this.addLink) {
-      this.addLink(this)
+      this.addLink(this);
     }
-    inheriltClassAndStyle.call(this)
+    inheriltClassAndStyle.call(this);
   },
-}
+};
 </script>

@@ -28,19 +28,19 @@
 
 <script>
 function inheriltClassAndStyle() {
-  const attrs = this.$attrs
-  attrs.class && this.$el.classList.add(attrs.class)
+  const attrs = this.$attrs;
+  attrs.class && this.$el.classList.add(attrs.class);
   attrs.style &&
     Object.entries(attrs.style).forEach(([k, v]) => {
-      this.$el.style[k] = v
-    })
+      this.$el.style[k] = v;
+    });
 }
 export default {
   mounted() {
-    inheriltClassAndStyle.call(this)
+    inheriltClassAndStyle.call(this);
   },
   inheritAttrs: false,
-  name: 'fg-input',
+  name: "fg-input",
   props: {
     label: String,
     value: [String, Number],
@@ -49,15 +49,15 @@ export default {
   },
   computed: {
     hasIcon() {
-      const { addonRight, addonLeft } = this.$slots
+      const { addonRight, addonLeft } = this.$slots;
       return (
         addonRight !== undefined ||
         addonLeft !== undefined ||
         this.addonRightIcon !== undefined ||
         this.addonLeftIcon !== undefined
-      )
+      );
     },
   },
-  emits: ['update:value'],
-}
+  emits: ["update:value"],
+};
 </script>
