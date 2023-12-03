@@ -41,7 +41,7 @@ jobs:
         npm run build --if-present
 
     - name: Deploy to Staging server
-      uses: easingthemes/ssh-deploy@4.1.10
+      uses: easingthemes/ssh-deploy@v4.1.10
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-rlgoDzvc -i"
