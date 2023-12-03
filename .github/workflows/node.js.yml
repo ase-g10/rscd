@@ -52,8 +52,6 @@ jobs:
         TARGET: ${{ secrets.REMOTE_TARGET }}
         EXCLUDE: "/node_modules/"
         SCRIPT_BEFORE: |
-          sudo -i
-          sudo chown -R ${{ secrets.REMOTE_USER }}:${{ secrets.REMOTE_USER }} ${{ secrets.REMOTE_TARGET }} 
           whoami
           ls -al
         SCRIPT_AFTER: |
