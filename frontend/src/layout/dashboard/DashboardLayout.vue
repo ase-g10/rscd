@@ -57,7 +57,7 @@
     <div class="main-panel">
       <top-navbar></top-navbar>
 
-      <dashboard-content @click="toggleSidebar"> </dashboard-content>
+      <dashboard-content> </dashboard-content>
 
       <content-footer></content-footer>
     </div>
