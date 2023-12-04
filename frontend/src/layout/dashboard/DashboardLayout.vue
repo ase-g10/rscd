@@ -13,11 +13,12 @@
         <!-- 如果有 dashboard 路由，取消以下注释
         <sidebar-link to="/dashboard" name="dashboard" icon="ti-panel" /> 
         -->
-        <sidebar-link to="/stats" name="stats" icon="ti-user" />
+        <sidebar-link to="/stats" name="stats" icon="ti-user"  v-if="isLoggedIn" />
         <sidebar-link
           to="/table-list"
           name="table-list"
           icon="ti-view-list-alt"
+           v-if="isLoggedIn" 
         />
         <!-- 如果有 typography 路由，取消以下注释
         <sidebar-link to="/typography" name="typography" icon="ti-text" />
@@ -25,7 +26,7 @@
         <!-- 如果有 icons 路由，取消以下注释 -->
         <!-- <sidebar-link to="/icons" name="icons" icon="ti-pencil-alt2" /> -->
        
-        <sidebar-link to="/notifications" name="notifications" icon="ti-bell" />
+        <sidebar-link to="/notifications" name="notifications" icon="ti-bell"  v-if="isLoggedIn" />
       </template>
       <mobile-menu>
         <li class="nav-item">
@@ -81,6 +82,11 @@ export default {
     toggleSidebar() {
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
     },
+  },
+  computed: {
+    isLoggedIn() {
+      return !!localStorage.getItem('token');
+    }
   },
 };
 </script>
