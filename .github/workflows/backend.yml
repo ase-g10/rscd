@@ -37,6 +37,11 @@ jobs:
         key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
 
   run_tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+
     needs: install_dependencies
     runs-on: ubuntu-latest
     steps:
