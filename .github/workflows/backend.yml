@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Django CI
 
 on:
   push:
@@ -6,52 +6,40 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  VUE_APP_GOOGLE_MAP_API: ${{ secrets.VUE_APP_GOOGLE_MAP_API }}
-  VUE_APP_BACKEND_URL: ${{ secrets.VUE_APP_BACKEND_URL }}
-
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
     strategy:
+      max-parallel: 4
       matrix:
-        node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        python-version: [3.9]
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
-
-    - name: Install dependencies
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
       run: |
-        cd frontend
-        npm ci
-    
-    - name: Build
+        python3.9 -m pip install --upgrade pip
+        pip3.9 install -r requirements.txt
+    - name: Run Tests
       run: |
-        cd frontend
-        npm run build --if-present
-
+        cd backend
+        python3.9 manage.py test
     - name: Deploy to Production server
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: easingthemes/ssh-deploy@v4.1.10
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-rlgoDzvc -i"
-        SOURCE: "frontend/dist/"
+        SOURCE: "backend/"
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
-        TARGET: ${{ secrets.REMOTE_TARGET }}
-        EXCLUDE: "/node_modules/"
+        TARGET: ${{ secrets.BACKEND_REMOTE_TARGET }}
         SCRIPT_BEFORE: |
           whoami
           ls -al
@@ -59,4 +47,8 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
-            
+          cd /www/wwwroot/api.rscd.iocky.com/backend
+          python3.9 manage.py makemigrations
+          python3.9 manage.py migrate
+          sudo systemctl restart uwsgi.service
+
