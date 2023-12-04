@@ -2,7 +2,7 @@ name: Backend CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "back-dev" ]
   pull_request:
     branches: [ "main" ]
 
@@ -65,11 +65,11 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
     - uses: actions/checkout@v4
     - name: Deploy to Production server
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: easingthemes/ssh-deploy@v4
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
