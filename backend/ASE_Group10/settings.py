@@ -63,7 +63,7 @@ CORS_ALLOW_HEADERS = (
 # url结尾自动加/
 APPEND_SLASH = True  # 默认是True
 
-ALLOWED_HOSTS = ["api.rscd.iocky.com","rscdapi.iocky.com"]
+ALLOWED_HOSTS = ["api.rscd.iocky.com","rscdapi.iocky.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -76,10 +76,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
+    'social_django',
     # 'users',
     'Disaster_Response',
     'corsheaders',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -113,6 +118,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ASE_Group10.wsgi.application"
+
+SOCIAL_AUTH_GITHUB_KEY = config('GITHUB_CLIENT_ID', default='98a50d02de2c591daac8')
+SOCIAL_AUTH_GITHUB_SECRET = config('GITHUB_CLIENT_SECRET', default='3373539bb38581530ef0304922d430418e106b1d')
+SOCIAL_AUTH_GITHUB_REDIRECT_URI = config('GITHUB_REDIRECT_URI', default='http://localhost:8000/dr/api/auth2/github_callback')
+FRONT_END_URL = config('FRONT_END_URL', default='http://localhost:8080/#')
 
 
 # Database

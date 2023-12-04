@@ -21,3 +21,4 @@ class User(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     is_delete = models.BooleanField(default=False)
+    github_username = models.CharField(max_length=255, unique=True, null=True, blank=True)
