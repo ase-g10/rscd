@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Frontend CI
 
 on:
   push:
@@ -11,14 +11,12 @@ env:
   VUE_APP_BACKEND_URL: ${{ secrets.VUE_APP_BACKEND_URL }}
 
 jobs:
-  build:
-
+  setup:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v3
@@ -34,11 +32,41 @@ jobs:
       run: |
         cd frontend
         npm ci
-    
+
+    - name: Cache dependencies
+      uses: actions/cache@v3.3.2
+      with:
+        path: frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Restore dependencies
+      uses: actions/cache@v3.3.2
+      with:
+        path: frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
     - name: Build
       run: |
         cd frontend
         npm run build --if-present
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
 
     - name: Deploy to Production server
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -59,4 +87,3 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
-            

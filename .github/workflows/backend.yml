@@ -1,4 +1,4 @@
-name: Django CI
+name: Backend CI
 
 on:
   push:
@@ -7,8 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  setup:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -25,10 +24,50 @@ jobs:
       run: |
         python3.9 -m pip install --upgrade pip
         pip3.9 install -r requirements.txt
+    - name: Cache dependencies
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.9]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Restore dependencies
+      uses: actions/cache@v3.3.2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Missed Dependencies
+      run: |
+        python3.9 -m pip install --upgrade pip
+        pip3.9 install -r requirements.txt
     - name: Run Tests
       run: |
         cd backend
         python3.9 manage.py test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
     - name: Deploy to Production server
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: easingthemes/ssh-deploy@v4.1.10
@@ -51,4 +90,3 @@ jobs:
           python3.9 manage.py makemigrations
           python3.9 manage.py migrate
           sudo systemctl restart uwsgi.service
-
