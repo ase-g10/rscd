@@ -1,0 +1,12 @@
+Django==4.2.7
+asgiref==3.7.2
+django-cors-headers==4.3.1
+djangorestframework==3.14.0
+mysqlclient==2.2.0
+pip==23.3.1
+python-decouple==3.8
+pytz==2023.3.post1
+setuptools==69.0.2
+sqlparse==0.4.4
+typing-extensions==4.8.0
+wheel==0.42.0

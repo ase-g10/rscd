@@ -24,15 +24,55 @@ The project is divided into two parts: the front-end and the back-end. The front
 
 # How to run the project  
 ## Back-end
+### Install the required packages
+Install the required packages in the virtual environment
+```shell
+pip install -r requirements.txt
+```
+### Go to the project directory
+```shell
+cd backend
+```
+
+### Create a ```.env``` file
+```shell
+touch .env
+```
+
+### Add the following content to the ```.env``` file
+```shell
+DJANGO_SECRET_KEY=
+DJANGO_DEBUG=
+DJANGO_DB_NAME=
+DJANGO_DB_USER=
+DJANGO_DB_PASSWORD=
+DJANGO_DB_HOST=
+DJANGO_DB_PORT=
+```
+
+### Run the following commands
+```shell
+python manage.py makemigrations
+```
+
+```shell
+python manage.py migrate
+```
+
+### Run the server
+```shell
+python manage.py runserver
+```
 
 ## Front-end
 
 ### Before Running
 
-Add your Google Map API to ```.env``` file
+Add your Google Map API and backend url to ```.env``` file
 
 ```shell
 VUE_APP_GOOGLE_MAP_API=
+VUE_APP_BACKEND_URL=http://[your_backend_host]:[your_backend_port]/dr/api
 ```
 
 ### Build Setup

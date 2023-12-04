@@ -16,8 +16,8 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# env_file = os.path.join(BASE_DIR.parent, '.env')
-# config = Config(RepositoryEnv(env_file))
+env_file = os.path.join(BASE_DIR.parent, '.env')
+config = Config(RepositoryEnv(env_file))
 import sys
 sys.path.insert(0, os.path.join(BASE_DIR, 'ASE_Group10'))
 
@@ -25,10 +25,10 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'ASE_Group10'))
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-%esv63zlkz0!s#f4h0af-$yo!f1nrhfx$8#8*93zpwt4+9cowl"
+SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DJANGO_DEBUG')
 # 允许所有域名跨域
 CORS_ORIGIN_ALLOW_ALL = True
 # 实际请求所允许的请求方式列表。默认为：
@@ -115,18 +115,18 @@ WSGI_APPLICATION = "ASE_Group10.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    },
     # "default": {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': config('DB_NAME'),
-    #     'USER': config('DB_USER'),
-    #     'PASSWORD': config('DB_PASSWORD'),
-    #     'HOST': config('DB_HOST'),
-    #     'PORT': config('DB_PORT'),
-    # }
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # },
+    "default": {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config('DJANGO_DB_NAME'),
+        'USER': config('DJANGO_DB_USER'),
+        'PASSWORD': config('DJANGO_DB_PASSWORD'),
+        'HOST': config('DJANGO_DB_HOST'),
+        'PORT': config('DJANGO_DB_PORT'),
+    }
 }
 
 
