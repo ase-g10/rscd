@@ -77,7 +77,7 @@ export default {
       if (token) {
         localStorage.setItem('token', token);
         console.log("token: " + token);
-        router.push('/stats'); // Navigate to stats page on successful login
+        router.push('/maps'); // Navigate to stats page on successful login
         notify({
           component: NotificationTemplate,
           icon: "ti-check",
