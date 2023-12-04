@@ -1,5 +1,8 @@
 <template>
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 ">
+    <div v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+    </div>
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
     </div>
@@ -29,11 +32,12 @@
           <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
         </div>
         <button
-            type="button"
-            class="mt-6 w-full flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            <img src="@/assets/img/github-mark.svg" alt="GitHub" class="h-5 w-5 mr-2"/>
-            Sign in with GitHub
+          type="button"
+          class="mt-6 w-full flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          @click="loginWithGithub"
+        >
+          <img src="@/assets/img/github-mark.svg" alt="GitHub" class="h-5 w-5 mr-2"/>
+          Sign in with GitHub
         </button>
       </form>
       
@@ -47,6 +51,59 @@
 </template>
 
 <script>
+import { ref, onMounted, getCurrentInstance } from 'vue';
+import { useRouter } from 'vue-router'
+import { loginWithGithub } from "@/api/auth2";
+import NotificationTemplate from "./Notifications/NotificationTemplate";
+
+export default {
+  methods: {
+    loginWithGithub() {
+      // 直接导航到后端提供的重定向 URL
+      window.location.href = process.env.VUE_APP_BACKEND_URL + '/auth2/redirect_to_github';
+    },
+  },
+  setup() {
+    const instance = getCurrentInstance();
+    const notify = instance.appContext.config.globalProperties.$notify;
+    const router = useRouter();
+    const errorMessage = ref(""); // Reactive variable to store the error message
+
+    onMounted(() => {
+      const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
+      const token = urlParams.get('token');
+      const error = urlParams.get('error'); // Capture any error messages
+
+      if (token) {
+        localStorage.setItem('token', token);
+        console.log("token: " + token);
+        router.push('/stats'); // Navigate to stats page on successful login
+        notify({
+          component: NotificationTemplate,
+          icon: "ti-check",
+          horizontalAlign: "right",
+          verticalAlign: "top",
+          type: "success",
+          title: "Login Successful",
+          dangerouslySetInnerHtml: true,
+        });
+      } else if (error) {
+        errorMessage.value = error; 
+        notify({
+          component: NotificationTemplate,
+          icon: "ti-close",
+          horizontalAlign: "right",
+          verticalAlign: "top",
+          type: "error",
+          title: "Error",
+          text: "Failed to log in, Please try again. " + error,
+          dangerouslySetInnerHtml: true,
+        });
+      } 
+    });
+    return { errorMessage };
+  },
+};
 </script>
 
 <style>
