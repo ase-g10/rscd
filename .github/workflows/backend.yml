@@ -27,6 +27,13 @@ jobs:
         pip3.9 install -r requirements.txt
     - name: Run Tests
       run: |
+        echo "DJANGO_DB_HOST=${{ secrets.DJANGO_DB_HOST }}" >> $GITHUB_ENV
+        echo "DJANGO_DB_NAME=${{ secrets.DJANGO_DB_NAME }}" >> $GITHUB_ENV
+        echo "DJANGO_DB_PASSWORD=${{ secrets.DJANGO_DB_PASSWORD }}" >> $GITHUB_ENV
+        echo "DJANGO_DB_PORT=${{ secrets.DJANGO_DB_PORT }}" >> $GITHUB_ENV
+        echo "DJANGO_DB_USER=${{ secrets.DJANGO_DB_USER }}" >> $GITHUB_ENV
+        echo "DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}" >> $GITHUB_ENV
+        echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
         cd backend
         python3.9 manage.py test
     - name: Deploy to Production server
