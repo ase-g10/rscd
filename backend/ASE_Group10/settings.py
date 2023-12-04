@@ -23,13 +23,15 @@ else:
     config = Config(os.environ)
 
 import sys
+
 sys.path.insert(0, os.path.join(BASE_DIR, 'ASE_Group10'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('DJANGO_SECRET_KEY', default='9owxyeo8(==0popen%%yv2=o69no61z*8&xkqdgrhdd#v%r)vr6_d=+ykndcdqx0rm&7-tm7!c_rr(7x!rh@c6$h&8n91_0yaqx7')
+SECRET_KEY = config('DJANGO_SECRET_KEY',
+                    default='9owxyeo8(==0popen%%yv2=o69no61z*8&xkqdgrhdd#v%r)vr6_d=+ykndcdqx0rm&7-tm7!c_rr(7x!rh@c6$h&8n91_0yaqx7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
@@ -63,8 +65,8 @@ CORS_ALLOW_HEADERS = (
 # url结尾自动加/
 APPEND_SLASH = True  # 默认是True
 
-ALLOWED_HOSTS = ["api.rscd.iocky.com","rscdapi.iocky.com", "localhost", "127.0.0.1"]
-
+ALLOWED_HOSTS = ["api.rscd.iocky.com", "rscdapi.iocky.com", "localhost", "127.0.0.1",
+                 config('DJANGO_DB_HOST', default='localhost')]
 
 # Application definition
 
@@ -121,9 +123,9 @@ WSGI_APPLICATION = "ASE_Group10.wsgi.application"
 
 SOCIAL_AUTH_GITHUB_KEY = config('GITHUB_CLIENT_ID', default='98a50d02de2c591daac8')
 SOCIAL_AUTH_GITHUB_SECRET = config('GITHUB_CLIENT_SECRET', default='3373539bb38581530ef0304922d430418e106b1d')
-SOCIAL_AUTH_GITHUB_REDIRECT_URI = config('GITHUB_REDIRECT_URI', default='http://localhost:8000/dr/api/auth2/github_callback')
+SOCIAL_AUTH_GITHUB_REDIRECT_URI = config('GITHUB_REDIRECT_URI',
+                                         default='http://localhost:8000/dr/api/auth2/github_callback')
 FRONT_END_URL = config('FRONT_END_URL', default='http://localhost:8080/#')
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -161,7 +163,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -172,7 +173,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
