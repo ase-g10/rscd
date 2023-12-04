@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from decouple import Config, RepositoryEnv, AutoConfig
+from decouple import Config, RepositoryEnv
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +20,7 @@ env_file = os.path.join(BASE_DIR.parent, '.env')
 if os.path.isfile(env_file):
     config = Config(RepositoryEnv(env_file))
 else:
-    config = AutoConfig(search_path=None)
+    config = Config(os.environ)
 
 import sys
 sys.path.insert(0, os.path.join(BASE_DIR, 'ASE_Group10'))
