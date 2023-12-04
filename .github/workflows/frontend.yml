@@ -111,7 +111,7 @@ jobs:
         path: frontend/dist/
 
     - name: Deploy to Production server
-      uses: easingthemes/ssh-deploy@v4
+      uses: easingthemes/ssh-deploy@v4.1.10
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-rlgoDzvc -i"
