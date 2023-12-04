@@ -2,9 +2,9 @@ name: Frontend CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   VUE_APP_GOOGLE_MAP_API: ${{ secrets.VUE_APP_GOOGLE_MAP_API }}
@@ -23,12 +23,22 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
+    - name: Cache dependencies
+      id: cache-check
+      uses: actions/cache@v2
+      with:
+        path: frontend/node_modules
+        key: npm-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
     - name: Install dependencies
       run: |
         cd frontend
         npm ci
+    - name: Save cache
+      if: steps.cache-check.outputs.cache-hit != 'true'
+      uses: actions/cache@v2
+      with:
+        path: frontend/node_modules
+        key: npm-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
 
   build:
     needs: install_dependencies
