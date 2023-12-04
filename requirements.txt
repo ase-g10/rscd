@@ -10,3 +10,5 @@ setuptools==69.0.2
 sqlparse==0.4.4
 typing-extensions==4.8.0
 wheel==0.42.0
+social-auth-app-django==5.4.0
+requests==2.31.0
