@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Frontend CI/CD
 
 on:
   push:
@@ -11,42 +11,57 @@ env:
   VUE_APP_BACKEND_URL: ${{ secrets.VUE_APP_BACKEND_URL }}
 
 jobs:
-  build:
-
+  install_dependencies:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v3
-
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: frontend/package-lock.json
-
     - name: Install dependencies
       run: |
         cd frontend
         npm ci
-    
+
+  build:
+    needs: install_dependencies
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
     - name: Build
       run: |
         cd frontend
         npm run build --if-present
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v3.1.3
+      with:
+        name: frontend-build
+        path: frontend/dist
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v3
+    - name: Download Build Artifact
+      uses: actions/download-artifact@v3.0.2
+      with:
+        name: frontend-build
+        path: frontend-build
     - name: Deploy to Production server
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: easingthemes/ssh-deploy@v4.1.10
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-rlgoDzvc -i"
-        SOURCE: "frontend/dist/"
+        SOURCE: "frontend-build/"
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
@@ -59,4 +74,3 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
-            

@@ -1,4 +1,4 @@
-name: Django CI
+name: Backend CI/CD
 
 on:
   push:
@@ -7,16 +7,20 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  install_dependencies:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
       matrix:
         python-version: [3.9]
 
     steps:
     - uses: actions/checkout@v3
+    - name: Check if cache exists
+      id: cache-check
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
@@ -25,12 +29,30 @@ jobs:
       run: |
         python3.9 -m pip install --upgrade pip
         pip3.9 install -r requirements.txt
+    - name: Save cache
+      if: steps.cache-check.outputs.cache-hit != 'true'
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+
+  run_tests:
+    needs: install_dependencies
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
     - name: Run Tests
       run: |
         cd backend
         python3.9 manage.py test
+
+  deploy:
+    needs: run_tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v3
     - name: Deploy to Production server
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: easingthemes/ssh-deploy@v4.1.10
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -47,8 +69,7 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
-          cd /www/wwwroot/api.rscd.iocky.com/backend
+          cd ${{ secrets.BACKEND_REMOTE_TARGET }}
           python3.9 manage.py makemigrations
           python3.9 manage.py migrate
           sudo systemctl restart uwsgi.service
-
