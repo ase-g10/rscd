@@ -86,7 +86,7 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
-          cd /www/wwwroot/api.rscd.iocky.com/backend
+          cd ${{ secrets.BACKEND_REMOTE_TARGET }}
           python3.9 manage.py makemigrations
           python3.9 manage.py migrate
           sudo systemctl restart uwsgi.service
