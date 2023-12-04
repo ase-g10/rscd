@@ -63,7 +63,7 @@ CORS_ALLOW_HEADERS = (
 # url结尾自动加/
 APPEND_SLASH = True  # 默认是True
 
-ALLOWED_HOSTS = ["api.rscd.iocky.com"]
+ALLOWED_HOSTS = ["api.rscd.iocky.com","rscdapi.iocky.com"]
 
 
 # Application definition
