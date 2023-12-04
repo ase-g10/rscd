@@ -41,7 +41,8 @@ jobs:
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
         TARGET: ${{ secrets.BACKEND_REMOTE_TARGET }}
         SCRIPT_BEFORE: |
-          sudo -i
+          sudo chown -R ${{ secrets.REMOTE_USER }} ${{ secrets.BACKEND_REMOTE_TARGET }}
+          sudo chmod -R 755 ${{ secrets.BACKEND_REMOTE_TARGET }}
           whoami
           ls -al
         SCRIPT_AFTER: |
