@@ -1,0 +1,54 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.9]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        python3.9 -m pip install --upgrade pip
+        pip3.9 install -r requirements.txt
+    - name: Run Tests
+      run: |
+        cd backend
+        python3.9 manage.py test
+    - name: Deploy to Production server
+      # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: easingthemes/ssh-deploy@v4.1.10
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-rlgoDzvc -i"
+        SOURCE: "backend/"
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        TARGET: ${{ secrets.BACKEND_REMOTE_TARGET }}
+        SCRIPT_BEFORE: |
+          whoami
+          ls -al
+        SCRIPT_AFTER: |
+          whoami
+          ls -al
+          echo $RSYNC_STDOUT
+          cd /www/wwwroot/api.rscd.iocky.com/backend
+          python3.9 manage.py makemigrations
+          python3.9 manage.py migrate
+          kill -HUP ${{ DJANGO_PID }}
+
