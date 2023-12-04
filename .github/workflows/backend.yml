@@ -2,7 +2,7 @@ name: Backend CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "back-dev" ]
   pull_request:
     branches: [ "main" ]
 
@@ -15,9 +15,9 @@ jobs:
         python-version: [3.9]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install Dependencies
@@ -25,7 +25,7 @@ jobs:
         python3.9 -m pip install --upgrade pip
         pip3.9 install -r requirements.txt
     - name: Cache dependencies
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v3
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -41,13 +41,13 @@ jobs:
         python-version: [3.9]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Restore dependencies
-      uses: actions/cache@v3.3.2
+      uses: actions/cache@v3
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -65,12 +65,12 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Deploy to Production server
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      uses: easingthemes/ssh-deploy@v4.1.10
+      uses: easingthemes/ssh-deploy@v4
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         ARGS: "-rlgoDzvc -i"
