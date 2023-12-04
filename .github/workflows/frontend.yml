@@ -60,13 +60,13 @@ jobs:
       uses: cypress-io/github-action@v6
       with:
         working-directory: frontend
-        start: npm run serve
-        wait-on: http://localhost:8080
         browser: chrome
         record: true
-        config-file: cypress.json
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        COMMIT_INFO_SHA: ${{github.event.pull_request.head.sha}}
+        COMMIT_INFO_MESSAGE: ${{github.event.pull_request.title}}
 
 
   build:
