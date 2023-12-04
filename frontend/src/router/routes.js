@@ -11,6 +11,7 @@ import Maps from "@/pages/Maps.vue";
 import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import ReportDisaster from "@/pages/ReportDisaster.vue";
+import Login from "@/pages/Login.vue";
 
 const routes = [
   {
@@ -57,6 +58,11 @@ const routes = [
         path: "report-disaster",
         name: "report-disaster",
         component: ReportDisaster,
+      },
+      {
+        path: "login",
+        name: "login",
+        component: Login,
       },
     ],
   },

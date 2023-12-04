@@ -9,6 +9,7 @@
           name="report-disaster"
           icon="ti-alert"
         />
+        <sidebar-link to="/login" name="login" icon="ti-id-badge" />
         <!-- 如果有 dashboard 路由，取消以下注释
         <sidebar-link to="/dashboard" name="dashboard" icon="ti-panel" /> 
         -->
@@ -21,9 +22,9 @@
         <!-- 如果有 typography 路由，取消以下注释
         <sidebar-link to="/typography" name="typography" icon="ti-text" />
         -->
-        <!-- 如果有 icons 路由，取消以下注释
-        <sidebar-link to="/icons" name="icons" icon="ti-pencil-alt2" />
-        -->
+        <!-- 如果有 icons 路由，取消以下注释 -->
+        <!-- <sidebar-link to="/icons" name="icons" icon="ti-pencil-alt2" /> -->
+       
         <sidebar-link to="/notifications" name="notifications" icon="ti-bell" />
       </template>
       <mobile-menu>
