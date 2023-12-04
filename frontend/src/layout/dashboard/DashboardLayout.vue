@@ -9,7 +9,7 @@
           name="report-disaster"
           icon="ti-alert"
         />
-        <sidebar-link to="/login" name="login" icon="ti-id-badge" />
+        <sidebar-link to="/login" name="login" icon="ti-id-badge" v-if="!isLoggedIn" />
         <!-- 如果有 dashboard 路由，取消以下注释
         <sidebar-link to="/dashboard" name="dashboard" icon="ti-panel" /> 
         -->

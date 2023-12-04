@@ -11,14 +11,18 @@ const router = VueRouter.createRouter({
 router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('token');
   const isPrivateRoute = to.matched.some(record => record.meta.requiresAuth);
+  const isGuestOnlyRoute = to.matched.some(record => record.meta.guestOnly);
 
   if (isPrivateRoute && !isLoggedIn) {
     // 如果是需要认证的路由且用户未登录，重定向到登录页
     next({ name: 'login' });
-  } else {
+  } else if (isGuestOnlyRoute && isLoggedIn) {
+    next({ name: 'stats' });
+  }else {
     // 否则正常导航
     next();
   }
+
 });
 
 export default router;
