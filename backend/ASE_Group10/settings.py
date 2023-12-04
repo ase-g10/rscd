@@ -17,7 +17,10 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 env_file = os.path.join(BASE_DIR.parent, '.env')
-config = Config(RepositoryEnv(env_file))
+if os.path.isfile(env_file):
+    config = Config(RepositoryEnv(env_file))
+else:
+    config = Config(os.environ)
 
 import sys
 sys.path.insert(0, os.path.join(BASE_DIR, 'ASE_Group10'))
@@ -129,7 +132,6 @@ DATABASES = {
         'PORT': config('DJANGO_DB_PORT', default='3306'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
