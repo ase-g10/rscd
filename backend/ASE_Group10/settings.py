@@ -17,10 +17,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 env_file = os.path.join(BASE_DIR.parent, '.env')
-if os.path.isfile(env_file):
-    config = Config(RepositoryEnv(env_file))
-else:
-    config = Config(os.environ)
+config = Config(RepositoryEnv(env_file))
 
 import sys
 sys.path.insert(0, os.path.join(BASE_DIR, 'ASE_Group10'))
@@ -29,10 +26,10 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'ASE_Group10'))
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('DJANGO_SECRET_KEY')
+SECRET_KEY = config('DJANGO_SECRET_KEY', default='9owxyeo8(==0popen%%yv2=o69no61z*8&xkqdgrhdd#v%r)vr6_d=+ykndcdqx0rm&7-tm7!c_rr(7x!rh@c6$h&8n91_0yaqx7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DJANGO_DEBUG')
+DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
 # 允许所有域名跨域
 CORS_ORIGIN_ALLOW_ALL = True
 # 实际请求所允许的请求方式列表。默认为：
@@ -125,11 +122,11 @@ DATABASES = {
     # },
     "default": {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DJANGO_DB_NAME'),
-        'USER': config('DJANGO_DB_USER'),
-        'PASSWORD': config('DJANGO_DB_PASSWORD'),
-        'HOST': config('DJANGO_DB_HOST'),
-        'PORT': config('DJANGO_DB_PORT'),
+        'NAME': config('DJANGO_DB_NAME', default='rscd_test_only'),
+        'USER': config('DJANGO_DB_USER', default='rscd_test_only'),
+        'PASSWORD': config('DJANGO_DB_PASSWORD', default='IjiaDGpeQNPd6EvyI7lRPqwHgxVlGg46'),
+        'HOST': config('DJANGO_DB_HOST', default='localhost'),
+        'PORT': config('DJANGO_DB_PORT', default='3306'),
     }
 }
 
