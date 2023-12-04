@@ -23,21 +23,25 @@ const routes = [
         path: "dashboard",
         name: "dashboard",
         component: Dashboard,
+        meta: { requiresAuth: true },
       },
       {
         path: "stats",
         name: "stats",
         component: UserProfile,
+        meta: { requiresAuth: true },
       },
       {
         path: "notifications",
         name: "notifications",
         component: Notifications,
+        meta: { requiresAuth: true },
       },
       {
         path: "icons",
         name: "icons",
         component: Icons,
+        meta: { requiresAuth: true },
       },
       {
         path: "maps",
@@ -48,16 +52,19 @@ const routes = [
         path: "typography",
         name: "typography",
         component: Typography,
+        meta: { requiresAuth: true },
       },
       {
         path: "table-list",
         name: "table-list",
         component: TableList,
+        meta: { requiresAuth: true },
       },
       {
         path: "report-disaster",
         name: "report-disaster",
         component: ReportDisaster,
+        meta: { requiresAuth: true },
       },
       {
         path: "login",
