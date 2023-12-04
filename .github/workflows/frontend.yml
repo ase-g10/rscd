@@ -2,7 +2,7 @@ name: Frontend CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "front-dev" ]
   pull_request:
     branches: [ "main" ]
 
@@ -70,8 +70,9 @@ jobs:
 
 
   build:
-    needs: setup
+    needs: [setup, test]
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     steps:
     - uses: actions/checkout@v4
@@ -98,6 +99,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
     - uses: actions/checkout@v4
@@ -109,7 +111,6 @@ jobs:
         path: frontend/dist/
 
     - name: Deploy to Production server
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: easingthemes/ssh-deploy@v4
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
