@@ -40,7 +40,7 @@ jobs:
         cd frontend
         npm run build --if-present
 
-    - name: Deploy to Staging server
+    - name: Deploy to Production server
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: easingthemes/ssh-deploy@v4.1.10
       with:
