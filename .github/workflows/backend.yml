@@ -82,14 +82,12 @@ jobs:
         SCRIPT_BEFORE: |
           whoami
           ls -al
+          cd ${{ secrets.BACKEND_REMOTE_TARGET }}
+          cd ..
+          chmod +x deploy.sh
+          sudo ./deploy.sh
         SCRIPT_AFTER: |
           whoami
           ls -al
           echo $RSYNC_STDOUT
-          cd ${{ secrets.BACKEND_REMOTE_TARGET }}
-          cd ..
-          pip3.9 install -r requirements.txt
-          cd backend
-          python3.9 manage.py makemigrations
-          python3.9 manage.py migrate
-          sudo systemctl restart uwsgi.service
+          
