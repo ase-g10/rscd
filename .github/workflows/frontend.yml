@@ -124,6 +124,7 @@ jobs:
         SCRIPT_BEFORE: |
           whoami
           ls -al
+          sudo chown -R ${{ secrets.REMOTE_USER }}:${{ secrets.REMOTE_USER }} ${{ secrets.BACKEND_REMOTE_TARGET }}
         SCRIPT_AFTER: |
           whoami
           ls -al
