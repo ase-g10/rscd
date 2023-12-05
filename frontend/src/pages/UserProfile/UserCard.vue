@@ -43,10 +43,17 @@
         </div>
       </div>
     </div>
+    <div class="text-center">
+      <p-button type="danger" round @click.prevent="logout">
+        Logout
+      </p-button>
+    </div>
   </card>
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+
 export default {
   data() {
     return {
@@ -77,6 +84,18 @@ export default {
         return 'col-lg-3'
       }
     },
+  },
+  setup() {
+    const router = useRouter();
+
+    const logout = () => {
+      localStorage.removeItem('token');
+      router.push('/maps');
+    };
+
+    return {
+      logout
+    };
   },
 }
 </script>

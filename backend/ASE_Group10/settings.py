@@ -122,7 +122,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "ASE_Group10.wsgi.application"
 
 SOCIAL_AUTH_GITHUB_KEY = config('GITHUB_CLIENT_ID', default='98a50d02de2c591daac8')
-SOCIAL_AUTH_GITHUB_SECRET = config('GITHUB_CLIENT_SECRET', default='3373539bb38581530ef0304922d430418e106b1d')
+SOCIAL_AUTH_GITHUB_SECRET = config('GITHUB_CLIENT_SECRET', default='test')
 SOCIAL_AUTH_GITHUB_REDIRECT_URI = config('GITHUB_REDIRECT_URI',
                                          default='http://localhost:8000/dr/api/auth2/github_callback')
 FRONT_END_URL = config('FRONT_END_URL', default='http://localhost:8080/#')

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRouter } from 'vue-router'
 
 // 创建 axios 实例
 const service = axios.create({
@@ -11,14 +12,16 @@ const service = axios.create({
 service.interceptors.request.use(
   // showLoading();
   (config) => {
-    // 在这里添加发送请求之前的逻辑，比如设置请求头等
-    // if (localStorage.getItem('token')) {
-    //   config.headers.Authorization = localStorage.getItem('token');
-    // }
+    if (config.url.includes('/api/private/')) { // 如果是私有接口则设置请求头
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Token ${token}`;
+      }
+    }
     return config;
   },
   (error) => {
-    // 请求错误处理
+    useRouter().push('/login')
     return Promise.reject(error);
   }
 );
@@ -44,6 +47,14 @@ service.interceptors.response.use(
     return response;
   },
   (error) => {
+    if (error.response && error.response.status === 401) {
+      // 用户未授权/Token失效
+      // 这里可以处理登录逻辑，比如清除本地 token，跳转到登录页等
+      localStorage.removeItem('token');
+      useRouter().push('/login');
+    }
+    return Promise.reject(error);
+  
     // 响应错误处理
     // closeLoading();
     // if (error.name == 'Error') {
@@ -60,7 +71,6 @@ service.interceptors.response.use(
     //     self.location='/login';
     //     resetTokenAndClearUser();
     // }
-    return Promise.reject(error);
   }
 );
 
