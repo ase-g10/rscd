@@ -58,6 +58,8 @@ jobs:
         python3.9 -m pip install --upgrade pip
         pip3.9 install -r requirements.txt
     - name: Run Tests
+      env:
+        DJANGO_ENV: ${{ secrets.DJANGO_ENV }}
       run: |
         cd backend
         python3.9 manage.py test
