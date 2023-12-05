@@ -1,8 +1,6 @@
 import axios from "axios";
 import { useRouter } from 'vue-router'
 
-const router = useRouter()
-
 // 创建 axios 实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BACKEND_URL, // 基础 URL，从环境变量中读取
@@ -23,7 +21,7 @@ service.interceptors.request.use(
     return config;
   },
   (error) => {
-    router.push('/login')
+    useRouter().push('/login')
     return Promise.reject(error);
   }
 );
@@ -53,7 +51,7 @@ service.interceptors.response.use(
       // 用户未授权/Token失效
       // 这里可以处理登录逻辑，比如清除本地 token，跳转到登录页等
       localStorage.removeItem('token');
-      router.push('/login');
+      useRouter().push('/login');
     }
     return Promise.reject(error);
   
