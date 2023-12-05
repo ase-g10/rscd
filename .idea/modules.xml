@@ -1,27 +1,8 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1a6daff28088bed67f79b66ff18fbf39d64ce7eb
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
-      <module fileurl="file://$PROJECT_DIR$/.idea/ASEBACK.iml" filepath="$PROJECT_DIR$/.idea/ASEBACK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/rscd.iml" filepath="$PROJECT_DIR$/.idea/rscd.iml" />
     </modules>
   </component>
-=======
-      <module fileurl="file://$PROJECT_DIR$/.idea/ASEmapG10.iml" filepath="$PROJECT_DIR$/.idea/ASEmapG10.iml" />
-    </modules>
-  </component>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ASE-Group10.iml" filepath="$PROJECT_DIR$/.idea/ASE-Group10.iml" />
-    </modules>
-  </component>
->>>>>>> 79d902f09f70df64624c87b2b3efecdeefc3a872
->>>>>>> 1a6daff28088bed67f79b66ff18fbf39d64ce7eb
 </project>

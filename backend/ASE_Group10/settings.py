@@ -25,7 +25,7 @@ else:
 import sys
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'ASE_Group10'))
-
+ENV = config('DJANGO_ENV')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -34,7 +34,7 @@ SECRET_KEY = config('DJANGO_SECRET_KEY',
                     default='9owxyeo8(==0popen%%yv2=o69no61z*8&xkqdgrhdd#v%r)vr6_d=+ykndcdqx0rm&7-tm7!c_rr(7x!rh@c6$h&8n91_0yaqx7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
+DEBUG = config('DJANGO_DEBUG', default=True, cast=bool)
 # 允许所有域名跨域
 CORS_ORIGIN_ALLOW_ALL = True
 # 实际请求所允许的请求方式列表。默认为：
@@ -129,20 +129,23 @@ FRONT_END_URL = config('FRONT_END_URL', default='http://localhost:8080/#')
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR / "db.sqlite3",
-    # },
-    "default": {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DJANGO_DB_NAME', default='rscd_test_only'),
-        'USER': config('DJANGO_DB_USER', default='rscd_test_only'),
-        'PASSWORD': config('DJANGO_DB_PASSWORD', default='IjiaDGpeQNPd6EvyI7lRPqwHgxVlGg46'),
-        'HOST': config('DJANGO_DB_HOST', default='localhost'),
-        'PORT': config('DJANGO_DB_PORT', default='3306'),
+if ENV == 'test':
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
+else:
+    DATABASES = {
+        "default": {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': config('DJANGO_DB_NAME', default='rscd_test_only'),
+            'USER': config('DJANGO_DB_USER', default='rscd_test_only'),
+            'PASSWORD': config('DJANGO_DB_PASSWORD', default='IjiaDGpeQNPd6EvyI7lRPqwHgxVlGg46'),
+            'HOST': config('DJANGO_DB_HOST', default='localhost'),
+            'PORT': config('DJANGO_DB_PORT', default='3306'),
+        }
 }
 
 # Password validation
