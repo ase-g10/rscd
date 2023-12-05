@@ -12,6 +12,9 @@ import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import ReportDisaster from "@/pages/ReportDisaster.vue";
 
+import Login from '@/components/Login.vue';
+import Register from '@/components/Register.vue';
+
 const routes = [
   {
     path: "/",
@@ -57,6 +60,17 @@ const routes = [
         path: "report-disaster",
         name: "report-disaster",
         component: ReportDisaster,
+      },
+
+      {
+        path: '/login',
+        component: Login,
+        name: 'Login'
+      },
+      {
+        path: '/register',
+        component: Register,
+        name: 'Register'
       },
     ],
   },
