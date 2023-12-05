@@ -64,7 +64,6 @@ const routes = [
         path: "report-disaster",
         name: "report-disaster",
         component: ReportDisaster,
-        meta: { requiresAuth: true },
       },
       {
         path: "login",
