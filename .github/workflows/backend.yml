@@ -103,8 +103,18 @@ jobs:
           ls -al
           echo $RSYNC_STDOUT
           cd ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
-          chmod +x staging.sh
-          ./staging.sh
+          python3.9 -m pip install --upgrade pip
+          git pull
+          git checkout back-dev
+          pip3.9 install -r requirements.txt
+          cd backend
+          python3.9 manage.py makemigrations
+          python3.9 manage.py migrate
+          sudo lsof -i :18351
+          sudo fuser -k 18351/tcp
+          sudo lsof -i :18351
+          python3.9 manage.py runserver 18351 &
+          sleep 2 && sudo lsof -i :18351
 
   deploy-backend:
     needs: test-backend
