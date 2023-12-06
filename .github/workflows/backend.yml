@@ -97,6 +97,7 @@ jobs:
           whoami
           ls -al
           sudo chown -R ${{ secrets.STAGING_REMOTE_USER }}:${{ secrets.STAGING_REMOTE_USER }} ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
+          sudo chmod -R 775 ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
         SCRIPT_AFTER: |
           whoami
           ls -al
@@ -134,6 +135,7 @@ jobs:
           whoami
           ls -al
           sudo chown -R ${{ secrets.REMOTE_USER }}:${{ secrets.REMOTE_USER }} ${{ secrets.BACKEND_REMOTE_TARGET }}
+          sudo chmod -R 775 ${{ secrets.BACKEND_REMOTE_TARGET }}
         SCRIPT_AFTER: |
           whoami
           ls -al
