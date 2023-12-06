@@ -3,7 +3,13 @@ Advanced Software Engineering - Group10
 
 This is the repository for the ASE project of Group 10.  
 
-You can visit the live demo here: [https://rscd.iocky.com](https://rscd.iocky.com) or [https://mine.bf](https://mine.bf) (mine.bf link may only be available for a limited time.)
+You can visit the live demo here: 
+## Production Build
+[https://rscd.iocky.com](https://rscd.iocky.com)  
+[https://mine.bf](https://mine.bf)   
+(mine.bf link may only be available for a limited time.)  
+## Staging Build with Staging APIs
+[https://rscdstaging.iocky.com/](https://rscdstaging.iocky.com/)
 
 # Group Members  
 To contact all group members, please send an email to: [group10@iocky.com](mailto:group10@iocky.com)
