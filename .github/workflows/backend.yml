@@ -78,7 +78,7 @@ jobs:
   
   staging-backend:
     needs: test-backend
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/back-dev')
 
     steps:
