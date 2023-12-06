@@ -6,6 +6,20 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+  DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+  DJANGO_DB_NAME: ${{ secrets.DJANGO_DB_NAME }}
+  DJANGO_DB_USER: ${{ secrets.DJANGO_DB_USER }}
+  DJANGO_DB_PASSWORD: ${{ secrets.DJANGO_DB_PASSWORD }}
+  DJANGO_DB_HOST: ${{ secrets.DJANGO_DB_HOST }}
+  DJANGO_DB_PORT: ${{ secrets.DJANGO_DB_PORT }}
+  DJANGO_GITHUB_CLIENT_ID: ${{ secrets.DJANGO_GITHUB_CLIENT_ID }}
+  DJANGO_GITHUB_CLIENT_SECRET: ${{ secrets.DJANGO_GITHUB_CLIENT_SECRET }}
+  DJANGO_GITHUB_REDIRECT_URI: ${{ secrets.DJANGO_GITHUB_REDIRECT_URI }}
+  DJANGO_FRONT_END_URL: ${{ secrets.DJANGO_FRONT_END_URL }}
+  DJANGO_ENV: ${{ secrets.DJANGO_ENV }}
+
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -58,8 +72,6 @@ jobs:
         python3.9 -m pip install --upgrade pip
         pip3.9 install -r requirements.txt
     - name: Run Tests
-      env:
-        DJANGO_ENV: ${{ secrets.DJANGO_ENV }}
       run: |
         cd backend
         python3.9 manage.py test

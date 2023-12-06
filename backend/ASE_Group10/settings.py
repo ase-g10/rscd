@@ -121,11 +121,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ASE_Group10.wsgi.application"
 
-SOCIAL_AUTH_GITHUB_KEY = config('GITHUB_CLIENT_ID', default='98a50d02de2c591daac8')
-SOCIAL_AUTH_GITHUB_SECRET = config('GITHUB_CLIENT_SECRET', default='test')
-SOCIAL_AUTH_GITHUB_REDIRECT_URI = config('GITHUB_REDIRECT_URI',
+SOCIAL_AUTH_GITHUB_KEY = config('DJANGO_GITHUB_CLIENT_ID', default='98a50d02de2c591daac8')
+SOCIAL_AUTH_GITHUB_SECRET = config('DJANGO_GITHUB_CLIENT_SECRET', default='test')
+SOCIAL_AUTH_GITHUB_REDIRECT_URI = config('DJANGO_GITHUB_REDIRECT_URI',
                                          default='http://localhost:8000/dr/api/auth2/github_callback')
-FRONT_END_URL = config('FRONT_END_URL', default='http://localhost:8080/#')
+FRONT_END_URL = config('DJANGO_FRONT_END_URL', default='http://localhost:8080/#')
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
