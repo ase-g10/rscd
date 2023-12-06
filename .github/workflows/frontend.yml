@@ -56,6 +56,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
+    - name: Set Environment Variables for Staging
+      if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/front-dev')
+      run: |
+        echo "VUE_APP_BACKEND_URL=${{ secrets.STAGING_VUE_APP_BACKEND_URL }}" >> $GITHUB_ENV
+    
     - name: Run cypress tests
       uses: cypress-io/github-action@v6
       with:
@@ -68,11 +73,9 @@ jobs:
         COMMIT_INFO_SHA: ${{github.event.pull_request.head.sha}}
         COMMIT_INFO_MESSAGE: ${{github.event.pull_request.title}}
 
-
   build-frontend:
     needs: [setup-frontend, test-frontend]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
 
     steps:
     - uses: actions/checkout@v4
@@ -85,6 +88,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
+    - name: Set Environment Variables for Staging
+      if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/front-dev')
+      run: |
+        echo "VUE_APP_BACKEND_URL=${{ secrets.STAGING_VUE_APP_BACKEND_URL }}" >> $GITHUB_ENV
+
     - name: Build
       run: |
         cd frontend
@@ -95,6 +103,41 @@ jobs:
       with:
         name: dist
         path: frontend/dist/
+
+  staging-frontend:
+    needs: build-frontend
+    runs-on: ubuntu-latest
+    if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/front-dev')
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Download dist directory
+      uses: actions/download-artifact@v3
+      with:
+        name: dist
+        path: frontend/dist/
+
+    - name: Deploy to Staging server
+      uses: easingthemes/ssh-deploy@v4.1.10
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-rlgoDzvc -i"
+        SOURCE: "frontend/dist/"
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        TARGET: ${{ secrets.STAGING_REMOTE_TARGET }}
+        EXCLUDE: "/node_modules/"
+        SCRIPT_BEFORE: |
+          whoami
+          ls -al
+          sudo chown -R ${{ secrets.REMOTE_USER }}:${{ secrets.REMOTE_USER }} ${{ secrets.STAGING_REMOTE_TARGET }}
+          sudo chmod -R 775 ${{ secrets.STAGING_REMOTE_TARGET }}
+        SCRIPT_AFTER: |
+          whoami
+          ls -al
+          echo $RSYNC_STDOUT
 
   deploy-frontend:
     needs: build-frontend
@@ -124,7 +167,8 @@ jobs:
         SCRIPT_BEFORE: |
           whoami
           ls -al
-          sudo chown -R ${{ secrets.REMOTE_USER }}:${{ secrets.REMOTE_USER }} ${{ secrets.BACKEND_REMOTE_TARGET }}
+          sudo chown -R ${{ secrets.REMOTE_USER }}:${{ secrets.REMOTE_USER }} ${{ secrets.REMOTE_TARGET }}
+          sudo chmod -R 775 ${{ secrets.REMOTE_TARGET }}
         SCRIPT_AFTER: |
           whoami
           ls -al
