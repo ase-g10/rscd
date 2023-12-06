@@ -88,7 +88,7 @@ jobs:
       with:
         SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
         ARGS: "-rlgoDzvc -i"
-        SOURCE: "README.md"
+        SOURCE: "others/"
         REMOTE_HOST: ${{ secrets.STAGING_REMOTE_HOST }}
         REMOTE_PORT: ${{ secrets.STAGING_REMOTE_PORT }}
         REMOTE_USER: ${{ secrets.STAGING_REMOTE_USER }}
