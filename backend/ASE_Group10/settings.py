@@ -65,8 +65,8 @@ CORS_ALLOW_HEADERS = (
 # url结尾自动加/
 APPEND_SLASH = True  # 默认是True
 
-ALLOWED_HOSTS = ["api.rscd.iocky.com", "rscdapi.iocky.com", "localhost", "127.0.0.1",
-                 config('DJANGO_DB_HOST', default='localhost')]
+ALLOWED_HOSTS = [ "rscdapi.iocky.com", "localhost", "127.0.0.1",
+                 config('DJANGO_DB_HOST', default='localhost'), "rscdapistaging.iocky.com" ]
 
 # Application definition
 

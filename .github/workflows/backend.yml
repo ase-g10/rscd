@@ -21,7 +21,7 @@ env:
   DJANGO_ENV: ${{ secrets.DJANGO_ENV }}
 
 jobs:
-  setup:
+  setup-backend:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -46,8 +46,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
-  test:
-    needs: setup
+  test-backend:
+    needs: setup-backend
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -75,9 +75,46 @@ jobs:
       run: |
         cd backend
         python3.9 manage.py test
+  
+  staging-backend:
+    needs: test-backend
+    runs-on: ubuntu-latest
+    if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/back-dev')
 
-  deploy:
-    needs: test
+    steps:
+    - uses: actions/checkout@v4
+    - name: Deploy to Sataging server
+      uses: easingthemes/ssh-deploy@v4.1.10
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+        ARGS: "-rlgoDzvc -i"
+        SOURCE: ""
+        REMOTE_HOST: ${{ secrets.STAGING_REMOTE_HOST }}
+        REMOTE_PORT: ${{ secrets.STAGING_REMOTE_PORT }}
+        REMOTE_USER: ${{ secrets.STAGING_REMOTE_USER }}
+        TARGET: ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
+        SCRIPT_BEFORE: |
+          whoami
+          ls -al
+          sudo chown -R ${{ secrets.STAGING_REMOTE_USER }}:${{ secrets.STAGING_REMOTE_USER }} ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
+        SCRIPT_AFTER: |
+          whoami
+          ls -al
+          echo $RSYNC_STDOUT
+          cd ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
+          pip install -r requirements.txt
+          cd backend
+          python3.9 manage.py makemigrations
+          python3.9 manage.py migrate
+          sudo lsof -i :18351
+          tmux kill-window -t rscdstaging
+          sudo lsof -i :18351
+          tmux new -d -n rscdstaging 'python3.9 manage.py runserver 18351'
+          sudo lsof -i :18351
+
+
+  deploy-backend:
+    needs: test-backend
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
