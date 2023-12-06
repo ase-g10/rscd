@@ -77,16 +77,7 @@ export default {
       if (token) {
         localStorage.setItem('token', token);
         console.log("token: " + token);
-        router.push('/maps'); // Navigate to stats page on successful login
-        notify({
-          component: NotificationTemplate,
-          icon: "ti-check",
-          horizontalAlign: "right",
-          verticalAlign: "top",
-          type: "success",
-          title: "Login Successful",
-          dangerouslySetInnerHtml: true,
-        });
+        window.location.reload(); // Reload the page to update the navbar
       } else if (error) {
         errorMessage.value = error; 
         notify({

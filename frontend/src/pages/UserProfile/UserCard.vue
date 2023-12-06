@@ -90,7 +90,7 @@ export default {
 
     const logout = () => {
       localStorage.removeItem('token');
-      router.push('/maps');
+      window.location.reload();
     };
 
     return {
