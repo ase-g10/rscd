@@ -109,7 +109,7 @@ jobs:
           sudo lsof -i :18351
           sudo fuser -k 18351/tcp
           sudo lsof -i :18351
-          python3.9 manage.py runserver 18351 & sleep 2 && sudo lsof -i :18351
+          python3.9 manage.py runserver 18351 & sleep 7 && sudo lsof -i :18351
 
   deploy-backend:
     needs: test-backend
