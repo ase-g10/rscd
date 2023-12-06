@@ -101,6 +101,7 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
+          sudo -i
           cd ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
           pip install -r requirements.txt
           cd backend
