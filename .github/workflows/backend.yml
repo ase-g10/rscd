@@ -109,7 +109,7 @@ jobs:
           sudo lsof -i :18351
           tmux kill-window -t rscdstaging
           sudo lsof -i :18351
-          tmux new -d -n rscdstaging 'python3.9 manage.py runserver 18351'
+          tmux new -d -n rscdstaging 'python3.9 manage.py runserver 0.0.0.0:18351'
           sudo lsof -i :18351
 
 
@@ -138,13 +138,6 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
-          cd ${{ secrets.BACKEND_REMOTE_TARGET }}
-          cd ..
-          pip3.9 install -r requirements.txt
-          cd backend
-          python3.9 manage.py makemigrations
-          python3.9 manage.py migrate
-          sudo -i
           cd ${{ secrets.BACKEND_REMOTE_TARGET }}
           cd ..
           pip3.9 install -r requirements.txt
