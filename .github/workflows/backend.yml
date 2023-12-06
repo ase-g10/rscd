@@ -83,7 +83,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Deploy to Production server
+    - name: Deploy to Sataging server
       uses: easingthemes/ssh-deploy@v4.1.10
       with:
         SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
@@ -92,11 +92,12 @@ jobs:
         REMOTE_HOST: ${{ secrets.STAGING_REMOTE_HOST }}
         REMOTE_PORT: ${{ secrets.STAGING_REMOTE_PORT }}
         REMOTE_USER: ${{ secrets.STAGING_REMOTE_USER }}
-        TARGET: ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
+        TARGET: ${{ secrets.OTHERS_STAGING_SSH_PRIVATE_KEY }}
         SCRIPT_BEFORE: |
           whoami
           ls -al
-          sudo chown -R ${{ secrets.REMOTE_USER }}:${{ secrets.REMOTE_USER }} ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
+          sudo chown -R ${{ secrets.STAGING_REMOTE_USER }}:${{ secrets.STAGING_REMOTE_USER }} ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
+          sudo chown -R ${{ secrets.STAGING_REMOTE_USER }}:${{ secrets.STAGING_REMOTE_USER }} ${{ secrets.OTHERS_STAGING_SSH_PRIVATE_KEY }}
         SCRIPT_AFTER: |
           whoami
           ls -al
