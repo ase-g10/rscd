@@ -11,7 +11,7 @@ env:
   VUE_APP_BACKEND_URL: ${{ secrets.VUE_APP_BACKEND_URL }}
 
 jobs:
-  setup:
+  setup-frontend:
     runs-on: ubuntu-latest
 
     strategy:
@@ -41,8 +41,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
-  test:
-    needs: setup
+  test-frontend:
+    needs: setup-frontend
     runs-on: ubuntu-latest
 
     steps:
@@ -69,8 +69,8 @@ jobs:
         COMMIT_INFO_MESSAGE: ${{github.event.pull_request.title}}
 
 
-  build:
-    needs: [setup, test]
+  build-frontend:
+    needs: [setup-frontend, test-frontend]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
@@ -96,8 +96,8 @@ jobs:
         name: dist
         path: frontend/dist/
 
-  deploy:
-    needs: build
+  deploy-frontend:
+    needs: build-frontend
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
