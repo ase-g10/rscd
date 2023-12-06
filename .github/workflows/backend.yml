@@ -101,7 +101,6 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
-          sudo -i
           cd ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
           pip install -r requirements.txt
           cd backend
@@ -111,7 +110,7 @@ jobs:
           sudo fuser -k 18351/tcp
           sudo lsof -i :18351
           python3.9 manage.py runserver 18351 &
-          sleep 2 && sudo lsof -i :18351
+          sleep 8 && sudo lsof -i :18351
 
   deploy-backend:
     needs: test-backend
