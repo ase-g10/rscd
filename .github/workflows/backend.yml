@@ -88,24 +88,20 @@ jobs:
       with:
         SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
         ARGS: "-rlgoDzvc -i"
-        SOURCE: "backend/others/"
+        SOURCE: ""
         REMOTE_HOST: ${{ secrets.STAGING_REMOTE_HOST }}
         REMOTE_PORT: ${{ secrets.STAGING_REMOTE_PORT }}
         REMOTE_USER: ${{ secrets.STAGING_REMOTE_USER }}
-        TARGET: ${{ secrets.OTHERS_STAGING_SSH_PRIVATE_KEY }}
+        TARGET: ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
         SCRIPT_BEFORE: |
           whoami
           ls -al
           sudo chown -R ${{ secrets.STAGING_REMOTE_USER }}:${{ secrets.STAGING_REMOTE_USER }} ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
-          sudo chown -R ${{ secrets.STAGING_REMOTE_USER }}:${{ secrets.STAGING_REMOTE_USER }} ${{ secrets.OTHERS_STAGING_SSH_PRIVATE_KEY }}
         SCRIPT_AFTER: |
           whoami
           ls -al
           echo $RSYNC_STDOUT
           cd ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
-          python3.9 -m pip install --upgrade pip
-          git pull
-          git checkout back-dev
           pip3.9 install -r requirements.txt
           cd backend
           python3.9 manage.py makemigrations
