@@ -14,13 +14,18 @@ class DisasterView(viewsets.ViewSet):
     @action(detail=False, methods=['post', 'get'])
     def post_location(self, request, pk=None):
         try:
-            # 将请求的 JSON 转换成 Python 字典
             data = request.data
 
-            # 提取纬度和经度数据
             latitude = data.get('latitude')
             longitude = data.get('longitude')
 
+            if latitude is None:
+                return JsonResponse({"status": "error", "message": "Latitude cannot be empty."}, status=400)
+            if longitude is None:
+                return JsonResponse({"status": "error", "message": "Longitude cannot be empty."}, status=400)
+
+            print(latitude)
+            print(longitude)
             # 在这里处理数据（例如，保
             # 返回成功响应
             return JsonResponse({"status": "success", "message": "Location received successfully."})
