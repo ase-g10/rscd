@@ -41,54 +41,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
-  test-frontend:
-    needs: setup-frontend
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Restore dependencies
-      uses: actions/cache@v3
-      with:
-        path: frontend/node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-
-    - name: Set Environment Variables for Staging
-      if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/front-dev')
-      run: |
-        echo "VUE_APP_BACKEND_URL=${{ secrets.STAGING_VUE_APP_BACKEND_URL }}" >> $GITHUB_ENV
-    
-    - name: Start test server
-      run: |
-        npm run dev &
-        sleep 10
-
-      working-directory: frontend
-
-    - name: Run cypress tests
-      uses: cypress-io/github-action@v6
-      with:
-        working-directory: frontend
-        browser: chrome
-        record: true
-      env:
-        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        COMMIT_INFO_SHA: ${{github.event.pull_request.head.sha}}
-        COMMIT_INFO_MESSAGE: ${{github.event.pull_request.title}}
-
-    - name: Stop test server
-      if: always()
-      run: |
-        kill $(jobs -p) || true
-
-      working-directory: frontend
-
   build-frontend:
-    needs: [setup-frontend, test-frontend]
+    needs: setup-frontend
     runs-on: ubuntu-latest
 
     steps:
@@ -152,6 +106,40 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
+
+
+  test-frontend:
+    needs: staging-frontend
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Restore dependencies
+      uses: actions/cache@v3
+      with:
+        path: frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Set Environment Variables for Staging
+      if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/front-dev')
+      run: |
+        echo "VUE_APP_BACKEND_URL=${{ secrets.STAGING_VUE_APP_BACKEND_URL }}" >> $GITHUB_ENV
+    
+    - name: Run cypress tests
+      uses: cypress-io/github-action@v6
+      with:
+        working-directory: frontend
+        browser: chrome
+        record: true
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        COMMIT_INFO_SHA: ${{github.event.pull_request.head.sha}}
+        COMMIT_INFO_MESSAGE: ${{github.event.pull_request.title}}
+        CYCRESS_BASE_URL: 'https://rscdapistaging.iocky.com/'
 
   deploy-frontend:
     needs: build-frontend
