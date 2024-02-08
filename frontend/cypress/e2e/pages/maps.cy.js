@@ -35,7 +35,7 @@ describe('Map Tests', () => {
               }
             }
           }];
-          callback(results, google.maps.GeocoderStatus.OK);
+          callback(results, win.google.maps.GeocoderStatus.OK);
         }
       };
       // 替换 window.google.maps.Geocoder 对象
