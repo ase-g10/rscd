@@ -1,6 +1,6 @@
 describe('Map Tests', () => {
   beforeEach(() => {
-    cy.visit('/maps'); // 替换为您的Vue应用中地图组件的实际路径
+    cy.visit('http://localhost:8080/maps'); // 替换为您的Vue应用中地图组件的实际路径
   });
 
   it('loads the map successfully', () => {
