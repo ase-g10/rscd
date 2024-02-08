@@ -142,7 +142,7 @@ jobs:
         CYCRESS_BASE_URL: 'https://rscdapistaging.iocky.com/'
 
   deploy-frontend:
-    needs: build-frontend
+    needs: [build-frontend, test-frontend]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
