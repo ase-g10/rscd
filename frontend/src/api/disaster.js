@@ -10,6 +10,14 @@ export function submitDisasterLocation(data) {
   });
 }
 
+export function userLogin(data) {
+  return service({
+    url: "disasterview/log_in/",
+    method: "post",
+    data,
+  })
+}
+
 export const getDisasterData = () => {
   return service.get("/api/disaster/getData");
 };

@@ -26,15 +26,41 @@ class DisasterView(viewsets.ViewSet):
 
             print(latitude)
             print(longitude)
-            # 在这里处理数据（例如，保
-            # 返回成功响应
+
             return JsonResponse({"status": "success", "message": "Location received successfully."})
         except json.JSONDecodeError:
-            # 如果请求的内容不是有效的 JSON，返回错误响应
+
             return JsonResponse({"status": "error", "message": "Invalid JSON."}, status=400)
         except Exception as e:
-            # 处理其他意外错误
+
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+    @action(detail=False, methods=['post'])
+    def log_in(self, request, pk=None):
+        try:
+            data = request.data
+
+            email = data.get('email')
+            pwd = data.get('password')
+
+            # Todo 邮箱是否存在，email验证，pwd验证是否相同，密码加密，存数据库，
+            if email is "":
+                return JsonResponse({"status": "error", "message": "email cannot be empty."}, status=400)
+            if pwd is "":
+                return JsonResponse({"status": "error", "message": "password cannot be empty."}, status=400)
+
+            print(email)
+            print(pwd)
+
+            return JsonResponse({"status": "success", "message": "Account login successfully."})
+        except json.JSONDecodeError:
+
+            return JsonResponse({"status": "error", "message": "Invalid JSON."}, status=400)
+        except Exception as e:
+
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+
 
 
 class Auth2(viewsets.ViewSet):
