@@ -4,7 +4,7 @@ import service from "@/utils/request"; // 引入封装好的 axios 实例
 // 不需要单独设置 BASE_URL，因为它已经在 request.js 中设置
 export function submitDisasterLocation(data) {
   return service({
-    url: "disasterview/post_location/",
+    url: "dm/disasterview/post_location/",
     method: "post",
     data,
   });
