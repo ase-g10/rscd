@@ -3,38 +3,12 @@ from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from social_core.exceptions import AuthException
-
 from django.http import JsonResponse
 import json
-
 from django.conf import settings
 
 
-class DisasterView(viewsets.ViewSet):
-    @action(detail=False, methods=['post', 'get'])
-    def post_location(self, request, pk=None):
-        try:
-            data = request.data
-
-            latitude = data.get('latitude')
-            longitude = data.get('longitude')
-
-            if latitude is None:
-                return JsonResponse({"status": "error", "message": "Latitude cannot be empty."}, status=400)
-            if longitude is None:
-                return JsonResponse({"status": "error", "message": "Longitude cannot be empty."}, status=400)
-
-            print(latitude)
-            print(longitude)
-
-            return JsonResponse({"status": "success", "message": "Location received successfully."})
-        except json.JSONDecodeError:
-
-            return JsonResponse({"status": "error", "message": "Invalid JSON."}, status=400)
-        except Exception as e:
-
-            return JsonResponse({"status": "error", "message": str(e)}, status=500)
-
+class Login(viewsets.ViewSet):
     @action(detail=False, methods=['post'])
     def log_in(self, request, pk=None):
         try:
@@ -59,8 +33,6 @@ class DisasterView(viewsets.ViewSet):
         except Exception as e:
 
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
-
-
 
 
 class Auth2(viewsets.ViewSet):

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class DisasterResponseConfig(AppConfig):
+class NotificationManagementConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'Disaster_Response'
+    name = 'notification_management'
