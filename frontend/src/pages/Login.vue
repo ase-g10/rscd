@@ -8,11 +8,11 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="#" >
+      <form class="space-y-6" action="#" method="POST">
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
           <div class="mt-2">
-            <input v-model="email" id="email" name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input id="email" name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
 
@@ -24,14 +24,12 @@
             </div>
           </div>
           <div class="mt-2">
-            <input v-model="password" id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
 
         <div>
-          <button type="submit"
-                  @click = "login"
-                  class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
+          <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
         </div>
         <button
           type="button"
@@ -42,7 +40,7 @@
           Sign in with GitHub
         </button>
       </form>
-
+      
 
       <p class="mt-10 text-center text-sm text-gray-500">
         Not a member?
@@ -54,11 +52,9 @@
 
 <script>
 import { ref, onMounted, getCurrentInstance } from 'vue';
-import { loadRouteLocation, useRouter } from "vue-router";
+import { useRouter } from 'vue-router'
 import { loginWithGithub } from "@/api/auth2";
 import NotificationTemplate from "./Notifications/NotificationTemplate";
-import { userLogin } from "@/api/disaster";
-import router from "@/router";
 
 export default {
   methods: {
@@ -66,55 +62,12 @@ export default {
       // 直接导航到后端提供的重定向 URL
       window.location.href = process.env.VUE_APP_BACKEND_URL + '/auth2/redirect_to_github';
     },
-    login(e){
-      e.preventDefault();
-
-      const userData = {
-        email: this?.email??null,
-        password: this?.password??null
-      };
-
-      userLogin(userData)
-        .then(response => {
-          console.log(response);
-          this.$notify({
-            component: NotificationTemplate,
-            icon: "ti-check",
-            horizontalAlign: "right",
-            verticalAlign: "top",
-            type: "success",
-            title: "successfully log in ",
-            text: `${response.data.message}`,
-            dangerouslySetInnerHtml: true,
-          })
-          router.push('/maps');
-          ;
-        })
-        .catch(error => {
-          console.log(error);
-          this.$notify({
-            component: NotificationTemplate,
-            icon: "ti-close",
-            horizontalAlign: "right",
-            verticalAlign: "top",
-            type: "error",
-            title: "Error",
-            text: "PLZ provide correct email or password " + error.message, // 使用 error.message 来获取错误信息
-            dangerouslySetInnerHtml: true,
-          });
-          console.error("incorrect email or password:", error);
-        });
-
-    },
   },
   setup() {
     const instance = getCurrentInstance();
     const notify = instance.appContext.config.globalProperties.$notify;
     const router = useRouter();
     const errorMessage = ref(""); // Reactive variable to store the error message
-
-    const email = ref("");
-    const password = ref("");
 
     onMounted(() => {
       const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
@@ -126,7 +79,7 @@ export default {
         console.log("token: " + token);
         window.location.reload(); // Reload the page to update the navbar
       } else if (error) {
-        errorMessage.value = error;
+        errorMessage.value = error; 
         notify({
           component: NotificationTemplate,
           icon: "ti-close",
@@ -137,9 +90,9 @@ export default {
           text: "Failed to log in, Please try again. " + error,
           dangerouslySetInnerHtml: true,
         });
-      }
+      } 
     });
-    return { errorMessage,email,password };
+    return { errorMessage };
   },
 };
 </script>
