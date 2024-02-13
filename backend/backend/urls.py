@@ -1,5 +1,5 @@
 """
-URL configuration for ASE_Group10 project.
+URL configuration for backend project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -17,8 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-
 urlpatterns = [
-    path('dr/', include("Disaster_Response.urls")),
+    path('dm/', include("disaster_management.urls")),
+    path('etm/', include("emergency_team_management.urls")),
+    path('nm/', include("notification_management.urls")),
+    path('tm/', include("traffic_management.urls")),
+    path('um/', include("user_management.urls")),
     path('admin/', admin.site.urls),
 ]
+

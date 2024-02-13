@@ -1,6 +1,6 @@
 from django.db import models
 
-
+#通用公共的model写在这里
 # Create your models here.
 class Disaster(models.Model):
     name = models.CharField(max_length=255)
@@ -22,3 +22,8 @@ class User(models.Model):
     update_time = models.DateTimeField(auto_now=True)
     is_delete = models.BooleanField(default=False)
     github_username = models.CharField(max_length=255, unique=True, null=True, blank=True)
+
+class Vehicle(models.Model):
+    #Todo: 填充这里
+    vehicleId = models.CharField(max_length=16, unique=True)
+    vehicleType = models.CharField(max_length=255)
