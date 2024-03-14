@@ -6,8 +6,7 @@ from social_core.exceptions import AuthException
 from django.http import JsonResponse
 import json
 from django.conf import settings
-
-
+from models.models import User
 class Login(viewsets.ViewSet):
     @action(detail=False, methods=['post'])
     def log_in(self, request, pk=None):

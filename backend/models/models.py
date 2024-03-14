@@ -14,10 +14,17 @@ class Disaster(models.Model):
 
 
 class User(models.Model):
+    ROLE_CHOICES = (
+        ('public', 'Public'),
+        ('publicRescueService', 'Public Rescue Service'),
+        ('emergencyResponseTeam', 'Emergency Response Team'),
+        ('emergencyRescueVehicle', 'Emergency Rescue Vehicle'),
+    )
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     status = models.SmallIntegerField()
+    role = models.CharField(max_length=40, choices=ROLE_CHOICES, default='public')
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     is_delete = models.BooleanField(default=False)
