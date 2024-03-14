@@ -34,3 +34,14 @@ class Vehicle(models.Model):
     #Todo: 填充这里
     vehicleId = models.CharField(max_length=16, unique=True)
     vehicleType = models.CharField(max_length=255)
+
+
+class Log(models.Model):
+    disaster_name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    latitude = models.CharField(max_length=255, blank=True)
+    longitude = models.CharField(max_length=255, blank=True)
+    location = models.CharField(max_length=255, blank=True)
+    create_time = models.CharField(max_length=255)
+    update_time = models.DateTimeField(auto_now=True)
+    responsible_team = models.CharField(max_length=255, unique=True)
