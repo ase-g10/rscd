@@ -2,10 +2,10 @@ import requests
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from rest_framework.decorators import action
-
+from django.core import serializers
 from django.http import JsonResponse
 import json
-
+from models.models import Disaster
 from django.conf import settings
 
 
@@ -35,3 +35,14 @@ class DisasterView(viewsets.ViewSet):
             # 处理其他意外错误
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
+    @action(detail=False, methods=['post', 'get'])
+    def disaster_view(self, request):
+        try:
+            disaster_queryset = Disaster.objects.all()
+            disaster_queryset = Disaster.objects.filter(name='testDisaster')
+            print(disaster_queryset)
+            disaster_serialized = serializers.serialize('json', disaster_queryset)
+            # Sending serialized data as a response
+            return JsonResponse({"message": json.loads(disaster_serialized)})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
