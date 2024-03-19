@@ -20,6 +20,10 @@ class EmergencyView(viewsets.ViewSet):
                 is_deleted = tmp.is_delete
                 if is_deleted:
                     return JsonResponse({"status": "error", "message": "already deleted this disaster"})
+                else:
+                    # delete disaster from database
+                    tmp.is_delete = True
+                    tmp.save()
                 type = tmp.type
                 radius = tmp.radius
                 create_time = tmp.create_time
