@@ -11,5 +11,6 @@ export function submitDisasterLocation(data) {
 }
 
 export const getDisasterData = () => {
-  return service.get("/api/disaster/getData");
+  return service.get("dm/disasterview/read_all/");
 };
+
