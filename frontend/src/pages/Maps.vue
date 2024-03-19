@@ -105,8 +105,8 @@ export default {
               position.coords.latitude,
               position.coords.longitude
             );
-            this.currentLat = position.coords.latitude.toFixed(5);
-            this.currentLng = position.coords.longitude.toFixed(5);
+            this.currentLat = position.coords.latitude;
+            this.currentLng = position.coords.longitude;
 
             this.infoWindow.setPosition(pos);
             this.infoWindow.setContent("Current location");
@@ -211,8 +211,8 @@ export default {
               position.coords.latitude,
               position.coords.longitude
             );
-            this.currentLat = pos.lat.toFixed(5); // 更新纬度
-            this.currentLng = pos.lng.toFixed(5); // 更新经度
+            this.currentLat = pos.lat; // 更新纬度
+            this.currentLng = pos.lng; // 更新经度
             this.map.setCenter(pos);
 
             this.marker = new window.google.maps.Marker({
@@ -281,8 +281,8 @@ export default {
             });
           }
 
-          this.currentLat = location.lat().toFixed(5);
-          this.currentLng = location.lng().toFixed(5);
+          this.currentLat = location.lat();
+          this.currentLng = location.lng();
 
           this.infoWindow.setPosition(location);
           this.infoWindow.setContent(results[0].formatted_address);
