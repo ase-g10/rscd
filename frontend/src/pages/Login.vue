@@ -4,7 +4,8 @@
       {{ errorMessage }}
     </div>
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
+      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your
+        account</h2>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -13,7 +14,7 @@
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
           <div class="mt-2">
             <input v-model="email" id="email" name="email" type="email" autocomplete="email" required
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
 
@@ -26,20 +27,22 @@
           </div>
           <div class="mt-2">
             <input v-model="password" id="password" name="password" type="password" autocomplete="current-password"
-              required
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                   required
+                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
 
         <div>
           <button type="submit" @click="login"
-            class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign
-            in</button>
+                  class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            Sign
+            in
+          </button>
         </div>
         <button type="button"
-          class="mt-6 w-full flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          @click="loginWithGithub">
-          <img src="@/assets/img/github-mark.svg" alt="GitHub" class="h-5 w-5 mr-2" />
+                class="mt-6 w-full flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                @click="loginWithGithub">
+          <img src="@/assets/img/github-mark.svg" alt="GitHub" class="h-5 w-5 mr-2"/>
           Sign in with GitHub
         </button>
       </form>
@@ -47,25 +50,37 @@
 
       <p class="mt-10 text-center text-sm text-gray-500">
         Not a member?
-        <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Register here</a>
+        <a href="#" @click.prevent="goToRegister" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Register
+          here</a>
       </p>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted, getCurrentInstance } from 'vue';
-import { loadRouteLocation, useRouter } from "vue-router";
-import { loginWithGithub } from "@/api/auth2";
+import {ref, onMounted, getCurrentInstance} from 'vue';
+import {loadRouteLocation, useRouter} from "vue-router";
+// import {loginWithGithub} from "@/api/auth2";
 import NotificationTemplate from "./Notifications/NotificationTemplate";
-import { userLogin } from "@/api/user";
+import {userLogin} from "@/api/user";
+// import router from "@/router";
+import register from "@/pages/Register.vue";
 import router from "@/router";
+import Register from "@/pages/Register.vue";
 
 export default {
   methods: {
+    goToRegister() {
+      console.log("ffff");
+      router.push('/register')
+      // window.location.href = "http://localhost:8080/#/register"
+
+      console.log("afterrrr");
+    },
+
+
     loginWithGithub() {
-      // 直接导航到后端提供的重定向 URL
-      window.location.href = process.env.VUE_APP_BACKEND_URL + '/um/auth2/redirect_to_github';
+      window.location.href = "https://github.com/login/oauth/authorize?scope=user:email&client_id=753619e4db584209e494";
     },
     login(e) {
       e.preventDefault();
@@ -140,7 +155,7 @@ export default {
         });
       }
     });
-    return { errorMessage, email, password };
+    return {errorMessage, email, password};
   },
 };
 </script>
