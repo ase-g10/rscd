@@ -57,12 +57,16 @@ class DisasterModify(viewsets.ViewSet):
             latitude = data.get('latitude')
             longitude = data.get('longitude')
             location = data.get('location')
+            radius = data.get('radius')
+            type = data.get('type')
             disaster = Disaster()
             disaster.name = name
             disaster.description = description
             disaster.latitude = latitude
             disaster.longitude = longitude
             disaster.location = location
+            disaster.radius = float(radius)
+            disaster.type = type
             disaster.save()
             return JsonResponse({"message": data})
         except Exception as e:

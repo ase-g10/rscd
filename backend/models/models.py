@@ -4,12 +4,7 @@ from django.db import models
 # Create your models here.
 class Disaster(models.Model):
     name = models.CharField(max_length=255)
-    TYPE_CHOICES = (
-        ("Car Accident", "Car Accident"),
-        ("Fire Disaster", "Fire Disaster"),
-        ("Riot", "Riot")
-    )
-    type = models.CharField(max_length=40, choices=TYPE_CHOICES, default='Car Accident')
+    type = models.CharField(max_length=40, default='Car Accident')
     radius = models.FloatField(default=0)
     description = models.TextField(blank=True)
     latitude = models.CharField(max_length=255, blank=True)
