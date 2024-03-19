@@ -46,3 +46,24 @@ class DisasterView(viewsets.ViewSet):
             return JsonResponse({"message": json.loads(disaster_serialized)})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+class DisasterModify(viewsets.ViewSet):
+    @action(detail=False, methods=['post', 'get'])
+    def write(self, request):
+        try:
+            data = request.data
+            name = data.get('name')
+            description = data.get('description')
+            latitude = data.get('latitude')
+            longitude = data.get('longitude')
+            location = data.get('location')
+            disaster = Disaster()
+            disaster.name = name
+            disaster.description = description
+            disaster.latitude = latitude
+            disaster.longitude = longitude
+            disaster.location = location
+            disaster.save()
+            return JsonResponse({"message": data})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
