@@ -30,6 +30,5 @@ class EmergencyView(viewsets.ViewSet):
             log.responsible_team = responsible_team
             # log.create_time = create_time
             log.save()
-            return JsonResponse({"message": data})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
