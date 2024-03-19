@@ -4,6 +4,8 @@ from django.db import models
 # Create your models here.
 class Disaster(models.Model):
     name = models.CharField(max_length=255)
+    type = models.CharField(max_length=40, default='Car Accident')
+    radius = models.FloatField(default=0)
     description = models.TextField(blank=True)
     latitude = models.CharField(max_length=255, blank=True)
     longitude = models.CharField(max_length=255, blank=True)
@@ -11,6 +13,7 @@ class Disaster(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     is_delete = models.BooleanField(default=False)
+    is_verified = models.CharField(max_length=10, default='')
 
 
 class User(models.Model):
@@ -42,6 +45,8 @@ class Log(models.Model):
     latitude = models.CharField(max_length=255, blank=True)
     longitude = models.CharField(max_length=255, blank=True)
     location = models.CharField(max_length=255, blank=True)
+    radius = models.FloatField(default=0.0)
+    type = models.CharField(max_length=40, default="")
     create_time = models.CharField(max_length=255)
     update_time = models.DateTimeField(auto_now=True)
-    responsible_team = models.CharField(max_length=255, unique=True)
+    responsible_team = models.CharField(max_length=255)

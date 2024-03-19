@@ -12,8 +12,10 @@ import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import ReportDisaster from "@/pages/ReportDisaster.vue";
 import Login from "@/pages/Login.vue";
+import Register from "@/pages/Register.vue";
 
 const routes = [
+
   {
     path: "/",
     component: DashboardLayout,
@@ -23,25 +25,25 @@ const routes = [
         path: "dashboard",
         name: "dashboard",
         component: Dashboard,
-        meta: { requiresAuth: true },
+        meta: {requiresAuth: true},
       },
       {
         path: "stats",
         name: "stats",
         component: UserProfile,
-        meta: { requiresAuth: true },
+        meta: {requiresAuth: true},
       },
       {
         path: "notifications",
         name: "notifications",
         component: Notifications,
-        meta: { requiresAuth: true },
+        meta: {requiresAuth: true},
       },
       {
         path: "icons",
         name: "icons",
         component: Icons,
-        meta: { requiresAuth: true },
+        meta: {requiresAuth: true},
       },
       {
         path: "maps",
@@ -52,13 +54,13 @@ const routes = [
         path: "typography",
         name: "typography",
         component: Typography,
-        meta: { requiresAuth: true },
+        meta: {requiresAuth: true},
       },
       {
         path: "Disasters",
         name: "Disasters",
         component: TableList,
-        meta: { requiresAuth: true },
+        meta: {requiresAuth: true},
       },
       {
         path: "report-disaster",
@@ -69,9 +71,14 @@ const routes = [
         path: "login",
         name: "login",
         component: Login,
-        meta: { guestOnly: true },
+        meta: {guestOnly: true},
       },
     ],
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register
   },
   {
     path: "/:catchAll(.*)",
@@ -83,9 +90,9 @@ const routes = [
  * Asynchronously load view (Webpack Lazy loading compatible)
  * The specified component must be inside the Views folder
  * @param  {string} name  the filename (basename) of the view to load.
-function view(name) {
-   var res= require('../components/Dashboard/Views/' + name + '.vue');
-   return res;
-};**/
+ function view(name) {
+ var res= require('../components/Dashboard/Views/' + name + '.vue');
+ return res;
+ };**/
 
 export default routes;
