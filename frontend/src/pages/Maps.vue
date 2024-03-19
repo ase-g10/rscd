@@ -3,6 +3,7 @@
     <div class="card card-compact bg-base-100 shadow-xl p-4">
       <div class="card-body">
         <!-- Flex container adjusted to wrap items if not enough space -->
+        <div class="map h-96" id="map"></div>
         <div class="flex flex-wrap justify-between gap-4 mb-4">
           <!-- Latitude -->
           <div class="flex-1 min-w-0">
@@ -57,7 +58,7 @@
       </div>
     </div>
 
-    <div class="map h-96" id="map"></div>
+   
   </div>
 </template>
 
