@@ -461,7 +461,7 @@ export default {
         type: this.selectedDisasterType === 'other' ? this.customDisasterType : this.selectedDisasterType,
         description: this.disasterDescription,
         //TODO: Add image upload
-        image: "",
+        imageUrl: "",
       };
 
       if (this.userCircle) {
