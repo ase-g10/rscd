@@ -15,6 +15,7 @@ class EmergencyView(viewsets.ViewSet):
             longitude = data.get('longitude')
             location = data.get('location')
             responsible_team = data.get('username')
+            print(responsible_team)
             Tmp = Disaster.objects.filter(latitude=latitude, longitude=longitude)
             for tmp in Tmp:
                 create_time = tmp.create_time
@@ -28,7 +29,7 @@ class EmergencyView(viewsets.ViewSet):
             log.longitude = longitude
             log.location = location
             log.responsible_team = responsible_team
-            log.create_time = create_time
+            # log.create_time = create_time
             log.save()
             return JsonResponse({"message": data})
         except Exception as e:
