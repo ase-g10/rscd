@@ -60,12 +60,12 @@ export default {
       currentLng: "",
       currentAddress: "",
       submitMessage: "",
-
+      // 53.341676, -6.267914
       disasterTable: {
         title: "Disaster Management",
         subTitle: "",
         data: [
-          { id: 1, name: "Earthquake", type: "Natural", latitude: 34.0522, longitude: -118.2437, description: "A sudden shaking of the ground.", createdTime: "2024-03-19T12:00:00" },
+          { id: 1, name: "Earthquake", type: "Natural", latitude:  53.341676, longitude: -6.267914, description: "A sudden shaking of the ground.", createdTime: "2024-03-19T12:00:00" },
           { id: 2, name: "Wildfire", type: "Natural", latitude: 40.7128, longitude: -74.0060, description: "An uncontrolled fire in wild areas.", createdTime: "2024-03-19T13:00:00" },
           { id: 3, name: "Flood", type: "Natural", latitude: 51.5074, longitude: -0.1278, description: "An overflow of water onto normally dry land.", createdTime: "2024-03-19T14:00:00" }
         ],
@@ -98,11 +98,42 @@ export default {
     deleteItem(item) {
       console.log("Delete item:", item);
     },
-    navigateToHomepage(item) {
-      // Implement navigation logic here
-      console.log("Navigate to homepage:", item);
-      // For example, you can use router.push('/home') to navigate to the homepage
+    async navigateToHomepage(item) {
+      console.log("Navigate to homepage:", item.latitude);
+
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer({
+        map: this.map,
+      });
+
+      const currentLocation = new google.maps.LatLng(this.currentLat, this.currentLng);
+      const destination = new google.maps.LatLng(item.latitude, item.longitude);
+
+      const request = {
+        origin: currentLocation,
+        destination: destination,
+        travelMode: google.maps.TravelMode.DRIVING,
+      };
+
+      try {
+        const response = await new Promise((resolve, reject) => {
+          directionsService.route(request, (result, status) => {
+            if (status === google.maps.DirectionsStatus.OK) {
+              resolve(result);
+            } else {
+              reject(new Error("Error displaying directions: " + status));
+            }
+          });
+        });
+
+        // Render the directions on the map
+        directionsRenderer.setDirections(response);
+      } catch (error) {
+        console.error(error.message);
+      }
     },
+
+
     getCurrentLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
