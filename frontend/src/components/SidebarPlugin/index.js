@@ -25,6 +25,12 @@ const SidebarStore = reactive({
       icon: "ti-bell",
       title: "Notifications",
     },
+    {
+      to: "/disaster-report-approval",
+      name: "disaster-report-approval",
+      icon: "ti-check-box",
+      title: "Disaster Report Approval",
+    },
     // { to: '/dashboard', name: 'dashboard', icon: 'ti-panel', title: 'Dashboard' },
     // { to: '/icons', name: 'icons', icon: 'ti-pencil-alt2', title: 'Icons' },
     // { to: '/typography', name: 'typography', icon: 'ti-text', title: 'Typography' },
