@@ -12,11 +12,8 @@ import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import ReportDisaster from "@/pages/ReportDisaster.vue";
 import Login from "@/pages/Login.vue";
-<<<<<<< HEAD
 import Register from "@/pages/Register.vue";
-=======
 import DisasterReportApproval from '@/pages/DisasterReportApproval.vue';
->>>>>>> front-dev
 
 const routes = [
 
