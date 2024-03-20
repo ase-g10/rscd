@@ -4,34 +4,45 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from social_core.exceptions import AuthException
 from django.http import JsonResponse
-import json
 from django.conf import settings
+from django.contrib.auth import authenticate, login
+from rest_framework import status
+from rest_framework.response import Response
 from models.models import User
-class Login(viewsets.ViewSet):
+
+
+class Authentication(viewsets.ViewSet):
     @action(detail=False, methods=['post'])
-    def log_in(self, request, pk=None):
-        try:
-            data = request.data
+    def register(self, request):
+        username = request.data.get("username")
+        email = request.data.get("email")
+        password = request.data.get("password")
 
-            email = data.get('email')
-            pwd = data.get('password')
+        if not username or not password or not email:
+            print("Username, email and password are required")
+            return Response({"error": "Username, email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Todo 邮箱是否存在，email验证，pwd验证是否相同，密码加密，存数据库，
-            if email is "":
-                return JsonResponse({"status": "error", "message": "email cannot be empty."}, status=400)
-            if pwd is "":
-                return JsonResponse({"status": "error", "message": "password cannot be empty."}, status=400)
+        if User.objects.filter(username=username).exists():
+            return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
-            print(email)
-            print(pwd)
+        if User.objects.filter(email=email).exists():
+            return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
-            return JsonResponse({"status": "success", "message": "Account login successfully."})
-        except json.JSONDecodeError:
+        user = User.objects.create_user(username=username, email=email, password=password)
+        print(f'User {user.username} created')
+        user.save()
+        return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
 
-            return JsonResponse({"status": "error", "message": "Invalid JSON."}, status=400)
-        except Exception as e:
-
-            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    @action(detail=False, methods=['post'])
+    def login(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return Response({"message": "User logged in successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Auth2(viewsets.ViewSet):
@@ -68,3 +79,13 @@ class Auth2(viewsets.ViewSet):
         except AuthException as e:
             # 处理可能的认证异常
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+
+class UserInfo(viewsets.ViewSet):
+    @action(detail=False, methods=['get'])
+    def get_user_info(self, request):
+        if request.user.is_authenticated:
+            return JsonResponse(
+                {"username": request.user.username, "role": request.user.role, "email": request.user.email})
+        else:
+            return JsonResponse({"error": "Not authenticated"}, status=401)
