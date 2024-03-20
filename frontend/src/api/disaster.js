@@ -11,6 +11,9 @@ export function submitDisasterLocation(data) {
 }
 
 export const getDisasterData = () => {
-  return service.get("dm/disasterview/read_all/");
+  return service.get("dm/disasterview/read_all_verified/");
 };
 
+export const getDisasterDataFroVerify = () => {
+  return service.get("dm/disasterview/read_all_verifying/");
+};

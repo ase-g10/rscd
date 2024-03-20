@@ -493,6 +493,7 @@ export default {
         location: this.currentAddress,
         type: this.selectedDisasterType === 'other' ? this.customDisasterType : this.selectedDisasterType,
         description: this.disasterDescription,
+        contact: this.contactInfo,
         //TODO: Add image upload
         imageUrl: "",
       };
