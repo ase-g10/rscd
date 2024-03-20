@@ -21,6 +21,7 @@ class DisasterView(viewsets.ViewSet):
             location = data.get('location')
             radius = data.get('radius')
             type = data.get('type')
+            imageUrl = "" if data.get('imageUrl') == None else data.get('imageUrl')
             disaster = Disaster()
             disaster.name = name
             disaster.description = description
@@ -29,6 +30,7 @@ class DisasterView(viewsets.ViewSet):
             disaster.location = location
             disaster.radius = float(radius)
             disaster.type = type
+            disaster.image_url = imageUrl
             disaster.save()
 
             if latitude is None:
@@ -46,10 +48,22 @@ class DisasterView(viewsets.ViewSet):
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
     @action(detail=False, methods=['post', 'get'])
+    def read_all_verified(self, request):
+        try:
+            # disaster_queryset = Disaster.objects.all()
+            disaster_queryset = Disaster.objects.filter(verified_status="1")
+            print(disaster_queryset)
+            disaster_serialized = serializers.serialize('json', disaster_queryset)
+            # Sending serialized data as a response
+            return JsonResponse({"message": json.loads(disaster_serialized)})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+    @action(detail=False, methods=['post', 'get'])
     def read_all(self, request):
         try:
             # disaster_queryset = Disaster.objects.all()
-            disaster_queryset = Disaster.objects.filter(is_verified=True)
+            disaster_queryset = Disaster.objects.all()
             print(disaster_queryset)
             disaster_serialized = serializers.serialize('json', disaster_queryset)
             # Sending serialized data as a response
@@ -66,7 +80,7 @@ class DisasterModify(viewsets.ViewSet):
             longitude = data.get('longitude')
             Tmp = Disaster.objects.filter(latitude=latitude, longitude=longitude)
             for tmp in Tmp:
-                tmp.is_verified = True
+                tmp.verified_status = "1"
                 tmp.save()
             return JsonResponse({"message": data})
         except Exception as e:

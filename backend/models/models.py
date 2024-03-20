@@ -10,10 +10,11 @@ class Disaster(models.Model):
     latitude = models.CharField(max_length=255, blank=True)
     longitude = models.CharField(max_length=255, blank=True)
     location = models.CharField(max_length=255, blank=True)
+    image_url = models.CharField(max_length=255, default="")
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     is_delete = models.BooleanField(default=False)
-    is_verified = models.CharField(max_length=10, default='')
+    verified_status = models.CharField(max_length=10, default='0') #0未审核 1审核通过 -1审核未通过
 
 
 class User(models.Model):
@@ -47,6 +48,7 @@ class Log(models.Model):
     location = models.CharField(max_length=255, blank=True)
     radius = models.FloatField(default=0.0)
     type = models.CharField(max_length=40, default="")
+    image_url = models.CharField(max_length=255, default="")
     create_time = models.CharField(max_length=255)
     update_time = models.DateTimeField(auto_now=True)
     responsible_team = models.CharField(max_length=255)
