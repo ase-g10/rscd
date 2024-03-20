@@ -10,13 +10,7 @@
             <label class="label" for="latitude">
               <span class="label-text">Latitude:</span>
             </label>
-            <input
-              type="text"
-              id="latitude"
-              v-model="currentLat"
-              readonly
-              class="input input-bordered w-full"
-            />
+            <input type="text" id="latitude" v-model="currentLat" readonly class="input input-bordered w-full" />
           </div>
 
           <!-- Longitude -->
@@ -24,13 +18,7 @@
             <label class="label" for="longitude">
               <span class="label-text">Longitude:</span>
             </label>
-            <input
-              type="text"
-              id="longitude"
-              v-model="currentLng"
-              readonly
-              class="input input-bordered w-full"
-            />
+            <input type="text" id="longitude" v-model="currentLng" readonly class="input input-bordered w-full" />
           </div>
         </div>
 
@@ -39,12 +27,7 @@
           <label class="label" for="address">
             <span class="label-text">Address:</span>
           </label>
-          <input
-            type="text"
-            id="address"
-            v-model="currentAddress"
-            class="input input-bordered w-full"
-          />
+          <input type="text" id="address" v-model="currentAddress" class="input input-bordered w-full" />
         </div>
 
         <div class="card-actions justify-end mt-4">
@@ -58,7 +41,7 @@
       </div>
     </div>
 
-   
+
   </div>
 </template>
 
@@ -82,146 +65,66 @@ export default {
     console.log("Mounted - loading Google Maps Script");
     await loadGoogleMapsScript(this.initMap.bind(this));
     await this.loadDisasters();
-  
+
   },
   methods: {
-    async  loadDisasters() {
+    async loadDisasters() {
       getDisasterData().then(response => {
-        const disasters = response.data; // 假设响应数据在data字段中
+        // 假设响应数据在data字段中，并且实际的灾难数据在message字段中
+        const disasters = response.data.message;
         console.log("Disasters:", disasters);
+
         disasters.forEach(disaster => {
-          const { latitude, longitude, radius, name, description, imageUrl } = disaster;
+          // 从disaster.fields中解构所需的字段
+          const { latitude, longitude, radius, name, description, image_url: imageUrl } = disaster.fields;
           const position = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
 
           if (radius > 0) {
-      const disasterCircle = new google.maps.Circle({
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
-        map: this.map,
-        center: position,
-        radius: radius,
-      });
+            const disasterCircle = new google.maps.Circle({
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: '#FF0000',
+              fillOpacity: 0.35,
+              map: this.map,
+              center: position,
+              radius: radius,
+            });
 
-      // 点击圆显示详细信息
-      google.maps.event.addListener(disasterCircle, 'click', () => {
-        let contentString = `<h3>${name}</h3><p>${description}</p>`;
-        if (imageUrl) {
-          contentString += `<img src="${imageUrl}" alt="${name}" style="width:100%;max-width:200px;">`;
-        }
-        this.infoWindow.setContent(contentString);
-        this.infoWindow.setPosition(position);
-        this.infoWindow.open(this.map);
-        console.log("Disaster circle added:", disasterCircle);
-      });
-    } else {
-      const marker = new google.maps.Marker({
-        position,
-        map: this.map,
-        title: name
-      });
-      // 点击标记显示详细信息
-      google.maps.event.addListener(marker, 'click', () => {
-        let contentString = `<h3>${name}</h3><p>${description}</p>`;
-        if (imageUrl) {
-          contentString += `<img src="${imageUrl}" alt="${name}" style="width:100%;max-width:200px;">`;
-        }
-        this.infoWindow.setContent(contentString);
-        this.infoWindow.open(this.map, marker);
-        console.log("Disaster marker added:", marker);
-      });
+            // 点击圆显示详细信息
+            google.maps.event.addListener(disasterCircle, 'click', () => {
+              let contentString = `<h3>${name}</h3><p>${description}</p>`;
+              if (imageUrl) {
+                contentString += `<img src="${imageUrl}" alt="${name}" style="width:100%;max-width:200px;">`;
+              }
+              this.infoWindow.setContent(contentString);
+              this.infoWindow.setPosition(position);
+              this.infoWindow.open(this.map);
+              console.log("Disaster circle added:", disasterCircle);
+            });
+          } else {
+            const marker = new google.maps.Marker({
+              position,
+              map: this.map,
+              title: name
+            });
+
+            // 点击标记显示详细信息
+            google.maps.event.addListener(marker, 'click', () => {
+              let contentString = `<h3>${name}</h3><p>${description}</p>`;
+              if (imageUrl) {
+                contentString += `<img src="${imageUrl}" alt="${name}" style="width:100%;max-width:200px;">`;
+              }
+              this.infoWindow.setContent(contentString);
+              this.infoWindow.open(this.map, marker);
+              console.log("Disaster marker added:", marker);
+            });
           }
         });
       }).catch(error => {
         console.error("Failed to load disasters:", error);
       });
     },
-
-//     async loadDisasters() {
-//   // 模拟从API获取的灾难数据
-//   const mockDisasterData = [
-//     {
-//       name: "Test Disaster 1",
-//       type: "Car Accident",
-//       radius: 500, // 表示半径为500米
-//       description: "A minor car accident with no injuries reported.",
-//       latitude: 53.3437935,
-//       longitude: -6.2545716,
-//       location: "D02 PN40, Dublin",
-//       create_time: "2024-03-14T15:47:08.921Z",
-//       update_time: "2024-03-14T16:17:35.616Z",
-//       is_delete: false,
-//       is_verified: true,
-//       imageUrl: "https://sky.iocky.com/i/2024/03/20/65fa2a407453f.jpg" // 假设的图片URL
-//     },
-//     {
-//       name: "Test Disaster 2",
-//       type: "Flood",
-//       radius: 0.0,
-//       description: "Unexpected flood after heavy rain.",
-//       latitude: 53.3498053,
-//       longitude: -6.2603097,
-//       location: "D01 XF44, Dublin",
-//       create_time: "2024-03-15T10:00:00.000Z",
-//       update_time: "2024-03-15T11:30:00.000Z",
-//       is_delete: false,
-//       is_verified: true,
-//       imageUrl: null // 无图片
-//     }
-//     // 添加更多灾难数据进行测试
-//   ];
-
-//   // 以下代码遍历模拟数据，并在地图上显示
-//   mockDisasterData.forEach(disaster => {
-//     const { latitude, longitude, radius, name, description, imageUrl } = disaster;
-//     console.log("Disaster:", disaster);
-//     const position = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
-
-//     if (radius > 0) {
-//       const disasterCircle = new google.maps.Circle({
-//         strokeColor: '#FF0000',
-//         strokeOpacity: 0.8,
-//         strokeWeight: 2,
-//         fillColor: '#FF0000',
-//         fillOpacity: 0.35,
-//         map: this.map,
-//         center: position,
-//         radius: radius,
-//       });
-
-//       // 点击圆显示详细信息
-//       google.maps.event.addListener(disasterCircle, 'click', () => {
-//         let contentString = `<h3>${name}</h3><p>${description}</p>`;
-//         if (imageUrl) {
-//           contentString += `<img src="${imageUrl}" alt="${name}" style="width:100%;max-width:200px;">`;
-//         }
-//         this.infoWindow.setContent(contentString);
-//         this.infoWindow.setPosition(position);
-//         this.infoWindow.open(this.map);
-//       });
-//     } else {
-//       const marker = new google.maps.Marker({
-//         position,
-//         map: this.map,
-//         title: name
-//       });
-
-//       // 点击标记显示详细信息
-//       google.maps.event.addListener(marker, 'click', () => {
-//         let contentString = `<h3>${name}</h3><p>${description}</p>`;
-//         if (imageUrl) {
-//           contentString += `<img src="${imageUrl}" alt="${name}" style="width:100%;max-width:200px;">`;
-//         }
-//         this.infoWindow.setContent(contentString);
-//         this.infoWindow.open(this.map, marker);
-//       });
-
-//       console.log("Disaster marker added:", marker);
-//     }
-//   });
-// },
 
 
     getCurrentLocation() {
@@ -343,8 +246,8 @@ export default {
       this.infoWindow = new window.google.maps.InfoWindow();
 
       google.maps.event.addListenerOnce(this.map, 'idle', () => {
-    this.loadDisasters();
-  });
+        this.loadDisasters();
+      });
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
