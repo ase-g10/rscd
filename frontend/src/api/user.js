@@ -24,20 +24,15 @@ const mockResponse = {
 };
 
 export const userRegister = async (userData) => {
-  return new Promise((resolve, reject) => {
-    // 模拟网络延迟
-    setTimeout(() => {
-      // 假设所有的注册请求都是有效的，直接解析模拟的响应
-      // 在实际的应用中，你可以在这里添加一些逻辑来根据 userData 的不同返回成功或失败的响应
-
-      // 例如，模拟一个注册错误
-      if (userData.email === "error@example.com") {
-        reject({
-          message: "This email is already in use.",
-        });
-      } else {
-        resolve(mockResponse);
-      }
-    }, 1000); // 1秒后解析 Promise
+  const response = await fetch('/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
   });
+  if (!response.ok) {
+    throw new Error('Failed to register');
+  }
+  return response.json();
 };
