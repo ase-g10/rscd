@@ -1,4 +1,7 @@
+import datetime
+
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 #通用公共的model写在这里
 # Create your models here.
@@ -10,28 +13,23 @@ class Disaster(models.Model):
     latitude = models.CharField(max_length=255, blank=True)
     longitude = models.CharField(max_length=255, blank=True)
     location = models.CharField(max_length=255, blank=True)
+    image_url = models.CharField(max_length=255, default="")
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     is_delete = models.BooleanField(default=False)
-    is_verified = models.CharField(max_length=10, default='')
+    verified_status = models.CharField(max_length=10, default='0') #0未审核 1审核通过 -1审核未通过
 
 
-class User(models.Model):
+class User(AbstractUser):
     ROLE_CHOICES = (
         ('public', 'Public'),
-        ('publicRescueService', 'Public Rescue Service'),
-        ('emergencyResponseTeam', 'Emergency Response Team'),
-        ('emergencyRescueVehicle', 'Emergency Rescue Vehicle'),
+        ('emergency_response_team', 'Emergency Response Team'),
+        ('administrator', 'Administrator'),
     )
-    username = models.CharField(max_length=255, unique=True)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=255)
-    status = models.SmallIntegerField()
+
     role = models.CharField(max_length=40, choices=ROLE_CHOICES, default='public')
-    create_time = models.DateTimeField(auto_now_add=True)
-    update_time = models.DateTimeField(auto_now=True)
-    is_delete = models.BooleanField(default=False)
-    github_username = models.CharField(max_length=255, unique=True, null=True, blank=True)
+    # create_time = models.DateTimeField(default=datetime.datetime.now)
+
 
 class Vehicle(models.Model):
     #Todo: 填充这里
@@ -47,6 +45,7 @@ class Log(models.Model):
     location = models.CharField(max_length=255, blank=True)
     radius = models.FloatField(default=0.0)
     type = models.CharField(max_length=40, default="")
+    image_url = models.CharField(max_length=255, default="")
     create_time = models.CharField(max_length=255)
     update_time = models.DateTimeField(auto_now=True)
     responsible_team = models.CharField(max_length=255)
