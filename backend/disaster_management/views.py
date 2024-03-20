@@ -78,9 +78,10 @@ class DisasterModify(viewsets.ViewSet):
             data = request.data
             latitude = data.get('latitude')
             longitude = data.get('longitude')
+            verified_status = data.get('verified_status')
             Tmp = Disaster.objects.filter(latitude=latitude, longitude=longitude)
             for tmp in Tmp:
-                tmp.verified_status = "1"
+                tmp.verified_status = verified_status
                 tmp.save()
             return JsonResponse({"message": data})
         except Exception as e:
