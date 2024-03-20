@@ -32,6 +32,7 @@ class DisasterView(viewsets.ViewSet):
             disaster.radius = float(radius)
             disaster.type = type
             disaster.image_url = imageUrl
+            disaster.contact = contact
             disaster.save()
 
             if latitude is None:

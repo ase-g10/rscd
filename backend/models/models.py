@@ -14,6 +14,7 @@ class Disaster(models.Model):
     longitude = models.CharField(max_length=255, blank=True)
     location = models.CharField(max_length=255, blank=True)
     image_url = models.CharField(max_length=255, default="")
+    contact = models.CharField(max_length=255, default="")
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     is_delete = models.BooleanField(default=False)
