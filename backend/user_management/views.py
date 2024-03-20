@@ -35,9 +35,14 @@ class Authentication(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'])
     def login(self, request):
-        username = request.data.get("username")
+        email = request.data.get("email")
         password = request.data.get("password")
-        user = authenticate(request, username=username, password=password)
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = authenticate(request, username=user.username, password=password)
         if user is not None:
             login(request, user)
             return Response({"message": "User logged in successfully"}, status=status.HTTP_200_OK)
