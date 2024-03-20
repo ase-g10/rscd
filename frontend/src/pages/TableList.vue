@@ -49,6 +49,7 @@
 
 <script>
 import loadGoogleMapsScript from "@/utils/googleMapsLoader";
+import NotificationTemplate from "@/pages/Notifications/NotificationTemplate.vue";
 
 export default {
   data() {
@@ -129,6 +130,16 @@ export default {
         // Render the directions on the map
         directionsRenderer.setDirections(response);
       } catch (error) {
+        this.$notify({
+          component: NotificationTemplate,
+          icon: "ti-close",
+          horizontalAlign: "right",
+          verticalAlign: "top",
+          type: "error",
+          title: "Error",
+          text: "Incorrect disaster position " + error.message, // 使用 error.message 来获取错误信息
+          dangerouslySetInnerHtml: true,
+        });
         console.error(error.message);
       }
     },
