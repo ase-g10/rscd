@@ -504,7 +504,7 @@ export default {
         description: this.disasterDescription,
         contact: this.contactInfo,
         //TODO: Add image upload
-        imageUrl: "",
+        image_url: "",
       };
 
       if (this.userCircle) {
@@ -514,7 +514,7 @@ export default {
       }
 
       if (this.imageUrl) {
-        data.imageUrl = this.imageUrl;
+        data.image_url = this.imageUrl;
       }
 
       submitDisasterLocation(data)
