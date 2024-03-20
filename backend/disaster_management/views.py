@@ -21,6 +21,7 @@ class DisasterView(viewsets.ViewSet):
             location = data.get('location')
             radius = data.get('radius')
             type = data.get('type')
+            contact = data.get('contact')
             imageUrl = "" if data.get('imageUrl') == None else data.get('imageUrl')
             disaster = Disaster()
             disaster.name = name
@@ -31,6 +32,7 @@ class DisasterView(viewsets.ViewSet):
             disaster.radius = float(radius)
             disaster.type = type
             disaster.image_url = imageUrl
+            disaster.contact = contact
             disaster.save()
 
             if latitude is None:
@@ -52,7 +54,6 @@ class DisasterView(viewsets.ViewSet):
         try:
             # disaster_queryset = Disaster.objects.all()
             disaster_queryset = Disaster.objects.filter(verified_status="1")
-            print(disaster_queryset)
             disaster_serialized = serializers.serialize('json', disaster_queryset)
             # Sending serialized data as a response
             return JsonResponse({"message": json.loads(disaster_serialized)})
@@ -60,11 +61,10 @@ class DisasterView(viewsets.ViewSet):
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
     @action(detail=False, methods=['post', 'get'])
-    def read_all(self, request):
+    def read_all_verifying(self, request):
         try:
             # disaster_queryset = Disaster.objects.all()
-            disaster_queryset = Disaster.objects.all()
-            print(disaster_queryset)
+            disaster_queryset = Disaster.objects.all(verified_status="0")
             disaster_serialized = serializers.serialize('json', disaster_queryset)
             # Sending serialized data as a response
             return JsonResponse({"message": json.loads(disaster_serialized)})
@@ -78,9 +78,10 @@ class DisasterModify(viewsets.ViewSet):
             data = request.data
             latitude = data.get('latitude')
             longitude = data.get('longitude')
+            verified_status = data.get('verified_status')
             Tmp = Disaster.objects.filter(latitude=latitude, longitude=longitude)
             for tmp in Tmp:
-                tmp.verified_status = "1"
+                tmp.verified_status = verified_status
                 tmp.save()
             return JsonResponse({"message": data})
         except Exception as e:
