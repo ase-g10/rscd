@@ -76,7 +76,7 @@ export default {
 
         disasters.forEach(disaster => {
           // 从disaster.fields中解构所需的字段
-          const { latitude, longitude, radius, name, description, image_url: imageUrl } = disaster.fields;
+          const { latitude, longitude, radius, name, description, image_url: image_url } = disaster.fields;
           const position = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
 
           if (radius > 0) {
@@ -94,8 +94,8 @@ export default {
             // 点击圆显示详细信息
             google.maps.event.addListener(disasterCircle, 'click', () => {
               let contentString = `<h3>${name}</h3><p>${description}</p>`;
-              if (imageUrl) {
-                contentString += `<img src="${imageUrl}" alt="${name}" style="width:100%;max-width:200px;">`;
+              if (image_url) {
+                contentString += `<img src="${image_url}" alt="${name}" style="width:100%;max-width:200px;">`;
               }
               this.infoWindow.setContent(contentString);
               this.infoWindow.setPosition(position);
@@ -112,8 +112,8 @@ export default {
             // 点击标记显示详细信息
             google.maps.event.addListener(marker, 'click', () => {
               let contentString = `<h3>${name}</h3><p>${description}</p>`;
-              if (imageUrl) {
-                contentString += `<img src="${imageUrl}" alt="${name}" style="width:100%;max-width:200px;">`;
+              if (image_url) {
+                contentString += `<img src="${image_url}" alt="${name}" style="width:100%;max-width:200px;">`;
               }
               this.infoWindow.setContent(contentString);
               this.infoWindow.open(this.map, marker);
