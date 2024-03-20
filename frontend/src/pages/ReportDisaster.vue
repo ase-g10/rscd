@@ -331,11 +331,10 @@ export default {
             this.marker = new window.google.maps.Marker({
               position: pos,
               map: this.map,
+              draggable: true,
             });
 
-            this.infoWindow.setPosition(pos);
-            this.infoWindow.setContent("Current location");
-            this.infoWindow.open(this.map, this.marker);
+            this.marker.setIcon('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/w8AAwAB/DE8Eg0AAAAASUVORK5CYII=');
 
             const userCircle = new window.google.maps.Circle({
             strokeColor: "#FF0000",
@@ -347,10 +346,20 @@ export default {
             center: pos,
             radius: 100, // 默认半径, 例如1000米
             editable: true, // 允许用户编辑大小
-            draggable: true 
             });
 
             this.userCircle = userCircle;
+
+            // 将圆心绑定到标记的位置
+            userCircle.bindTo('center', this.marker, 'position');
+
+            // 添加标记拖动事件监听器
+            this.marker.addListener('drag', () => {
+              // 拖动标记时，圆形会自动更新其位置
+              const markerPos = this.marker.getPosition();
+              this.currentLat = markerPos.lat();
+              this.currentLng = markerPos.lng();
+            });
 
             // 监听圆的大小和位置变化
             userCircle.addListener('radius_changed', () => {
