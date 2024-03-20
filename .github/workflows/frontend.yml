@@ -2,7 +2,7 @@ name: Frontend CI/CD
 
 on:
   push:
-    branches: [ "main", "front-dev" ]
+    branches: [ "main", "front-dev", "local-test" ]
   pull_request:
     branches: [ "main" ]
 
@@ -104,7 +104,7 @@ jobs:
           ${{ runner.os }}-node-
 
     - name: Set Environment Variables for Staging
-      if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/front-dev')
+      if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/front-dev' || github.ref == 'refs/heads/local-test')
       run: |
         echo "VUE_APP_BACKEND_URL=${{ secrets.STAGING_VUE_APP_BACKEND_URL }}" >> $GITHUB_ENV
 
