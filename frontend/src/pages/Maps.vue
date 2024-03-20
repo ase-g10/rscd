@@ -80,11 +80,12 @@ export default {
   },
   async mounted() {
     console.log("Mounted - loading Google Maps Script");
-    loadGoogleMapsScript(this.initMap.bind(this));
-    this.loadDisasters();
+    await loadGoogleMapsScript(this.initMap.bind(this));
+    await this.loadDisasters();
+  
   },
   methods: {
-    // loadDisasters() {
+    // async  loadDisasters() {
     //   getDisasterData().then(response => {
     //     const disasters = response.data; // 假设响应数据在data字段中
     //     console.log("Disasters:", disasters);
@@ -122,7 +123,7 @@ export default {
     //   });
     // },
 
-    loadDisasters() {
+    async loadDisasters() {
   // 模拟从API获取的灾难数据
   const mockDisasterData = [
     {
@@ -159,6 +160,7 @@ export default {
   // 以下代码遍历模拟数据，并在地图上显示
   mockDisasterData.forEach(disaster => {
     const { latitude, longitude, radius, name, description, imageUrl } = disaster;
+    console.log("Disaster:", disaster);
     const position = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
 
     if (radius > 0) {
@@ -199,6 +201,8 @@ export default {
         this.infoWindow.setContent(contentString);
         this.infoWindow.open(this.map, marker);
       });
+
+      console.log("Disaster marker added:", marker);
     }
   });
 },
@@ -321,6 +325,10 @@ export default {
         mapOptions
       );
       this.infoWindow = new window.google.maps.InfoWindow();
+
+      google.maps.event.addListenerOnce(this.map, 'idle', () => {
+    this.loadDisasters();
+  });
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
