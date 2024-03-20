@@ -34,6 +34,8 @@
           </div>
         </div>
 
+        
+
         <!-- Address with flex-auto to take up the remaining space -->
         <div class="flex-auto mb-4">
           <label class="label" for="disasterAddress">
@@ -46,6 +48,21 @@
             class="input input-bordered w-full"
           />
         </div>
+
+        <!-- Disaster Name -->
+        <div class="flex-auto mb-4">
+          <label class="label" for="disasterName">
+            <span class="label-text">Disaster Name:</span>
+          </label>
+          <input
+            type="text"
+            id="disasterName"
+            v-model="disasterName"
+            class="input input-bordered w-full"
+            placeholder="Enter the disaster name"
+          />
+        </div>
+
 
         <!-- Email or Phone Number -->
         <div class="flex-auto mb-4">
@@ -165,6 +182,7 @@ export default {
       contactInfo: "",
       imageUrl: "",
       customDisasterType: "",
+      disasterName: "",
     };
   },
   mounted() {
@@ -426,6 +444,20 @@ export default {
         return;
       }
 
+      if (!this.disasterName) {
+        this.$notify({
+          component: NotificationTemplate,
+          icon: "ti-close",
+          horizontalAlign: "right",
+          verticalAlign: "top",
+          type: "warning",
+          title: "Warning",
+          text: "Please provide a disaster name.",
+          dangerouslySetInnerHtml: true,
+        });
+        return;
+      }
+
       if (!this.selectedDisasterType) {
         this.$notify({
             component: NotificationTemplate,
@@ -455,9 +487,10 @@ export default {
       }     
 
       const data = {
+        name: this.disasterName,
         latitude: this.currentLat,
         longitude: this.currentLng,
-        address: this.currentAddress,
+        location: this.currentAddress,
         type: this.selectedDisasterType === 'other' ? this.customDisasterType : this.selectedDisasterType,
         description: this.disasterDescription,
         //TODO: Add image upload
