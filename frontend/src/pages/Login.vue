@@ -82,7 +82,7 @@ export default {
     loginWithGithub() {
 
       // 直接导航到后端提供的重定向 URL
-      window.location.href = 'https://github.com/login/oauth/authorize?scope=user:email&client_id=753619e4db584209e494';
+      window.location.href = process.env.VUE_APP_BACKEND_URL + '/um/auth2/redirect_to_github';;
 
     },
     login(e) {
