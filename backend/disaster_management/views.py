@@ -1,4 +1,4 @@
-from math import sin, cos, atan2, radians, pi, sqrt
+from math import sin, cos, atan2, radians, pi, sqrt, degrees
 
 import requests
 from django.shortcuts import render, redirect
@@ -9,6 +9,7 @@ from django.http import JsonResponse
 import json
 from models.models import Disaster
 from django.conf import settings
+from geopy.distance import geodesic
 
 
 class DisasterView(viewsets.ViewSet):
@@ -86,15 +87,13 @@ class DisasterView(viewsets.ViewSet):
     @action(detail=False, methods=['post'])
     def calculate_safePoint(self, request):
         data = request.data
-        print(data)
-        user_latitude = float(data.get('latitude'))
-
-        user_longitude = float(data.get('longitude'))
-        print(user_latitude, user_longitude)
-        if user_latitude is None:
-            return JsonResponse({"status": "error", "message": "Latitude cannot be empty."}, status=400)
-        if user_longitude is None:
-            return JsonResponse({"status": "error", "message": "Longitude cannot be empty."}, status=400)
+        try:
+            # 从请求中获取数据，并转换为浮点数
+            user_latitude = float(data['latitude'])
+            user_longitude = float(data['longitude'])
+        except (ValueError, KeyError):
+            # 如果无法获取或转换，返回错误响应
+            return JsonResponse({"status": "error", "message": "Invalid or missing latitude/longitude."}, status=400)
         def calculate_bearing(lat1, lng1, lat2, lng2):
             """
             计算从点1到点2的方位角（以北为0度，顺时针方向）
@@ -107,7 +106,7 @@ class DisasterView(viewsets.ViewSet):
             x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(d_lng)
             bearing = atan2(y, x)
             bearing = (bearing + 2 * pi) % (2 * pi)  # 规范化为0到2π之间
-            return bearing
+            return degrees(bearing)
 
         def haversine(lon1, lat1, lon2, lat2):
             """
@@ -126,37 +125,39 @@ class DisasterView(viewsets.ViewSet):
             return c * r
 
         def is_user_in_disaster_area(user_lat, user_lng):
-            for disaster in Disaster.objects.all():
-                distance = haversine(user_lng, user_lat, disaster.longitude, disaster.latitude)
+            user_lat, user_lng = float(user_lat), float(user_lng)
+            user_location = (user_lat, user_lng)
+            for disaster in Disaster.objects.filter(verified_status="1"):
+                disaster_lat, disaster_lng, disaster_radius = map(float,
+                                                                  [disaster.latitude, disaster.longitude,
+                                                                   disaster.radius])
+                disaster_location = (disaster_lat, disaster_lng)
+                distance = geodesic(user_location, disaster_location).meters
                 if distance <= disaster.radius:
                     # 用户在灾难影响范围内
                     return True, disaster
             return False, None
 
-        def calculate_escape_point(user_lat, user_lng, disaster):
-            user_lat, user_lng = float(user_lat), float(user_lng)
-            disaster_lat, disaster_lng, disaster_radius = map(float,
-                                                              [disaster.latitude, disaster.longitude, disaster.radius])
-
-            bearing = calculate_bearing(user_lat, user_lng, disaster_lat, disaster_lng)
-            print(bearing)
-            safe_lat = disaster_lat + (disaster_radius / 6371000) * cos(bearing) * (180 / pi)
-            safe_lng = disaster_lng + (disaster_radius / 6371000) * sin(bearing) * (180 / pi) / cos(
-                radians(disaster_lat))
-
-            return safe_lat, safe_lng
 
         # 检查用户是否处于任何灾难的影响范围内
         # user_lat, user_lng = 40.7128, -74.0060  # 假设的用户位置
         in_disaster_area, disaster = is_user_in_disaster_area(user_latitude, user_longitude)
         print(in_disaster_area, disaster)
         if in_disaster_area:
-            safe_lat, safe_lng = calculate_escape_point(user_latitude, user_longitude, disaster)
-            print(f"用户在灾难范围内，最近安全点的坐标：{safe_lat}, {safe_lng}")
-            return JsonResponse({'safe_lat': safe_lat, 'safe_lng': safe_lng})
+            bearing = calculate_bearing(user_latitude, user_longitude, float(disaster.latitude), float(disaster.longitude))
+            bearing = (bearing + 180) % 360  # 反向
+            print("Bearing from user to disaster center:", bearing)
+            # 计算安全距离，确保安全点在灾难半径之外
+            escape_distance = disaster.radius + 50  # 加上额外的安全距离
+            user_location = (user_latitude, user_longitude)
+            # 计算安全点
+            safe_location = geodesic(meters=escape_distance).destination(user_location, bearing)
+            print(f"用户在灾难范围内，最近安全点的坐标：{safe_location.latitude}, {safe_location.longitude}")
+
+            return JsonResponse({'status': 'success', 'safe_lat': safe_location[0], 'safe_lng': safe_location[1]})
         else:
-            print("用户不在任何灾难的影响范围内。")
-            return JsonResponse({"status": "error", "message": "User is not in any disaster's impact area."})
+            # 如果不在灾难范围内，返回提示消息
+            return JsonResponse({"status": "success", "message": "User is not in any disaster's impact area."})
 
 
 class DisasterModify(viewsets.ViewSet):
