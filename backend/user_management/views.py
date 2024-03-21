@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from social_core.exceptions import AuthException
 from django.http import JsonResponse
 from django.conf import settings
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from rest_framework import status
 from rest_framework.response import Response
 from models.models import User
@@ -48,6 +48,14 @@ class Authentication(viewsets.ViewSet):
             return Response({"message": "User logged in successfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['post'])
+    def logout(self, request):
+        if request.user.is_authenticated:
+            logout(request)
+            return Response({"message": "User logged out successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class Auth2(viewsets.ViewSet):

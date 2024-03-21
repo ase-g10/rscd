@@ -17,19 +17,16 @@ class EmergencyView(viewsets.ViewSet):
             responsible_team = data.get('username')
             Tmp = Disaster.objects.filter(latitude=latitude, longitude=longitude)
             for tmp in Tmp:
-                is_deleted = tmp.is_delete
-                if is_deleted:
+                is_onging = tmp.is_onging
+                if not is_onging:
                     return JsonResponse({"status": "error", "message": "already deleted this disaster"})
                 else:
-                    # delete disaster from database
-                    tmp.is_delete = True
+                    # terminate the disaster
+                    tmp.is_onging = False
                     tmp.save()
                 type = tmp.type
                 radius = tmp.radius
                 create_time = tmp.create_time
-            is_delete = Disaster.objects.filter(latitude=latitude, longitude=longitude)
-            # if is_delete:
-            #     return JsonResponse({"message": "already deleted"})
             log = Log()
             log.disaster_name = disaster_name
             log.description = description

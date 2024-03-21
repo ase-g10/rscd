@@ -63,6 +63,17 @@ class DisasterView(viewsets.ViewSet):
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
     @action(detail=False, methods=['post', 'get'])
+    def read_all_ongoing(self, request):
+        try:
+            # disaster_queryset = Disaster.objects.all()
+            disaster_queryset = Disaster.objects.filter(verified_status="1", is_onging=True)
+            disaster_serialized = serializers.serialize('json', disaster_queryset)
+            # Sending serialized data as a response
+            return JsonResponse({"message": json.loads(disaster_serialized)})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+    @action(detail=False, methods=['post', 'get'])
     def read_all_verifying(self, request):
         try:
             # disaster_queryset = Disaster.objects.all()
@@ -72,10 +83,12 @@ class DisasterView(viewsets.ViewSet):
             return JsonResponse({"message": json.loads(disaster_serialized)})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['post'])
     def calculate_safePoint(self, request):
         data = request.data
+        print(data)
         user_latitude = float(data.get('latitude'))
+
         user_longitude = float(data.get('longitude'))
         print(user_latitude, user_longitude)
         if user_latitude is None:
