@@ -371,7 +371,7 @@ export default {
       // 假设已有方法获取当前用户位置，此处直接使用
       const userPosition = { lat: parseFloat(this.currentLat), lng: parseFloat(this.currentLng) };
       console.log("Fetching safe point based on...", this.currentLat, this.currentLng)
-
+      console.log("User position:", { latitude: userPosition.lat, longitude: userPosition.lng });
       try {
         const response = await getDisasterSafePoint({ latitude: userPosition.lat, longitude: userPosition.lng });
         // const response = await mockGetDisasterSafePoint({ latitude: userPosition.lat, longitude: userPosition.lng });
