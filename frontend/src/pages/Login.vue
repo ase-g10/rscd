@@ -107,8 +107,7 @@ export default {
             text: `Login successful!`,
             dangerouslySetInnerHtml: true,
           })
-          router.push('/maps');
-          ;
+          window.location.reload();
         })
         .catch(error => {
           console.log(error);
@@ -136,6 +135,7 @@ export default {
     const email = ref("");
     const password = ref("");
 
+    //TODO: 改成从后端获取token,不经过URL
     onMounted(() => {
       const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
       const token = urlParams.get('token');

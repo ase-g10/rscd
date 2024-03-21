@@ -388,6 +388,7 @@ export default {
           );
         } else {
           this.hasRoute = false; // User is in a safe area, do not display route
+          window.location.reload();
         }
         // const safeLat = safePoint.safe_lat;
         // const safeLng = safePoint.safe_lng;
