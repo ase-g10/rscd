@@ -525,3 +525,5 @@ dist
 .pnp.*
 
 .idea/copilot
+
+backend/models/migrations
