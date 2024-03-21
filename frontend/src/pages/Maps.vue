@@ -3,7 +3,23 @@
     <div class="card card-compact bg-base-100 shadow-xl p-4">
       <div class="card-body">
         <!-- Flex container adjusted to wrap items if not enough space -->
-        <div class="map h-96" id="map"></div>
+        <div id="container" class="flex h-screen"> <!-- Ensure full height and flex display -->
+          <div class="map h-full flex-grow" id="map"></div> <!-- Map fills available space -->
+          <div id="sidebar" class="bg-white overflow-auto" :style="{ flexBasis: hasRoute ? '250px' : '0px' }">
+            <p v-if="hasRoute">Total Distance: <span id="total" class="total-distance"></span></p>
+            <div id="panel"></div>
+          </div>
+          <div id="floating-panel" class="absolute top-0 left-0 z-10 m-10" v-if="hasRoute">
+            <b>Mode of Travel:</b>
+            <select id="mode" v-model="travelMode" class="select select-bordered select-sm">
+              <!-- Adjusted for smaller size -->
+              <option value="DRIVING">Driving</option>
+              <option value="WALKING">Walking</option>
+              <option value="BICYCLING">Bicycling</option>
+              <option value="TRANSIT">Transit</option>
+            </select>
+          </div>
+        </div>
         <div class="flex flex-wrap justify-between gap-4 mb-4">
           <!-- Latitude -->
           <div class="flex-1 min-w-0">
@@ -48,6 +64,39 @@
 <script>
 import loadGoogleMapsScript from "@/utils/googleMapsLoader";
 import { getDisasterData } from "@/api/disaster";
+import { getDisasterSafePoint } from "@/api/disaster";
+import router from "@/router";
+
+function mockGetDisasterSafePoint({ latitude, longitude }) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // Simulate a condition check. You could use latitude and longitude for more realistic scenarios.
+      const userIsInDisasterArea = Math.random() < 0.5; // Assume the user is not in a disaster area for this simulation
+      console.log("User is in disaster area:", userIsInDisasterArea);
+
+      if (userIsInDisasterArea) {
+        // Simulate a successful response
+        resolve({
+          data: {
+            safe_lat: 53.3433840099226, // Mock safe point latitude
+            safe_lng: -6.245269005249021, // Mock safe point longitude
+          }
+        });
+      } else {
+        // Simulate an error response
+        reject({
+          response: {
+            data: {
+              status: "error",
+              message: "User is not in any disaster's impact area."
+            }
+          }
+        });
+      }
+    }, 1000); // Delay to simulate network request
+  });
+}
+
 
 export default {
   data() {
@@ -59,6 +108,10 @@ export default {
       currentLng: "",
       currentAddress: "",
       submitMessage: "",
+      directionsService: null, 
+      directionsRenderer: null, 
+      travelMode: 'WALKING',
+      hasRoute: false,
     };
   },
   async mounted() {
@@ -66,6 +119,17 @@ export default {
     await loadGoogleMapsScript(this.initMap.bind(this));
     await this.loadDisasters();
 
+  },
+  watch: {
+    travelMode: {
+      handler() {
+        // Check if we already have a location to route from/to
+        if (this.currentLat && this.currentLng) {
+          this.fetchSafePointAndDisplayRoute();
+        }
+      },
+      immediate: false,
+    },
   },
   methods: {
     async loadDisasters() {
@@ -156,6 +220,8 @@ export default {
             this.infoWindow.setPosition(pos);
             this.infoWindow.setContent("Current location");
             this.infoWindow.open(this.map, this.marker);
+
+            this.fetchSafePointAndDisplayRoute();
           },
           () => {
             this.handleLocationError(
@@ -244,9 +310,23 @@ export default {
         mapOptions
       );
       this.infoWindow = new window.google.maps.InfoWindow();
+      this.directionsService = new google.maps.DirectionsService();
+      this.directionsRenderer = new google.maps.DirectionsRenderer({
+        draggable: true,
+        map: this.map,
+        panel: document.getElementById("panel"),
+      });
 
       google.maps.event.addListenerOnce(this.map, 'idle', () => {
         this.loadDisasters();
+      });
+
+      // 当路线改变时更新距离
+      this.directionsRenderer.addListener("directions_changed", () => {
+        const directions = this.directionsRenderer.getDirections();
+        if (directions) {
+          this.computeTotalDistance(directions);
+        }
       });
 
       if (navigator.geolocation) {
@@ -272,6 +352,8 @@ export default {
             this.infoWindow.setPosition(pos);
             this.infoWindow.setContent("Current location");
             this.infoWindow.open(this.map, this.marker);
+            this.fetchSafePointAndDisplayRoute();
+
           },
           () => {
             this.handleLocationError(
@@ -285,6 +367,75 @@ export default {
         this.handleLocationError(false, this.infoWindow, this.map.getCenter());
       }
     },
+    async fetchSafePointAndDisplayRoute() {
+      // 假设已有方法获取当前用户位置，此处直接使用
+      const userPosition = { lat: parseFloat(this.currentLat), lng: parseFloat(this.currentLng) };
+      console.log("Fetching safe point based on...", this.currentLat, this.currentLng)
+
+      try {
+        const response = await getDisasterSafePoint({ latitude: userPosition.lat, longitude: userPosition.lng });
+        // const response = await mockGetDisasterSafePoint({ latitude: userPosition.lat, longitude: userPosition.lng });
+        const safePoint = response.data;
+        if (safePoint.safe_lat && safePoint.safe_lng) {
+          this.hasRoute = true; // User is not in a safe area, display route
+          console.log("User position:", userPosition);
+          console.log("Safe point:", safePoint);
+          this.displayRoute(
+            { lat: userPosition.lat, lng: userPosition.lng },
+            { lat: safePoint.safe_lat, lng: safePoint.safe_lng },
+            this.directionsService,
+            this.directionsRenderer
+          );
+        } else {
+          this.hasRoute = false; // User is in a safe area, do not display route
+        }
+        // const safeLat = safePoint.safe_lat;
+        // const safeLng = safePoint.safe_lng;
+        // console.log("User position:", userPosition)
+        // console.log("Safe point:", safePoint);
+
+        // this.displayRoute(
+        //   { lat: userPosition.lat, lng: userPosition.lng },
+        //   { lat: safeLat, lng: safeLng },
+        //   this.directionsService,
+        //   this.directionsRenderer
+        // );
+      } catch (error) {
+        console.error("Failed to fetch safe point:", error);
+      }
+    },
+    displayRoute(origin, destination, service, display) {
+      const travelModes = {
+        DRIVING: google.maps.TravelMode.DRIVING,
+        WALKING: google.maps.TravelMode.WALKING,
+        BICYCLING: google.maps.TravelMode.BICYCLING,
+        TRANSIT: google.maps.TravelMode.TRANSIT,
+      };
+      // 更新此方法以接受坐标而非地址作为起点和终点
+      service.route({
+        origin: origin,
+        destination: destination,
+        travelMode: travelModes[this.travelMode],
+        // 其他路线选项...
+      }).then(result => {
+        display.setDirections(result);
+      }).catch(e => {
+        alert("Could not display directions due to: " + e);
+      });
+    },
+    computeTotalDistance(result) {
+      let total = 0;
+      const myroute = result.routes[0];
+      if (!myroute) {
+        return;
+      }
+      for (let i = 0; i < myroute.legs.length; i++) {
+        total += myroute.legs[i].distance.value;
+      }
+      total = total / 1000;
+      document.getElementById("total").innerHTML = total + " km";
+    },
+
     geocodeLatLng(lat, lng) {
       // eslint-disable-next-line no-undef
       const geocoder = new google.maps.Geocoder();
@@ -349,4 +500,46 @@ export default {
 
 <style>
 @import "@/assets/css/mapsStyles.css";
+
+#container {
+  display: flex;
+  height: 100%;
+}
+
+#sidebar {
+  flex-basis: 250px;
+  /* Adjust based on your preference */
+  flex-shrink: 0;
+  /* Prevents shrinking */
+  overflow-y: auto;
+  /* Allows scrolling */
+  padding: 1rem;
+}
+
+#map {
+  height: 600px;
+  /* Temporarily set a fixed height to debug */
+  flex-grow: 1;
+}
+
+#floating-panel {
+  position: absolute;
+  top: 10px;
+  left: 25%;
+  z-index: 5;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #999;
+  text-align: center;
+  font-family: "Roboto", "sans-serif";
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+.select-sm {
+  /* Smaller select size */
+  padding: 0.1rem 0.1rem;
+  font-size: 0.875rem;
+  line-height: 1rem;
+}
 </style>
