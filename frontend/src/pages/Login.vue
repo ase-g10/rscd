@@ -68,6 +68,7 @@ import register from "@/pages/Register.vue";
 import router from "@/router";
 import Register from "@/pages/Register.vue";
 
+
 export default {
   methods: {
     goToRegister() {
@@ -103,7 +104,7 @@ export default {
             verticalAlign: "top",
             type: "success",
             title: "successfully log in ",
-            text: `${response.data.message}`,
+            text: `Login successful!`,
             dangerouslySetInnerHtml: true,
           })
           router.push('/maps');

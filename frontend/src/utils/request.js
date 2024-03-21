@@ -15,7 +15,7 @@ service.interceptors.request.use(
     if (config.url.includes('/api/private/')) { // 如果是私有接口则设置请求头
       const token = localStorage.getItem('token');
       if (token) {
-        config.headers.Authorization = `Token ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
       }
     }
     return config;

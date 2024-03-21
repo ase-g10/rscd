@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework import status
 from rest_framework.response import Response
 from models.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class Authentication(viewsets.ViewSet):
@@ -37,6 +38,7 @@ class Authentication(viewsets.ViewSet):
     def login(self, request):
         email = request.data.get("email")
         password = request.data.get("password")
+
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
@@ -45,7 +47,9 @@ class Authentication(viewsets.ViewSet):
         user = authenticate(request, username=user.username, password=password)
         if user is not None:
             login(request, user)
-            return Response({"message": "User logged in successfully"}, status=status.HTTP_200_OK)
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            return Response({"access_token": access_token}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 

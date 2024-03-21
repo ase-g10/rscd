@@ -118,6 +118,13 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
 #TODO: 这里要改成“ASE_Group10.wsgi.application”
 WSGI_APPLICATION = 'backend.wsgi.application'
 SOCIAL_AUTH_GITHUB_KEY = config('DJANGO_GITHUB_CLIENT_ID', default='98a50d02de2c591daac8')
