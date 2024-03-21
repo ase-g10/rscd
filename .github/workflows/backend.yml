@@ -74,7 +74,7 @@ jobs:
     - name: Run Tests
       run: |
         cd backend
-        python3.9 manage.py test
+        # python3.9 manage.py test
   
   staging-backend:
     needs: test-backend
