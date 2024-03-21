@@ -1,34 +1,55 @@
 <template>
-    <div class="card card-compact bg-base-100 shadow-xl p-4">
-      <div class="card-body">
-        <h2 class="card-title">Disaster Report Approval</h2>
-        <!-- Placeholder for disaster reports list -->
-        <div class="report-list my-4">
-          <!-- Dynamic list of disaster reports will be rendered here -->
-        </div>
-        <div class="card-actions justify-end">
-          <button class="btn btn-primary">Approve</button>
-          <button class="btn btn-error">Reject</button>
-        </div>
+  <div class="card card-compact bg-base-100 shadow-xl p-4">
+    <div class="card-body">
+      <h2 class="card-title">Disaster Report Approval</h2>
+      <div class="report-list my-4">
+        <ul>
+          <li v-for="report in disasterReports" :key="report.id">
+            {{ report.fields.disasterType }} at {{ report.fields.location }}
+            <button @click="approveReport(report.id)" class="btn btn-primary">Approve</button>
+            <button @click="rejectReport(report.id)" class="btn btn-error">Reject</button>
+          </li>
+        </ul>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'DisasterReportApproval',
-    data() {
-      return {
-        // Define data properties here
-      };
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'DisasterReportApproval',
+  data() {
+    return {
+      disasterReports: [],
+    };
+  },
+  created() {
+    this.fetchDisasterReports();
+  },
+  methods: {
+    fetchDisasterReports() {
+      console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW');
+      axios.get('/dm/disasterview/read_all_verifying/')
+        .then(response => {
+          this.disasterReports = response.data.message;
+          console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW');
+        })
+        .catch(error => {
+          console.error('There was an error fetching the disaster reports:', error);
+        });
     },
-    methods: {
-      // Define component methods here
+    approveReport(reportId) {
+      console.log('Approving report with ID:', reportId);
     },
-  };
-  </script>
-  
-  <style>
-  @import "@/assets/css/mapsStyles.css";
-  </style>
-  
+    rejectReport(reportId) {
+      console.log('Rejecting report with ID:', reportId);
+    },
+  },
+};
+</script>
+
+<style>
+@import "@/assets/css/mapsStyles.css";
+</style>
