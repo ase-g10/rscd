@@ -75,8 +75,8 @@ const routes = [
         meta: {guestOnly: true},
       },
       {
-        path: '/disaster-report-approval',
-        name: 'DisasterReportApproval',
+        path: 'disaster-report-approval',
+        name: 'disaster-report-approval',
         component: DisasterReportApproval,
         meta: {
           requiresAuth: true
