@@ -17,3 +17,11 @@ export const getDisasterData = () => {
 export const getDisasterDataFroVerify = () => {
   return service.get("dm/disasterview/read_all_verifying/");
 };
+
+export const getDisasterSafePoint = (data) => {
+  return service({
+    url: "dm/disasterview/calculate_safePoint/",
+    method: "post",
+    data,
+  });
+};
