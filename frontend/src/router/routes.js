@@ -13,6 +13,7 @@ import TableList from "@/pages/TableList.vue";
 import ReportDisaster from "@/pages/ReportDisaster.vue";
 import Login from "@/pages/Login.vue";
 import Register from "@/pages/Register.vue";
+import DisasterReportApproval from '@/pages/DisasterReportApproval.vue';
 
 const routes = [
 
@@ -73,6 +74,14 @@ const routes = [
         component: Login,
         meta: {guestOnly: true},
       },
+      {
+        path: '/disaster-report-approval',
+        name: 'DisasterReportApproval',
+        component: DisasterReportApproval,
+        meta: {
+          requiresAuth: true
+        }
+      }
     ],
   },
   {

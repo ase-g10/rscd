@@ -3,19 +3,14 @@
     <div class="card card-compact bg-base-100 shadow-xl p-4">
       <div class="card-body">
         <!-- Flex container adjusted to wrap items if not enough space -->
+        <div class="map h-96" id="map"></div>
         <div class="flex flex-wrap justify-between gap-4 mb-4">
           <!-- Latitude -->
           <div class="flex-1 min-w-0">
             <label class="label" for="latitude">
               <span class="label-text">Latitude:</span>
             </label>
-            <input
-              type="text"
-              id="latitude"
-              v-model="currentLat"
-              readonly
-              class="input input-bordered w-full"
-            />
+            <input type="text" id="latitude" v-model="currentLat" readonly class="input input-bordered w-full" />
           </div>
 
           <!-- Longitude -->
@@ -23,13 +18,7 @@
             <label class="label" for="longitude">
               <span class="label-text">Longitude:</span>
             </label>
-            <input
-              type="text"
-              id="longitude"
-              v-model="currentLng"
-              readonly
-              class="input input-bordered w-full"
-            />
+            <input type="text" id="longitude" v-model="currentLng" readonly class="input input-bordered w-full" />
           </div>
         </div>
 
@@ -38,12 +27,7 @@
           <label class="label" for="address">
             <span class="label-text">Address:</span>
           </label>
-          <input
-            type="text"
-            id="address"
-            v-model="currentAddress"
-            class="input input-bordered w-full"
-          />
+          <input type="text" id="address" v-model="currentAddress" class="input input-bordered w-full" />
         </div>
 
         <div class="card-actions justify-end mt-4">
@@ -57,12 +41,13 @@
       </div>
     </div>
 
-    <div class="map h-96" id="map"></div>
+
   </div>
 </template>
 
 <script>
 import loadGoogleMapsScript from "@/utils/googleMapsLoader";
+import { getDisasterData } from "@/api/disaster";
 
 export default {
   data() {
@@ -76,11 +61,72 @@ export default {
       submitMessage: "",
     };
   },
-  mounted() {
+  async mounted() {
     console.log("Mounted - loading Google Maps Script");
-    loadGoogleMapsScript(this.initMap.bind(this));
+    await loadGoogleMapsScript(this.initMap.bind(this));
+    await this.loadDisasters();
+
   },
   methods: {
+    async loadDisasters() {
+      getDisasterData().then(response => {
+        // 假设响应数据在data字段中，并且实际的灾难数据在message字段中
+        const disasters = response.data.message;
+        console.log("Disasters:", disasters);
+
+        disasters.forEach(disaster => {
+          // 从disaster.fields中解构所需的字段
+          const { latitude, longitude, radius, name, description, image_url: image_url } = disaster.fields;
+          const position = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+
+          if (radius > 0) {
+            const disasterCircle = new google.maps.Circle({
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: '#FF0000',
+              fillOpacity: 0.35,
+              map: this.map,
+              center: position,
+              radius: radius,
+            });
+
+            // 点击圆显示详细信息
+            google.maps.event.addListener(disasterCircle, 'click', () => {
+              let contentString = `<h3>${name}</h3><p>${description}</p>`;
+              if (image_url) {
+                contentString += `<img src="${image_url}" alt="${name}" style="width:100%;max-width:200px;">`;
+              }
+              this.infoWindow.setContent(contentString);
+              this.infoWindow.setPosition(position);
+              this.infoWindow.open(this.map);
+              console.log("Disaster circle added:", disasterCircle);
+            });
+          } else {
+            const marker = new google.maps.Marker({
+              position,
+              map: this.map,
+              title: name
+            });
+
+            // 点击标记显示详细信息
+            google.maps.event.addListener(marker, 'click', () => {
+              let contentString = `<h3>${name}</h3><p>${description}</p>`;
+              if (image_url) {
+                contentString += `<img src="${image_url}" alt="${name}" style="width:100%;max-width:200px;">`;
+              }
+              this.infoWindow.setContent(contentString);
+              this.infoWindow.open(this.map, marker);
+              console.log("Disaster marker added:", marker);
+            });
+          }
+        });
+      }).catch(error => {
+        console.error("Failed to load disasters:", error);
+      });
+    },
+
+
     getCurrentLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -104,8 +150,8 @@ export default {
               position.coords.latitude,
               position.coords.longitude
             );
-            this.currentLat = position.coords.latitude.toFixed(5);
-            this.currentLng = position.coords.longitude.toFixed(5);
+            this.currentLat = position.coords.latitude;
+            this.currentLng = position.coords.longitude;
 
             this.infoWindow.setPosition(pos);
             this.infoWindow.setContent("Current location");
@@ -199,6 +245,10 @@ export default {
       );
       this.infoWindow = new window.google.maps.InfoWindow();
 
+      google.maps.event.addListenerOnce(this.map, 'idle', () => {
+        this.loadDisasters();
+      });
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -210,8 +260,8 @@ export default {
               position.coords.latitude,
               position.coords.longitude
             );
-            this.currentLat = pos.lat.toFixed(5); // 更新纬度
-            this.currentLng = pos.lng.toFixed(5); // 更新经度
+            this.currentLat = pos.lat; // 更新纬度
+            this.currentLng = pos.lng; // 更新经度
             this.map.setCenter(pos);
 
             this.marker = new window.google.maps.Marker({
@@ -280,8 +330,8 @@ export default {
             });
           }
 
-          this.currentLat = location.lat().toFixed(5);
-          this.currentLng = location.lng().toFixed(5);
+          this.currentLat = location.lat();
+          this.currentLng = location.lng();
 
           this.infoWindow.setPosition(location);
           this.infoWindow.setContent(results[0].formatted_address);

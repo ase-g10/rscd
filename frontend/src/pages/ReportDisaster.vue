@@ -3,6 +3,7 @@
     <div class="card card-compact bg-base-100 shadow-xl p-4">
       <div class="card-body">
         <!-- Flex container adjusted to wrap items if not enough space -->
+        <div class="map h-96" id="map"></div>
         <div class="flex flex-wrap justify-between gap-4 mb-4">
           <!-- Latitude -->
           <div class="flex-1 min-w-0">
@@ -33,6 +34,8 @@
           </div>
         </div>
 
+        
+
         <!-- Address with flex-auto to take up the remaining space -->
         <div class="flex-auto mb-4">
           <label class="label" for="disasterAddress">
@@ -46,6 +49,36 @@
           />
         </div>
 
+        <!-- Disaster Name -->
+        <div class="flex-auto mb-4">
+          <label class="label" for="disasterName">
+            <span class="label-text">Disaster Name:</span>
+          </label>
+          <input
+            type="text"
+            id="disasterName"
+            v-model="disasterName"
+            class="input input-bordered w-full"
+            placeholder="Enter the disaster name"
+          />
+        </div>
+
+
+        <!-- Email or Phone Number -->
+        <div class="flex-auto mb-4">
+          <label class="label" for="contactInfo">
+            <span class="label-text">Email or Phone Number (Required, Phone Number Must started with +353, followed by 9 digits):</span>
+          </label>
+          <input
+            type="text"
+            id="contactInfo"
+            v-model="contactInfo"
+            class="input input-bordered w-full"
+            placeholder="Email or Phone"
+          />
+        </div>
+
+
         <div class="flex-1 min-w-0">
           <label class="label" for="disasterType">
             <span class="label-text">Disaster Type:</span>
@@ -54,12 +87,35 @@
             id="disasterType"
             v-model="selectedDisasterType"
             class="input input-bordered w-full"
+            placeholder="Select a disaster type."
           >
+            <option value="" disabled selected>Select a disaster type</option>
             <option value="car_accident">Car Accident</option>
             <option value="fire_disaster">Fire Disaster</option>
             <option value="fire_disaster">Riot</option>
+            <option value="earthquake">Earthquake</option>
+            <option value="flood">Flood</option>
+            <option value="hurricane">Hurricane</option>
+            <option value="tornado">Tornado</option>
+            <option value="tsunami">Tsunami</option>
+            <option value="volcano">Volcano</option>
+            <option value="other">Other</option>
           </select>
         </div>
+
+        <div class="flex-1 min-w-0" v-if="selectedDisasterType === 'other'">
+          <label class="label" for="customDisasterType">
+            <span class="label-text">Specify Disaster Type:</span>
+          </label>
+          <input
+            type="text"
+            id="customDisasterType"
+            v-model="customDisasterType"
+            class="input input-bordered w-full"
+            placeholder="Specify the type of disaster"
+          />
+        </div>
+
 
         <div class="flex-auto mb-4">
           <label class="label" for="disasterDescription">
@@ -69,8 +125,24 @@
             id="disasterDescription"
             v-model="disasterDescription"
             class="input input-bordered w-full"
+            placeholder="In WHERE, WHEN, WHAT happened."
           ></textarea>
         </div>
+
+        <!-- Image URL -->
+        <div class="flex-auto mb-4">
+          <label class="label" for="imageUrl">
+            <span class="label-text">Image URL:</span>
+          </label>
+          <input
+            type="text"
+            id="imageUrl"
+            v-model="imageUrl"
+            class="input input-bordered w-full"
+            placeholder="http://example.com/image.jpg"
+          />
+        </div>
+
 
         <div class="card-actions justify-end mt-4">
           <button @click="getCurrentLocation" class="btn btn-secondary">
@@ -86,7 +158,6 @@
       </div>
     </div>
 
-    <div class="map h-96" id="map"></div>
   </div>
 </template>
 
@@ -107,6 +178,11 @@ export default {
       submitMessage: "",
       selectedDisasterType: "",
       disasterDescription: "",
+      userCircle: null,
+      contactInfo: "",
+      imageUrl: "",
+      customDisasterType: "",
+      disasterName: "",
     };
   },
   mounted() {
@@ -114,6 +190,11 @@ export default {
     loadGoogleMapsScript(this.initMap.bind(this));
   },
   methods: {
+    isValidContactInfo(input) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phonePattern = /^(?:\+353|0)8[3-9]\d{7}$/;
+    return emailPattern.test(input) || phonePattern.test(input);
+  },
     getCurrentLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -137,8 +218,8 @@ export default {
               position.coords.latitude,
               position.coords.longitude
             );
-            this.currentLat = position.coords.latitude.toFixed(5);
-            this.currentLng = position.coords.longitude.toFixed(5);
+            this.currentLat = position.coords.latitude;
+            this.currentLng = position.coords.longitude;
 
             this.infoWindow.setPosition(pos);
             this.infoWindow.setContent("Current location");
@@ -243,18 +324,52 @@ export default {
               position.coords.latitude,
               position.coords.longitude
             );
-            this.currentLat = pos.lat.toFixed(5); // 更新纬度
-            this.currentLng = pos.lng.toFixed(5); // 更新经度
+            this.currentLat = pos.lat; // 更新纬度
+            this.currentLng = pos.lng; // 更新经度
             this.map.setCenter(pos);
 
             this.marker = new window.google.maps.Marker({
               position: pos,
               map: this.map,
+              draggable: true,
             });
 
-            this.infoWindow.setPosition(pos);
-            this.infoWindow.setContent("Current location");
-            this.infoWindow.open(this.map, this.marker);
+            this.marker.setIcon('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/w8AAwAB/DE8Eg0AAAAASUVORK5CYII=');
+
+            const userCircle = new window.google.maps.Circle({
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#FF0000",
+            fillOpacity: 0.35,
+            map: this.map,
+            center: pos,
+            radius: 100, // 默认半径, 例如1000米
+            editable: true, // 允许用户编辑大小
+            });
+
+            this.userCircle = userCircle;
+
+            // 将圆心绑定到标记的位置
+            userCircle.bindTo('center', this.marker, 'position');
+
+            // 添加标记拖动事件监听器
+            this.marker.addListener('drag', () => {
+              // 拖动标记时，圆形会自动更新其位置
+              const markerPos = this.marker.getPosition();
+              this.currentLat = markerPos.lat();
+              this.currentLng = markerPos.lng();
+            });
+
+            // 监听圆的大小和位置变化
+            userCircle.addListener('radius_changed', () => {
+            });
+            userCircle.addListener('center_changed', () => {
+              const center = this.userCircle.getCenter();
+              this.currentLat = center.lat();
+              this.currentLng = center.lng();
+              this.geocodeLatLng(this.currentLat, this.currentLng);
+            });
           },
           () => {
             this.handleLocationError(
@@ -310,8 +425,8 @@ export default {
             });
           }
 
-          this.currentLat = location.lat().toFixed(5);
-          this.currentLng = location.lng().toFixed(5);
+          this.currentLat = location.lat();
+          this.currentLng = location.lng();
 
           this.infoWindow.setPosition(location);
           this.infoWindow.setContent(results[0].formatted_address);
@@ -324,16 +439,87 @@ export default {
       });
     },
     submitDisaster() {
+      if (!this.currentLat || !this.currentLng) {
+        this.$notify({
+          component: NotificationTemplate,
+          icon: "ti-close",
+          horizontalAlign: "right",
+          verticalAlign: "top",
+          type: "warning",
+          title: "Warning",
+          text: "Please provide a valid location.",
+          dangerouslySetInnerHtml: true,
+        });
+        return;
+      }
+
+      if (!this.disasterName) {
+        this.$notify({
+          component: NotificationTemplate,
+          icon: "ti-close",
+          horizontalAlign: "right",
+          verticalAlign: "top",
+          type: "warning",
+          title: "Warning",
+          text: "Please provide a disaster name.",
+          dangerouslySetInnerHtml: true,
+        });
+        return;
+      }
+
+      if (!this.selectedDisasterType) {
+        this.$notify({
+            component: NotificationTemplate,
+            icon: "ti-close",
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            type: "warning",
+            title: "Warning",
+            text: "Please select a disaster type.",
+            dangerouslySetInnerHtml: true,
+        });
+        return;
+      }
+
+      if (!this.contactInfo || !this.isValidContactInfo(this.contactInfo)) {
+        this.$notify({
+            component: NotificationTemplate,
+            icon: "ti-close",
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            type: "warning",
+            title: "Warning",
+            text: "Please enter valid email or phone number.", // 使用 error.message 来获取错误信息
+            dangerouslySetInnerHtml: true,
+          });
+        return;
+      }     
+
       const data = {
+        name: this.disasterName,
         latitude: this.currentLat,
         longitude: this.currentLng,
-        address: this.currentAddress,
-        type: this.selectedDisasterType,
+        location: this.currentAddress,
+        type: this.selectedDisasterType === 'other' ? this.customDisasterType : this.selectedDisasterType,
         description: this.disasterDescription,
+        contact: this.contactInfo,
+        //TODO: Add image upload
+        image_url: "",
       };
+
+      if (this.userCircle) {
+        data.latitude = this.userCircle.getCenter().lat();
+        data.longitude = this.userCircle.getCenter().lng();
+        data.radius = this.userCircle.getRadius();
+      }
+
+      if (this.imageUrl) {
+        data.image_url = this.imageUrl;
+      }
 
       submitDisasterLocation(data)
         .then((response) => {
+          console.log("Reported Data: ",data);
           console.log("Response:", response);
           this.$notify({
             component: NotificationTemplate,
