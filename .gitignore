@@ -527,3 +527,7 @@ dist
 .idea/copilot
 
 backend/models/migrations
+
+.idea
+
+backend/.idea
