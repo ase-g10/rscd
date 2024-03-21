@@ -158,3 +158,5 @@ package-lock.json
 npm-debug.log
 .idea/
 dist/
+
+.idea
