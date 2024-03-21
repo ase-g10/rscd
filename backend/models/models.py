@@ -17,7 +17,7 @@ class Disaster(models.Model):
     contact = models.CharField(max_length=255, default="")
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
-    is_delete = models.BooleanField(default=False)
+    is_onging = models.BooleanField(default=True)
     verified_status = models.CharField(max_length=10, default='0') #0未审核 1审核通过 -1审核未通过
 
 
