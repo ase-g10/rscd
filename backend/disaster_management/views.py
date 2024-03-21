@@ -78,7 +78,7 @@ class DisasterView(viewsets.ViewSet):
     def read_all_verifying(self, request):
         try:
             # disaster_queryset = Disaster.objects.all()
-            disaster_queryset = Disaster.objects.all(verified_status="0")
+            disaster_queryset = Disaster.objects.filter(verified_status="0")
             disaster_serialized = serializers.serialize('json', disaster_queryset)
             # Sending serialized data as a response
             return JsonResponse({"message": json.loads(disaster_serialized)})

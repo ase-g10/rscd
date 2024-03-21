@@ -68,6 +68,7 @@ import register from "@/pages/Register.vue";
 import router from "@/router";
 import Register from "@/pages/Register.vue";
 
+
 export default {
   methods: {
     goToRegister() {
@@ -82,7 +83,7 @@ export default {
     loginWithGithub() {
 
       // 直接导航到后端提供的重定向 URL
-      window.location.href = 'https://github.com/login/oauth/authorize?scope=user:email&client_id=753619e4db584209e494';
+      window.location.href = process.env.VUE_APP_BACKEND_URL + '/um/auth2/redirect_to_github';;
 
     },
     login(e) {
@@ -103,11 +104,10 @@ export default {
             verticalAlign: "top",
             type: "success",
             title: "successfully log in ",
-            text: `${response.data.message}`,
+            text: `Login successful!`,
             dangerouslySetInnerHtml: true,
           })
-          router.push('/maps');
-          ;
+          window.location.reload();
         })
         .catch(error => {
           console.log(error);
@@ -135,6 +135,7 @@ export default {
     const email = ref("");
     const password = ref("");
 
+    //TODO: 改成从后端获取token,不经过URL
     onMounted(() => {
       const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
       const token = urlParams.get('token');

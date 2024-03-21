@@ -27,6 +27,7 @@
         <!-- <sidebar-link to="/icons" name="icons" icon="ti-pencil-alt2" /> -->
 
         <sidebar-link to="/notifications" name="notifications" icon="ti-bell"  v-if="isLoggedIn" />
+        <sidebar-link to="/disaster-report-approval" name="disaster-report-approval" icon="ti-check-box"  v-if="isLoggedIn" />
       </template>
       <mobile-menu>
         <li class="nav-item">

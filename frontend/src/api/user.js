@@ -7,8 +7,17 @@ export function userLogin(data) {
     url: "/um/auth/login/",
     method: "POST",
     data,
-  })
+  }).then(response => {
+    if (response.status === 200 && response.data.access_token) {
+      // 存储token
+      localStorage.setItem('token', response.data.access_token);
+    }
+    return response.data;
+  }).catch(error => {
+    throw new Error('Login failed');
+  });
 }
+
 
 export const userRegister = async (userData) => {
   const response = await service({
