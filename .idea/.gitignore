@@ -20,3 +20,5 @@
 /httpRequests/
 >>>>>>> 79d902f09f70df64624c87b2b3efecdeefc3a872
 >>>>>>> 1a6daff28088bed67f79b66ff18fbf39d64ce7eb
+# GitHub Copilot persisted chat sessions
+/copilot/chatSessions
