@@ -14,4 +14,4 @@ social-auth-app-django==5.4.0
 requests==2.31.0
 geopy~=2.4.1
 Faker~=24.3.0
-rest_framework_simplejwt
+djangorestframework-simplejwt
