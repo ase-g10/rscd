@@ -17,6 +17,7 @@ app.config.globalProperties.$axios = axios;
 app.config.globalProperties.routerAppend = (path, pathToAppend) => {
   return path + (path.endsWith("/") ? "" : "/") + pathToAppend;
 };
+axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL;
 
 app.use(rscdDashboard); // 然后添加 rscdDashboard 插件
 // app.use(Notification); // 最后添加 notification 插件

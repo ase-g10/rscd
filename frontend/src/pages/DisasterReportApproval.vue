@@ -30,11 +30,10 @@ export default {
   },
   methods: {
     fetchDisasterReports() {
-      console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW');
       axios.get('/dm/disasterview/read_all_verifying/')
         .then(response => {
           this.disasterReports = response.data.message;
-          console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW');
+          console.log(response)
         })
         .catch(error => {
           console.error('There was an error fetching the disaster reports:', error);
