@@ -1,6 +1,6 @@
 <template>
-  <div class="row">
-    <div class="col-lg-12">
+  <div>
+    <div class="flex flex-wrap justify-between gap-4 mb-4">
       <card class="large-card">
         <template v-slot:title>
           <b class="text-center">{{ disasterTable.title }}</b>
@@ -41,10 +41,10 @@
       </card>
     </div>
 
-
+    <div class="map h-full flex-grow" id="map"></div>
 
   </div>
-  <div class="map h-96" id="map"></div>
+
 </template>
 
 <script>
@@ -60,7 +60,6 @@ export default {
       currentLat: "",
       currentLng: "",
       currentAddress: "",
-      submitMessage: "",
       // 53.341676, -6.267914
       disasterTable: {
         title: "Disaster Management",
@@ -88,6 +87,7 @@ export default {
       },
     };
   },
+
   mounted() {
     console.log("Mounted - loading Google Maps Script");
     loadGoogleMapsScript(this.initMap.bind(this));
@@ -143,7 +143,6 @@ export default {
         console.error(error.message);
       }
     },
-
 
     getCurrentLocation() {
       if (navigator.geolocation) {
