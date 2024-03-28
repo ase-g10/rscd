@@ -14,8 +14,8 @@
             <p>Status: {{ report.fields.verified_status === '0' ? 'Awaiting Verification' : 'Verified' }}</p>
             <img :src="report.fields.image_url" alt="Disaster Image" class="disaster-image" v-if="report.fields.image_url">
             <div>
-              <button @click="approveReport(report.id)" class="btn btn-primary">Approve</button>
-              <button @click="rejectReport(report.id)" class="btn btn-error">Reject</button>
+              <button @click="approveReport(report)" class="btn btn-primary">Approve</button>
+              <button @click="rejectReport(report)" class="btn btn-error">Reject</button>
             </div>
           </li>
         </ul>
@@ -47,13 +47,35 @@ export default {
           console.error('There was an error fetching the disaster reports:', error);
         });
     },
-    approveReport(reportId) {
-      console.log('Approving report with ID:', reportId);
-      // Implementation to approve the disaster report
+    approveReport(report) {
+      const postData = {
+        latitude: report.fields.latitude,
+        longitude: report.fields.longitude,
+        verified_status: '1',
+      };
+      axios.post('/dm/disastermodify/write/', postData)
+        .then(response => {
+          console.log('Report approved:', response.data.message);
+          this.fetchDisasterReports();
+        })
+        .catch(error => {
+          console.error('There was an error approving the disaster report:', error);
+        });
     },
-    rejectReport(reportId) {
-      console.log('Rejecting report with ID:', reportId);
-      // Implementation to reject the disaster report
+    rejectReport(report) {
+      const postData = {
+        latitude: report.fields.latitude,
+        longitude: report.fields.longitude,
+        verified_status: '-1',
+      };
+      axios.post('/dm/disastermodify/write/', postData)
+        .then(response => {
+          console.log('Report rejected:', response.data.message);
+          this.fetchDisasterReports();
+        })
+        .catch(error => {
+          console.error('There was an error rejecting the disaster report:', error);
+        });
     },
   },
 };
