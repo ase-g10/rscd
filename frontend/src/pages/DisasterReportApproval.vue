@@ -4,10 +4,19 @@
       <h2 class="card-title">Disaster Report Approval</h2>
       <div class="report-list my-4">
         <ul>
-          <li v-for="report in disasterReports" :key="report.id">
-            {{ report.fields.disasterType }} at {{ report.fields.location }}
-            <button @click="approveReport(report.id)" class="btn btn-primary">Approve</button>
-            <button @click="rejectReport(report.id)" class="btn btn-error">Reject</button>
+          <li v-for="report in disasterReports" :key="report.id" class="mb-4 p-2 border rounded">
+            <h3>{{ report.fields.name }} - {{ report.fields.type }}</h3>
+            <p>Description: {{ report.fields.description }}</p>
+            <p>Location: {{ report.fields.location }}</p>
+            <p>Latitude: {{ report.fields.latitude }}, Longitude: {{ report.fields.longitude }}</p>
+            <p>Contact: {{ report.fields.contact }}</p>
+            <p>Report Time: {{ new Date(report.fields.create_time).toLocaleString() }}</p>
+            <p>Status: {{ report.fields.verified_status === '0' ? 'Awaiting Verification' : 'Verified' }}</p>
+            <img :src="report.fields.image_url" alt="Disaster Image" class="disaster-image" v-if="report.fields.image_url">
+            <div>
+              <button @click="approveReport(report.id)" class="btn btn-primary">Approve</button>
+              <button @click="rejectReport(report.id)" class="btn btn-error">Reject</button>
+            </div>
           </li>
         </ul>
       </div>
@@ -33,7 +42,6 @@ export default {
       axios.get('/dm/disasterview/read_all_verifying/')
         .then(response => {
           this.disasterReports = response.data.message;
-          console.log(response)
         })
         .catch(error => {
           console.error('There was an error fetching the disaster reports:', error);
@@ -41,9 +49,11 @@ export default {
     },
     approveReport(reportId) {
       console.log('Approving report with ID:', reportId);
+      // Implementation to approve the disaster report
     },
     rejectReport(reportId) {
       console.log('Rejecting report with ID:', reportId);
+      // Implementation to reject the disaster report
     },
   },
 };
@@ -51,4 +61,9 @@ export default {
 
 <style>
 @import "@/assets/css/mapsStyles.css";
+
+.disaster-image {
+  max-width: 100%;
+  height: auto;
+}
 </style>
