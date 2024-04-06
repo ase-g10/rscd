@@ -40,7 +40,8 @@
       </card>
     </div>
 
-    <div class="map h-full flex-grow" id="map"></div>
+    <div class="map h-full flex-grow" id="map" ref="mapRef"></div>
+
 
   </div>
 
@@ -95,12 +96,6 @@ export default {
         console.error('Fail to fetch the ongoing disasters:', e);
       }
     },
-    editItem(item) {
-      console.log("Edit item:", item);
-    },
-    deleteItem(item) {
-      console.log("Delete item:", item);
-    },
     async navigateToHomepage(item) {
       console.log("Navigate to homepage:", item.latitude);
 
@@ -131,6 +126,7 @@ export default {
 
         // Render the directions on the map
         directionsRenderer.setDirections(response);
+        this.$refs.mapRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (error) {
         this.$notify({
           component: NotificationTemplate,
