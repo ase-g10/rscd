@@ -205,3 +205,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Our user model
 AUTH_USER_MODEL = 'models.User'
+
+CSRF_TRUSTED_ORIGINS=['https://*.iocky.com']
