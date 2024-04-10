@@ -1,6 +1,8 @@
+# your_app_name/apps.py
 from django.apps import AppConfig
 
-
-class NotificationManagementConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
+class YourAppNameConfig(AppConfig):
     name = 'notification_management'
+
+    def ready(self):
+        import notification_management.signals
