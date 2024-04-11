@@ -5,11 +5,14 @@ from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from django.core import serializers
-from django.http import JsonResponse
 import json
 from models.models import Disaster
 from django.conf import settings
 from geopy.distance import geodesic
+from django.http import JsonResponse
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 
 
 class DisasterView(viewsets.ViewSet):
@@ -172,6 +175,14 @@ class DisasterModify(viewsets.ViewSet):
             for tmp in Tmp:
                 tmp.verified_status = verified_status
                 tmp.save()
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "alert_group",
+                {
+                    "type": "send.alert",
+                    "message": data,
+                }
+            )
             return JsonResponse({"message": data})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
