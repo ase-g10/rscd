@@ -10,8 +10,8 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
-from traffic_management.scheduler import start
+# from traffic_management.scheduler import start
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
-start()
+# start()
 application = get_wsgi_application()
