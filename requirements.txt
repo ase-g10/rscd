@@ -17,3 +17,4 @@ Faker~=24.3.0
 djangorestframework-simplejwt
 djangorestframework-simplejwt[crypto]
 channels
+django-apscheduler
