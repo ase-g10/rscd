@@ -48,16 +48,16 @@ class DisasterViewTests(APITestCase):
         Disaster.objects.create(
             name="Test Disaster",
             description="A test disaster",
-            latitude=10.1,
-            longitude=20.1,
+            latitude=10.0001,
+            longitude=20.0001,
             location="Test Location",
-            radius=100.0,  # Ensure this radius covers the test user's location
+            radius=100.0,
             type="Test Type",
             contact="Test Contact",
             image_url="http://example.com/image.jpg",
             verified_status="1"
         )
-        url = '/dm/disasterview/calculate_safePoint/'  # Adjust based on actual URL pattern
+        url = '/dm/disasterview/calculate_safePoint/'
         data = {'latitude': '10.0', 'longitude': '20.0'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -70,8 +70,8 @@ class DisasterViewTests(APITestCase):
 
 
     def test_disaster_modify_write(self):
-        url = '/dm/disastermodify/write/'  # Adjust based on actual URL pattern and action name
-        data = {'key': 'value'}  # Adjust based on what data your action expects
+        url = '/dm/disastermodify/write/'
+        data = {'key': 'value'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response_data = json.loads(response.content.decode('utf-8'))
