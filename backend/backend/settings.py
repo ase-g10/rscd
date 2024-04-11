@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'notification_management',
     'disaster_management',
     'emergency_team_management',
+    'django_apscheduler',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -199,3 +200,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Our user model
 AUTH_USER_MODEL = 'models.User'
+
