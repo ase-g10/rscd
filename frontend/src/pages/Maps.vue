@@ -388,7 +388,6 @@ export default {
           );
         } else {
           this.hasRoute = false; // User is in a safe area, do not display route
-          window.location.reload();
         }
         // const safeLat = safePoint.safe_lat;
         // const safeLng = safePoint.safe_lng;
@@ -422,6 +421,7 @@ export default {
         display.setDirections(result);
       }).catch(e => {
         alert("Could not display directions due to: " + e);
+        window.location.reload(); //TODO: 这个可能导致页面不断刷新?
       });
     },
     computeTotalDistance(result) {

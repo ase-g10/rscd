@@ -1,6 +1,6 @@
 <template>
-  <div class="row">
-    <div class="col-lg-12">
+  <div>
+    <div class="flex flex-wrap justify-between gap-4 mb-4">
       <card class="large-card">
         <template v-slot:title>
           <b class="text-center">{{ disasterTable.title }}</b>
@@ -14,24 +14,31 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="item in disasterTable.data" :key="item.id">
+              <tr v-for="item in disasterTable.data" :key="item.fields.name">
                 <td v-for="column in disasterTable.columns" :key="column.field">
                   <!-- Use a conditional to check for the navigation column -->
-                  <template v-if="column.field !== 'edit' && column.field !== 'navigation'">
-                    {{ item[column.field] }}
+                  <template v-if="column.field !== 'navigation' || column.field !== 'TerminateDisaster' ">
+                    {{ item.fields[column.field] }}
                   </template>
-                  <template v-else-if="column.field === 'edit'">
-                    <div>
-                      <button @click="editItem(item)" class="btn btn-primary">Edit</button>
-                      <button @click="deleteItem(item)" class="btn btn-danger">Delete</button>
-                    </div>
+
+                  <template v-if="column.field === 'create_time' || column.field === 'update_time'">
+                    {{ item.fields[column.field] ? new Date(item.fields[column.field]).toLocaleString() : 'No time display' }}
                   </template>
+
                   <template v-else-if="column.field === 'navigation'">
-                    <!-- Add a clickable icon for navigation -->
-                    <div @click="navigateToHomepage(item)" style="cursor: pointer;">
-                      <i>📍Show the Path</i>
+                  <!-- Add a clickable icon for navigation -->
+                  <div @click="navigateToDisasterAsync(item)" style="cursor: pointer;">
+                    <i>📍Show the Path</i>
+                  </div>
+                </template>
+
+                  <template v-else-if="column.field === 'TerminateDisaster'">
+
+                    <div @click="terminateDisasterAsync(item)" style="cursor: pointer;">
+                      <i>🔚 Terminate</i>
                     </div>
                   </template>
+
                 </td>
               </tr>
               </tbody>
@@ -41,15 +48,18 @@
       </card>
     </div>
 
+    <div class="map h-full flex-grow" id="map" ref="mapRef"></div>
+
 
 
   </div>
-  <div class="map h-96" id="map"></div>
+
 </template>
 
 <script>
 import loadGoogleMapsScript from "@/utils/googleMapsLoader";
 import NotificationTemplate from "@/pages/Notifications/NotificationTemplate.vue";
+import axios from "axios";
 
 export default {
   data() {
@@ -60,47 +70,76 @@ export default {
       currentLat: "",
       currentLng: "",
       currentAddress: "",
-      submitMessage: "",
-      // 53.341676, -6.267914
+      // 53.341676, -6.267914 An example to use the navigate
       disasterTable: {
         title: "Disaster Management",
         subTitle: "",
-        data: [
-          { id: 1, name: "Earthquake", type: "Natural", latitude:  53.341676, longitude: -6.267914, description: "A sudden shaking of the ground.", createdTime: "2024-03-19T12:00:00" },
-          { id: 2, name: "Wildfire", type: "Natural", latitude: 40.7128, longitude: -74.0060, description: "An uncontrolled fire in wild areas.", createdTime: "2024-03-19T13:00:00" },
-          { id: 3, name: "Flood", type: "Natural", latitude: 51.5074, longitude: -0.1278, description: "An overflow of water onto normally dry land.", createdTime: "2024-03-19T14:00:00" }
-        ],
+        data: [],
         columns: [
-          { field: "id", label: "Disaster ID" },
           { field: "name", label: "Name" },
           { field: "type", label: "Type" },
           { field: "latitude", label: "Latitude" },
           { field: "longitude", label: "Longitude" },
           { field: "description", label: "Description" },
-          { field: "createdTime", label: "Created Time" },
-          {
-            field: "edit",
-            label: "Edit",
-            slot: "edit",
-          },
-          { field: 'navigation', label:"Navigation" }
+          { field: "create_time", label: "Create Time" },
+          { field: "update_time", label: "Update Time" },
+          { field: 'navigation', label:"Navigation" },
+          { field: 'TerminateDisaster', label:"Terminate Disaster" }
         ]
       },
     };
+  },
+  created() {
+    this.fetchOngoingDisastersAsync()
   },
   mounted() {
     console.log("Mounted - loading Google Maps Script");
     loadGoogleMapsScript(this.initMap.bind(this));
   },
   methods: {
-    editItem(item) {
-      console.log("Edit item:", item);
+    async terminateDisasterAsync(item) {
+      console.log(item);
+      try {
+        const terminatedDisaster = {
+          name: item.fields.name,
+          latitude: item.fields.latitude,
+          longitude: item.fields.longitude,
+          description: item.fields.description,
+          location: item.fields.location,
+          username: 'FireFighter'
+        }
+
+        const response = await axios.post('/etm/emergencyview/response/', terminatedDisaster);
+
+        if(response.data.status !== 'error') {
+          this.$notify({
+            component: NotificationTemplate,
+            icon: "ti-check",
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            type: "success",
+            title: "successfully terminate disaster ",
+            text: `terminate disaster successful!`,
+            dangerouslySetInnerHtml: true,
+          })
+        }
+
+      }catch (e) {
+        console.error(e)
+      }
     },
-    deleteItem(item) {
-      console.log("Delete item:", item);
+
+    async fetchOngoingDisastersAsync() {
+      try {
+        const response = await axios.get('/dm/disasterview/read_all_ongoing/')
+        this.disasterTable.data = response.data.message
+        console.log(this.disasterTable.data);
+      }catch (e) {
+        console.error('Fail to fetch the ongoing disasters:', e);
+      }
     },
-    async navigateToHomepage(item) {
-      console.log("Navigate to homepage:", item.latitude);
+
+    async navigateToDisasterAsync(item) {
 
       const directionsService = new google.maps.DirectionsService();
       const directionsRenderer = new google.maps.DirectionsRenderer({
@@ -108,7 +147,7 @@ export default {
       });
 
       const currentLocation = new google.maps.LatLng(this.currentLat, this.currentLng);
-      const destination = new google.maps.LatLng(item.latitude, item.longitude);
+      const destination = new google.maps.LatLng(item.fields['latitude'], item.fields['longitude']);
 
       const request = {
         origin: currentLocation,
@@ -129,6 +168,7 @@ export default {
 
         // Render the directions on the map
         directionsRenderer.setDirections(response);
+        this.$refs.mapRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (error) {
         this.$notify({
           component: NotificationTemplate,
@@ -143,7 +183,6 @@ export default {
         console.error(error.message);
       }
     },
-
 
     getCurrentLocation() {
       if (navigator.geolocation) {

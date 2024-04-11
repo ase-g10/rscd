@@ -14,10 +14,10 @@ const SidebarStore = reactive({
     },
     { to: "/stats", name: "stats", icon: "ti-user", title: "User Profile" },
     {
-      to: "/Disasters",
-      name: "Disasters",
+      to: "/OngoingDisasters",
+      name: "OngoingDisasters",
       icon: "ti-view-list-alt",
-      title: "Disasters",
+      title: "OngoingDisasters",
     },
     {
       to: "/notifications",
@@ -30,6 +30,12 @@ const SidebarStore = reactive({
       name: "disaster-report-approval",
       icon: "ti-check-box",
       title: "Disaster Report Approval",
+    },
+    {
+      to: "/post-disasters",
+      name: "post-disasters",
+      icon: "ti-flag",
+      title: "Post Disasters",
     },
     // { to: '/dashboard', name: 'dashboard', icon: 'ti-panel', title: 'Dashboard' },
     // { to: '/icons', name: 'icons', icon: 'ti-pencil-alt2', title: 'Icons' },

@@ -14,6 +14,7 @@ import ReportDisaster from "@/pages/ReportDisaster.vue";
 import Login from "@/pages/Login.vue";
 import Register from "@/pages/Register.vue";
 import DisasterReportApproval from '@/pages/DisasterReportApproval.vue';
+import PostDisasters from '@/pages/PostDisasters.vue';
 
 const routes = [
 
@@ -58,8 +59,8 @@ const routes = [
         meta: {requiresAuth: true},
       },
       {
-        path: "Disasters",
-        name: "Disasters",
+        path: "OngoingDisasters",
+        name: "OngoingDisasters",
         component: TableList,
         meta: {requiresAuth: true},
       },
@@ -78,6 +79,14 @@ const routes = [
         path: 'disaster-report-approval',
         name: 'disaster-report-approval',
         component: DisasterReportApproval,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'post-disasters',
+        name: 'post-disasters',
+        component: PostDisasters,
         meta: {
           requiresAuth: true
         }

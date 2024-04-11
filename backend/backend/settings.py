@@ -211,4 +211,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Our user model
 AUTH_USER_MODEL = 'models.User'
 
+# Use ISO 8601 format for datetime fields.
+DATETIME_FORMAT = 'iso-8601'
+
 CSRF_TRUSTED_ORIGINS=['https://*.iocky.com']
