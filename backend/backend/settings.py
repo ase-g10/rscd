@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'disaster_management',
     'emergency_team_management',
     'django_apscheduler',
+    'channels',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -142,6 +143,9 @@ if ENV == 'test':
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
+            'TEST': {
+                'NAME': BASE_DIR / "test_db.sqlite3",
+            },
         }
     }
 else:
@@ -156,6 +160,11 @@ else:
         }
 }
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -201,3 +210,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Our user model
 AUTH_USER_MODEL = 'models.User'
 
+CSRF_TRUSTED_ORIGINS=['https://*.iocky.com']
