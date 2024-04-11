@@ -2,7 +2,7 @@ name: Backend CI/CD
 
 on:
   push:
-    branches: [ "main", "back-dev" ]
+    branches: [ "main", "back-dev", "local-test" ]
   pull_request:
     branches: [ "main" ]
 
@@ -37,7 +37,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python3.9 -m pip install --upgrade pip
-        pip3.9 install -r requirements.txt
+        python3.9 -m pip install -r requirements.txt
     - name: Cache dependencies
       uses: actions/cache@v3
       with:
@@ -70,7 +70,7 @@ jobs:
     - name: Install Missed Dependencies
       run: |
         python3.9 -m pip install --upgrade pip
-        pip3.9 install -r requirements.txt
+        python3.9 -m pip install -r requirements.txt
     - name: Run Tests
       run: |
         cd backend
@@ -79,7 +79,7 @@ jobs:
   staging-backend:
     needs: test-backend
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/back-dev')
+    if: (github.event_name == 'pull_request' && github.base_ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/back-dev' || github.ref == 'refs/heads/local-test')
 
     steps:
     - uses: actions/checkout@v4
@@ -103,7 +103,7 @@ jobs:
           ls -al
           echo $RSYNC_STDOUT
           cd ${{ secrets.STAGING_BACKEND_REMOTE_TARGET }}
-          pip install -r requirements.txt
+          python3.9 -m pip install -r requirements.txt
           cd backend
           python3.9 manage.py makemigrations
           python3.9 manage.py migrate
@@ -142,7 +142,7 @@ jobs:
           echo $RSYNC_STDOUT
           cd ${{ secrets.BACKEND_REMOTE_TARGET }}
           cd ..
-          pip3.9 install -r requirements.txt
+          python3.9 -m pip install -r requirements.txt
           cd backend
           python3.9 manage.py makemigrations
           python3.9 manage.py migrate

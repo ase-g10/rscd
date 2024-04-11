@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router'
 // 创建 axios 实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BACKEND_URL, // 基础 URL，从环境变量中读取
-  // baseURL: 'http://localhost:8000', // 基础 URL，从环境变量中读取
   timeout: 10000, // 请求超时时间
 });
 
@@ -15,7 +14,7 @@ service.interceptors.request.use(
     if (config.url.includes('/api/private/')) { // 如果是私有接口则设置请求头
       const token = localStorage.getItem('token');
       if (token) {
-        config.headers.Authorization = `Token ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
       }
     }
     return config;

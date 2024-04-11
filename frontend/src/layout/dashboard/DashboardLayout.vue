@@ -11,22 +11,24 @@
         />
         <sidebar-link to="/login" name="login" icon="ti-id-badge" v-if="!isLoggedIn" />
         <!-- 如果有 dashboard 路由，取消以下注释
-        <sidebar-link to="/dashboard" name="dashboard" icon="ti-panel" /> 
+        <sidebar-link to="/dashboard" name="dashboard" icon="ti-panel" />
         -->
         <sidebar-link to="/stats" name="stats" icon="ti-user"  v-if="isLoggedIn" />
         <sidebar-link
-          to="/table-list"
-          name="table-list"
+          to="/OngoingDisasters"
+          name="OngoingDisasters"
           icon="ti-view-list-alt"
-           v-if="isLoggedIn" 
+           v-if="isLoggedIn"
         />
         <!-- 如果有 typography 路由，取消以下注释
         <sidebar-link to="/typography" name="typography" icon="ti-text" />
         -->
         <!-- 如果有 icons 路由，取消以下注释 -->
         <!-- <sidebar-link to="/icons" name="icons" icon="ti-pencil-alt2" /> -->
-       
+
         <sidebar-link to="/notifications" name="notifications" icon="ti-bell"  v-if="isLoggedIn" />
+        <sidebar-link to="/disaster-report-approval" name="disaster-report-approval" icon="ti-check-box"  v-if="isLoggedIn" />
+        <sidebar-link to="/post-disasters" name="post-disasters" icon="ti-flag"  v-if="isLoggedIn" />
       </template>
       <mobile-menu>
         <li class="nav-item">

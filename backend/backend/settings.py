@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from decouple import Config, RepositoryEnv
 import os, sys
+# import rest_framework_simplejwt
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -82,6 +83,8 @@ INSTALLED_APPS = [
     'notification_management',
     'disaster_management',
     'emergency_team_management',
+    'django_apscheduler',
+    'channels',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -118,6 +121,13 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
 #TODO: 这里要改成“ASE_Group10.wsgi.application”
 WSGI_APPLICATION = 'backend.wsgi.application'
 SOCIAL_AUTH_GITHUB_KEY = config('DJANGO_GITHUB_CLIENT_ID', default='98a50d02de2c591daac8')
@@ -133,6 +143,9 @@ if ENV == 'test':
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
+            'TEST': {
+                'NAME': BASE_DIR / "test_db.sqlite3",
+            },
         }
     }
 else:
@@ -147,6 +160,11 @@ else:
         }
 }
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -188,3 +206,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Our user model
+AUTH_USER_MODEL = 'models.User'
+
+# Use ISO 8601 format for datetime fields.
+DATETIME_FORMAT = 'iso-8601'
+
+CSRF_TRUSTED_ORIGINS=['https://*.iocky.com']

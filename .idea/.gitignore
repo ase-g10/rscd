@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-# Default ignored files
-/shelf/
-/workspace.xml
-=======
-<<<<<<< HEAD
 # Default ignored files
 /shelf/
 /workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
-=======
 # Default ignored files
 /shelf/
 /workspace.xml
@@ -18,5 +11,7 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
->>>>>>> 79d902f09f70df64624c87b2b3efecdeefc3a872
->>>>>>> 1a6daff28088bed67f79b66ff18fbf39d64ce7eb
+# GitHub Copilot persisted chat sessions
+/copilot/chatSessions
+
+.idea

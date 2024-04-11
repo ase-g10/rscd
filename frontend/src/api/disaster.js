@@ -11,5 +11,17 @@ export function submitDisasterLocation(data) {
 }
 
 export const getDisasterData = () => {
-  return service.get("/api/disaster/getData");
+  return service.get("dm/disasterview/read_all_verified/");
+};
+
+export const getDisasterDataFroVerify = () => {
+  return service.get("dm/disasterview/read_all_verifying/");
+};
+
+export const getDisasterSafePoint = (data) => {
+  return service({
+    url: "dm/disasterview/calculate_safePoint/",
+    method: "post",
+    data,
+  });
 };
