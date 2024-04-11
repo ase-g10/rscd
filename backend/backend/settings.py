@@ -83,10 +83,9 @@ INSTALLED_APPS = [
     'notification_management',
     'disaster_management',
     'emergency_team_management',
+    'django_apscheduler',
     'channels',
 ]
-
-ASGI_APPLICATION = 'backend.routing.application'
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.github.GithubOAuth2',
