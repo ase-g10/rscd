@@ -14,10 +14,10 @@ const SidebarStore = reactive({
     },
     { to: "/stats", name: "stats", icon: "ti-user", title: "User Profile" },
     {
-      to: "/Disasters",
-      name: "Disasters",
+      to: "/OngoingDisasters",
+      name: "OngoingDisasters",
       icon: "ti-view-list-alt",
-      title: "Disasters",
+      title: "OngoingDisasters",
     },
     {
       to: "/notifications",

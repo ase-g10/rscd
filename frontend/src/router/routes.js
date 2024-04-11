@@ -58,8 +58,8 @@ const routes = [
         meta: {requiresAuth: true},
       },
       {
-        path: "Disasters",
-        name: "Disasters",
+        path: "OngoingDisasters",
+        name: "OngoingDisasters",
         component: TableList,
         meta: {requiresAuth: true},
       },

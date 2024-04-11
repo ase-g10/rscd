@@ -17,7 +17,7 @@
               <tr v-for="item in disasterTable.data" :key="item.fields.name">
                 <td v-for="column in disasterTable.columns" :key="column.field">
                   <!-- Use a conditional to check for the navigation column -->
-                  <template v-if="column.field !== 'navigation'">
+                  <template v-if="column.field !== 'navigation' || column.field !== 'TerminateDisaster' ">
                     {{ item.fields[column.field] }}
                   </template>
 
@@ -26,11 +26,19 @@
                   </template>
 
                   <template v-else-if="column.field === 'navigation'">
-                    <!-- Add a clickable icon for navigation -->
-                    <div @click="navigateToHomepage(item)" style="cursor: pointer;">
-                      <i>📍Show the Path</i>
+                  <!-- Add a clickable icon for navigation -->
+                  <div @click="navigateToDisasterAsync(item)" style="cursor: pointer;">
+                    <i>📍Show the Path</i>
+                  </div>
+                </template>
+
+                  <template v-else-if="column.field === 'TerminateDisaster'">
+
+                    <div @click="terminateDisasterAsync(item)" style="cursor: pointer;">
+                      <i>🔚 Terminate</i>
                     </div>
                   </template>
+
                 </td>
               </tr>
               </tbody>
@@ -75,7 +83,8 @@ export default {
           { field: "description", label: "Description" },
           { field: "create_time", label: "Create Time" },
           { field: "update_time", label: "Update Time" },
-          { field: 'navigation', label:"Navigation" }
+          { field: 'navigation', label:"Navigation" },
+          { field: 'TerminateDisaster', label:"Terminate Disaster" }
         ]
       },
     };
@@ -88,6 +97,38 @@ export default {
     loadGoogleMapsScript(this.initMap.bind(this));
   },
   methods: {
+    async terminateDisasterAsync(item) {
+      console.log(item);
+      try {
+        const terminatedDisaster = {
+          name: item.fields.name,
+          latitude: item.fields.latitude,
+          longitude: item.fields.longitude,
+          description: item.fields.description,
+          location: item.fields.location,
+          username: 'FireFighter'
+        }
+
+        const response = await axios.post('/etm/emergencyview/response/', terminatedDisaster);
+
+        if(response.data.status !== 'error') {
+          this.$notify({
+            component: NotificationTemplate,
+            icon: "ti-check",
+            horizontalAlign: "right",
+            verticalAlign: "top",
+            type: "success",
+            title: "successfully terminate disaster ",
+            text: `terminate disaster successful!`,
+            dangerouslySetInnerHtml: true,
+          })
+        }
+
+      }catch (e) {
+        console.error(e)
+      }
+    },
+
     async fetchOngoingDisastersAsync() {
       try {
         const response = await axios.get('/dm/disasterview/read_all_ongoing/')
@@ -97,8 +138,8 @@ export default {
         console.error('Fail to fetch the ongoing disasters:', e);
       }
     },
-    async navigateToHomepage(item) {
-      console.log("Navigate to homepage:", item.latitude);
+
+    async navigateToDisasterAsync(item) {
 
       const directionsService = new google.maps.DirectionsService();
       const directionsRenderer = new google.maps.DirectionsRenderer({

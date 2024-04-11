@@ -15,8 +15,8 @@
         -->
         <sidebar-link to="/stats" name="stats" icon="ti-user"  v-if="isLoggedIn" />
         <sidebar-link
-          to="/Disasters"
-          name="Disasters"
+          to="/OngoingDisasters"
+          name="OngoingDisasters"
           icon="ti-view-list-alt"
            v-if="isLoggedIn"
         />
