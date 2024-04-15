@@ -50,8 +50,7 @@ class EmergencyView(viewsets.ViewSet):
         try:
             Tmp = Log.objects.all()
             new_Tmp = serializers.serialize('json', Tmp)
-            for tmp in Tmp:
-                return JsonResponse({"message": json.loads(new_Tmp)})
+            return JsonResponse({"message": json.loads(new_Tmp)})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 

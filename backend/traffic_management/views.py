@@ -45,7 +45,8 @@ class TrafficView(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'])
     def save_driving_location(self, request):
-        username = request.data.get("username")
+        # username = request.data.get("username")
+        username = request.user.username        # 从request的session中获取当前用户的username
         latitude = request.data.get("latitude")
         longitude = request.data.get("longitude")
         if username is None or latitude is None or longitude is None:
@@ -55,10 +56,10 @@ class TrafficView(viewsets.ViewSet):
             location = DrivingLocation.objects.get(username=username)
             location.latitude = latitude
             location.longitude = longitude
-            location.update = timezone.now()
+            location.update_time = timezone.now()
             location.save()
         except DrivingLocation.DoesNotExist:
             DrivingLocation.objects.create(username=username, latitude=latitude, longitude=longitude,
-                                           update=timezone.now())
+                                           update_time=timezone.now())
 
         return JsonResponse({"status": "success", "message": "Location saved successfully."})
