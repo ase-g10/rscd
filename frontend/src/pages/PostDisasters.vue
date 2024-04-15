@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div class="container mx-auto px-4">
       <h1 class="text-xl font-semibold my-4">Post Disasters</h1>
       <div v-if="disasters.length">
@@ -17,11 +18,12 @@
       </div>
     </div>
     <Modal v-if="showModal" @close="showModal=false" :report="disasterReport" />
+  </div>
   </template>
-  
+
   <script>
   import axios from 'axios';
-  
+
   export default {
     name: 'PostDisasters',
     data() {
@@ -72,7 +74,7 @@
     }
   };
   </script>
-  
+
   <style scoped>
   .container {
     max-width: 1200px;
@@ -96,4 +98,3 @@
     width: 100%;
     }
   </style>
-  
