@@ -35,6 +35,7 @@ SECRET_KEY = config('DJANGO_SECRET_KEY',
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DJANGO_DEBUG', default=True, cast=bool)
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 # 实际请求所允许的请求方式列表。默认为：
 CORS_ALLOW_METHODS = (
     'DELETE',
