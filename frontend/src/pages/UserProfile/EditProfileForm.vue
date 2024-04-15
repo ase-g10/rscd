@@ -141,9 +141,6 @@ export default {
       },
     };
   },
-  created() {
-    this.fetchUserData();
-  },
   methods: {
     updateProfile() {
       alert("Your data: " + JSON.stringify(this.user));
@@ -154,7 +151,6 @@ export default {
         this.user = { ...this.user, ...userData }; // Merge API data with user data
       } catch (error) {
         console.error("Failed to fetch user data:", error);
-        alert("Failed to load user information.");
       }
     },
   },
