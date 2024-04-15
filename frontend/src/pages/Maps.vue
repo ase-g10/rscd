@@ -590,7 +590,7 @@ export default {
         'police': 'https://sky.iocky.com/i/2024/04/16/661d89fae',
         'rescue': 'https://sky.iocky.com/i/2024/04/16/661d8a4c56ef5.png',
         'admin': 'https://sky.iocky.com/i/2024/04/16/661d8a1c1e3e1.png',
-        'default': 'https://sky.iocky.com/i/2024/04/16/661d8558b2f2d.png',
+        'public': 'https://sky.iocky.com/i/2024/04/16/661d8558b2f2d.png',
         'army': 'https://sky.iocky.com/i/2024/04/16/661d8b3b34626.png',
         // 其他角色...
       };
