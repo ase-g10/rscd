@@ -584,7 +584,6 @@ export default {
       });
     },
     updateMarkers(locations) {
-      mockfortest = false;
       const roleIcons = {
         'firetruck': 'https://sky.iocky.com/i/2024/04/16/661d88f9c5821.png',
         'ambulance': 'https://sky.iocky.com/i/2024/04/16/661d8908dbbfb.png',
@@ -604,8 +603,7 @@ export default {
         console.log('No existing markers to clear');
       }
       console.log('New locations:', locations);
-      // 测试用数据
-      if (mockfortest) {
+      if (false) {
         locations = [
           { latitude: 53.355427961778176, longitude: -6.263842820866124, user_role: "firetruck" },
           { latitude: 53.36444248500757, longitude: -6.26897164340078, user_role: "firetruck" },
@@ -624,8 +622,8 @@ export default {
 
         console.log('Mock New locations:', locations);
       }
-
-      if (!locations || locations.length === 0) {
+      
+      if (!locations || locations.length === 0 || locations == undefined || locations == null) {
         console.log('No new locations to update');
         return;
       }
