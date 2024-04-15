@@ -8,3 +8,7 @@ export function updateDrivingLocation(data) {
     data,
   });
 }
+
+export function getDrivingLocations() {
+  return service.get("/tm/trafficview/get_driving_location/");
+}

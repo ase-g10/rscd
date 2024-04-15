@@ -66,7 +66,7 @@ import loadGoogleMapsScript from "@/utils/googleMapsLoader";
 import { getDisasterData } from "@/api/disaster";
 import { getDisasterSafePoint } from "@/api/disaster";
 import router from "@/router";
-import { updateDrivingLocation } from "@/api/traffic";
+import { updateDrivingLocation, getDrivingLocations } from "@/api/traffic";
 
 function mockGetDisasterSafePoint({ latitude, longitude }) {
   return new Promise((resolve, reject) => {
@@ -114,6 +114,8 @@ export default {
       travelMode: 'WALKING',
       hasRoute: false,
       locationUpdateTimer: null,
+      updateTimer: null,
+      drivingMarkers: [],
     };
   },
   async mounted() {
@@ -124,7 +126,9 @@ export default {
       if (this.travelMode === "DRIVING") {
         this.startLocationUpdates();
       }
+      this.startLocationFetching();
     });
+    
   },
   watch: {
     travelMode: {
@@ -527,21 +531,181 @@ export default {
       }
     },
     updateLocation() {
-      // Ensure that current location is available
-      if (this.currentLat && this.currentLng) {
-        const data = {
-          latitude: this.currentLat,
-          longitude: this.currentLng,
-        };
-        console.log("Location updated", data);
-        updateDrivingLocation(data)
-          .then(response => {
-            console.log('Location update successful:', response);
-          })
-          .catch(error => {
-            console.error('Location update failed:', error);
-          });
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            // 成功获取位置，使用当前位置进行上报
+            const currentLat = position.coords.latitude;
+            const currentLng = position.coords.longitude;
+            const data = {
+              latitude: currentLat,
+              longitude: currentLng,
+            };
+            console.log("Current location updated directly", data);
+            this.sendLocationData(data);
+          },
+          () => {
+            // 获取位置失败，使用预设的固定位置进行上报
+            console.error('Failed to fetch current location, using address location instead');
+            const data = {
+              latitude: this.currentLat,
+              longitude: this.currentLng,
+            };
+            this.sendLocationData(data);
+          },
+          { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
       }
+    },
+    sendLocationData(data) {
+      console.log("Location updated", data);
+      updateDrivingLocation(data)
+        .then(response => {
+          console.log('Location update successful:', response);
+        })
+        .catch(error => {
+          console.error('Location update failed:', error);
+        });
+    },
+    startLocationFetching() {
+      this.updateTimer = setInterval(() => {
+        this.fetchDrivingLocations();
+      }, 3000);
+    },
+    fetchDrivingLocations() {
+      getDrivingLocations().then(response => {
+        const locations = response.data.locations;
+        console.log('Fetched locations:', response.data);
+        this.updateMarkers(locations);
+      }).catch(error => {
+        console.error('Failed to fetch locations:', error);
+      });
+    },
+    updateMarkers(locations) {
+      mockfortest = false;
+      const roleIcons = {
+        'firetruck': 'https://sky.iocky.com/i/2024/04/16/661d88f9c5821.png',
+        'ambulance': 'https://sky.iocky.com/i/2024/04/16/661d8908dbbfb.png',
+        'police': 'https://sky.iocky.com/i/2024/04/16/661d89fae',
+        'rescue': 'https://sky.iocky.com/i/2024/04/16/661d8a4c56ef5.png',
+        'admin': 'https://sky.iocky.com/i/2024/04/16/661d8a1c1e3e1.png',
+        'default': 'https://sky.iocky.com/i/2024/04/16/661d8558b2f2d.png',
+        'army': 'https://sky.iocky.com/i/2024/04/16/661d8b3b34626.png',
+        // 其他角色...
+      };
+      // Remove existing markers
+      if (this.drivingMarkers.length > 0) {
+        this.drivingMarkers.forEach(marker => marker.setMap(null));
+        this.drivingMarkers = [];
+        console.log('Driving markers cleared:', this.drivingMarkers);
+      } else {
+        console.log('No existing markers to clear');
+      }
+      console.log('New locations:', locations);
+      // 测试用数据
+      if (mockfortest) {
+        locations = [
+          { latitude: 53.355427961778176, longitude: -6.263842820866124, user_role: "firetruck" },
+          { latitude: 53.36444248500757, longitude: -6.26897164340078, user_role: "firetruck" },
+          { latitude: 53.34785944551918, longitude: -6.25956887847702, user_role: "ambulance" },
+          { latitude: 53.35334802661926, longitude: -6.269516950547101, user_role: "ambulance" },
+          { latitude: 53.35572672814882, longitude: -6.259175498778991, user_role: "police" },
+          { latitude: 53.353055505056496, longitude: -6.262115244700755, user_role: "police" },
+          { latitude: 53.352363840730185, longitude: -6.261097214897715, user_role: "default" },
+          { latitude: 53.36608042449805, longitude: -6.258274304906397, user_role: "rescue" },
+          { latitude: 53.348601826525176, longitude: -6.250799770399876, user_role: "army" },
+          { latitude: 53.352695871981325, longitude: -6.269076223864162 }
+        ];
+
+        // 添加一个不符合格式的位置数据进行测试
+        locations.push({ lat: 53.350000, long: -6.260000 }); // 故意使用错误的键名以测试数据验证
+
+        console.log('Mock New locations:', locations);
+      }
+
+      if (!locations || locations.length === 0) {
+        console.log('No new locations to update');
+        return;
+      }
+      
+      var service = new google.maps.DirectionsService();
+
+      locations.forEach(async loc => {
+        if (typeof loc.latitude !== 'number' || typeof loc.longitude !== 'number') {
+          console.error('Invalid location data:', loc);
+          return;
+        }
+        
+        // 使用 DirectionsService 获取路线
+        const result = await new Promise(resolve => {
+          service.route({
+            origin: { lat: loc.latitude, lng: loc.longitude },
+            destination: { lat: loc.latitude, lng: loc.longitude }, // 使用相同的起点和终点来获取最近的道路
+            travelMode: google.maps.TravelMode.DRIVING
+          }, function (result, status) {
+            if (status === google.maps.DirectionsStatus.OK) {
+              resolve(result);
+            } else {
+              console.error('Directions request failed due to ' + status);
+              resolve(null);
+            }
+          });
+        });
+
+        if (!result) {
+          console.error('Failed to get directions for location:', loc);
+          return;
+        }
+
+        const iconUrl = roleIcons[loc.user_role] || 'https://sky.iocky.com/i/2024/04/16/661d8558b2f2d.png';
+
+        const marker = new google.maps.Marker({
+          position: result.routes[0].legs[0].start_location, // 将标记的位置设置为最近的路上
+          map: this.map,
+          title: loc.username,
+          icon: {
+            url: iconUrl,
+            scaledSize: new google.maps.Size(40, 40),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(0, 0)
+          }
+        });
+
+        this.drivingMarkers.push(marker);
+      });
+
+      console.log('Driving markers updated:', this.drivingMarkers);
+
+
+
+      // Add new markers
+      // locations.forEach(loc => {
+      //   if (typeof loc.latitude !== 'number' || typeof loc.longitude !== 'number') {
+      //     console.error('Invalid location data:', loc);
+      //     return;
+      //   }
+      //   const marker = new google.maps.Marker({
+      //     position: { lat: loc.latitude, lng: loc.longitude },
+      //     map: this.map,
+      //     title: loc.username,
+      //     icon : {
+      //       url: 'https://sky.iocky.com/i/2024/04/16/661d8558b2f2d.png',
+      //       scaledSize: new google.maps.Size(30, 30),
+      //       origin: new google.maps.Point(0, 0),
+      //       anchor: new google.maps.Point(0, 0)
+      //     }
+      //   });
+      //   this.drivingMarkers.push(marker);
+      // });
+      // console.log('Driving markers updated:', this.drivingMarkers);
+    },
+    beforeDestroy() {
+      if (this.updateTimer) {
+        clearInterval(this.updateTimer);
+      }
+      this.drivingMarkers.forEach(marker => marker.setMap(null));
     },
   },
 };

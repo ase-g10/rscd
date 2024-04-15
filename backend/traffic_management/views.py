@@ -35,12 +35,17 @@ class TrafficView(viewsets.ViewSet):
         locations_list = []
         for loc in locations:
             user = User.objects.get(username=loc.username)
+            if user is None:
+                continue
             locations_list.append({
                 "username": loc.username,
                 "latitude": loc.latitude,
                 "longitude": loc.longitude,
                 "user_role": user.role
             })
+        print(locations_list)
+        if locations_list is None or len(locations_list) == 0:
+            return JsonResponse({"status": "error", "message": "No location data available."})
         return JsonResponse({"status": "success", "locations": locations_list})
 
     @action(detail=False, methods=['post'])
@@ -49,6 +54,9 @@ class TrafficView(viewsets.ViewSet):
         username = request.user.username        # 从request的session中获取当前用户的username
         latitude = request.data.get("latitude")
         longitude = request.data.get("longitude")
+        print("username: ", username)
+        print("latitude: ", latitude)
+        print("longitude: ", longitude)
         if username is None or latitude is None or longitude is None:
             return JsonResponse({"status": "error", "message": "Invalid request."})
 
