@@ -9,7 +9,7 @@
             <p v-if="hasRoute">Total Distance: <span id="total" class="total-distance"></span></p>
             <div id="panel"></div>
           </div>
-          <div id="floating-panel" class="absolute top-0 left-0 z-10 m-10" v-if="hasRoute">
+          <div id="floating-panel" class="absolute top-0 left-0 z-10 m-10">
             <b>Mode of Travel:</b>
             <select id="mode" v-model="travelMode" class="select select-bordered select-sm">
               <!-- Adjusted for smaller size -->
@@ -66,6 +66,7 @@ import loadGoogleMapsScript from "@/utils/googleMapsLoader";
 import { getDisasterData } from "@/api/disaster";
 import { getDisasterSafePoint } from "@/api/disaster";
 import router from "@/router";
+import { updateDrivingLocation } from "@/api/traffic";
 
 function mockGetDisasterSafePoint({ latitude, longitude }) {
   return new Promise((resolve, reject) => {
@@ -112,13 +113,18 @@ export default {
       directionsRenderer: null, 
       travelMode: 'WALKING',
       hasRoute: false,
+      locationUpdateTimer: null,
     };
   },
   async mounted() {
     console.log("Mounted - loading Google Maps Script");
     await loadGoogleMapsScript(this.initMap.bind(this));
     await this.loadDisasters();
-
+    this.$nextTick(() => {
+      if (this.travelMode === "DRIVING") {
+        this.startLocationUpdates();
+      }
+    });
   },
   watch: {
     travelMode: {
@@ -129,6 +135,16 @@ export default {
         }
       },
       immediate: false,
+    },
+    travelMode(newMode) {
+      // When the travel mode changes to or from "DRIVING"
+      if (newMode === "DRIVING") {
+        console.log("Starting location updates...");
+        this.startLocationUpdates();
+      } else {
+        console.log("Stopping location updates...");
+        this.stopLocationUpdates();
+      }
     },
   },
   methods: {
@@ -494,6 +510,38 @@ export default {
           );
         }
       });
+    },
+    startLocationUpdates() {
+      // Start the periodic location updates
+      if (!this.locationUpdateTimer) {
+        this.locationUpdateTimer = setInterval(() => {
+          this.updateLocation();
+        }, 3000); // Update every 30 seconds
+      }
+    },
+    stopLocationUpdates() {
+      // Stop the periodic location updates
+      if (this.locationUpdateTimer) {
+        clearInterval(this.locationUpdateTimer);
+        this.locationUpdateTimer = null;
+      }
+    },
+    updateLocation() {
+      // Ensure that current location is available
+      if (this.currentLat && this.currentLng) {
+        const data = {
+          latitude: this.currentLat,
+          longitude: this.currentLng,
+        };
+        console.log("Location updated", data);
+        updateDrivingLocation(data)
+          .then(response => {
+            console.log('Location update successful:', response);
+          })
+          .catch(error => {
+            console.error('Location update failed:', error);
+          });
+      }
     },
   },
 };

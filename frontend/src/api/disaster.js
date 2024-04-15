@@ -25,3 +25,4 @@ export const getDisasterSafePoint = (data) => {
     data,
   });
 };
+
