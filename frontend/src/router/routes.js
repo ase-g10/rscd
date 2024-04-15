@@ -35,12 +35,12 @@ const routes = [
         component: UserProfile,
         meta: {requiresAuth: true},
       },
-      {
-        path: "notifications",
-        name: "notifications",
-        component: Notifications,
-        meta: {requiresAuth: true},
-      },
+      // {
+      //   path: "notifications",
+      //   name: "notifications",
+      //   component: Notifications,
+      //   meta: {requiresAuth: true},
+      // },
       {
         path: "icons",
         name: "icons",

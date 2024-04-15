@@ -19,12 +19,12 @@ const SidebarStore = reactive({
       icon: "ti-view-list-alt",
       title: "OngoingDisasters",
     },
-    {
-      to: "/notifications",
-      name: "notifications",
-      icon: "ti-bell",
-      title: "Notifications",
-    },
+    // {
+    //   to: "/notifications",
+    //   name: "notifications",
+    //   icon: "ti-bell",
+    //   title: "Notifications",
+    // },
     {
       to: "/disaster-report-approval",
       name: "disaster-report-approval",

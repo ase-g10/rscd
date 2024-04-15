@@ -116,6 +116,7 @@ export default {
       locationUpdateTimer: null,
       updateTimer: null,
       drivingMarkers: [],
+      markerPool: [],
     };
   },
   async mounted() {
@@ -520,7 +521,7 @@ export default {
       if (!this.locationUpdateTimer) {
         this.locationUpdateTimer = setInterval(() => {
           this.updateLocation();
-        }, 3000); // Update every 30 seconds
+        }, 10000); // Update every 30 seconds
       }
     },
     stopLocationUpdates() {
@@ -572,7 +573,7 @@ export default {
     startLocationFetching() {
       this.updateTimer = setInterval(() => {
         this.fetchDrivingLocations();
-      }, 3000);
+      }, 1000);
     },
     fetchDrivingLocations() {
       getDrivingLocations().then(response => {
@@ -583,7 +584,8 @@ export default {
         console.error('Failed to fetch locations:', error);
       });
     },
-    updateMarkers(locations) {
+    async updateMarkers(locations) {
+      const vm = this;
       const roleIcons = {
         'firetruck': 'https://sky.iocky.com/i/2024/04/16/661d88f9c5821.png',
         'ambulance': 'https://sky.iocky.com/i/2024/04/16/661d8908dbbfb.png',
@@ -595,27 +597,26 @@ export default {
         // 其他角色...
       };
       // Remove existing markers
-      if (this.drivingMarkers.length > 0) {
-        this.drivingMarkers.forEach(marker => marker.setMap(null));
-        this.drivingMarkers = [];
-        console.log('Driving markers cleared:', this.drivingMarkers);
-      } else {
-        console.log('No existing markers to clear');
-      }
+      this.drivingMarkers.forEach(marker => {
+        marker.setMap(null);
+        vm.markerPool.push(marker); // 使用 vm 来访问 markerPool
+      });
+      this.drivingMarkers = [];
+      console.log('Driving markers cleared:', this.drivingMarkers);
+
       console.log('New locations:', locations);
       if (false) {
-        locations = [
-          { latitude: 53.355427961778176, longitude: -6.263842820866124, user_role: "firetruck" },
-          { latitude: 53.36444248500757, longitude: -6.26897164340078, user_role: "firetruck" },
-          { latitude: 53.34785944551918, longitude: -6.25956887847702, user_role: "ambulance" },
-          { latitude: 53.35334802661926, longitude: -6.269516950547101, user_role: "ambulance" },
-          { latitude: 53.35572672814882, longitude: -6.259175498778991, user_role: "police" },
-          { latitude: 53.353055505056496, longitude: -6.262115244700755, user_role: "police" },
-          { latitude: 53.352363840730185, longitude: -6.261097214897715, user_role: "default" },
-          { latitude: 53.36608042449805, longitude: -6.258274304906397, user_role: "rescue" },
-          { latitude: 53.348601826525176, longitude: -6.250799770399876, user_role: "army" },
-          { latitude: 53.352695871981325, longitude: -6.269076223864162 }
-        ];
+        locations.push({ latitude: 53.355427961778176, longitude: -6.263842820866124, user_role: "firetruck" });
+        locations.push({ latitude: 53.36444248500757, longitude: -6.26897164340078, user_role: "firetruck" });
+        locations.push({ latitude: 53.34785944551918, longitude: -6.25956887847702, user_role: "ambulance" });
+        locations.push({ latitude: 53.35334802661926, longitude: -6.269516950547101, user_role: "ambulance" });
+        locations.push({ latitude: 53.35572672814882, longitude: -6.259175498778991, user_role: "police" });
+        locations.push({ latitude: 53.353055505056496, longitude: -6.262115244700755, user_role: "police" });
+        locations.push({ latitude: 53.352363840730185, longitude: -6.261097214897715, user_role: "default" });
+        locations.push({ latitude: 53.36608042449805, longitude: -6.258274304906397, user_role: "rescue" });
+        locations.push({ latitude: 53.348601826525176, longitude: -6.250799770399876, user_role: "army" });
+        locations.push({ latitude: 53.352695871981325, longitude: -6.269076223864162, user_role: undefined }); 
+
 
         // 添加一个不符合格式的位置数据进行测试
         locations.push({ lat: 53.350000, long: -6.260000 }); // 故意使用错误的键名以测试数据验证
@@ -630,17 +631,16 @@ export default {
       
       var service = new google.maps.DirectionsService();
 
-      locations.forEach(async loc => {
+      const markerPromises = locations.map(async (loc) => {
         if (typeof loc.latitude !== 'number' || typeof loc.longitude !== 'number') {
           console.error('Invalid location data:', loc);
-          return;
+          return null;
         }
-        
-        // 使用 DirectionsService 获取路线
-        const result = await new Promise(resolve => {
+
+        let result = await new Promise(resolve => {
           service.route({
             origin: { lat: loc.latitude, lng: loc.longitude },
-            destination: { lat: loc.latitude, lng: loc.longitude }, // 使用相同的起点和终点来获取最近的道路
+            destination: { lat: loc.latitude, lng: loc.longitude },
             travelMode: google.maps.TravelMode.DRIVING
           }, function (result, status) {
             if (status === google.maps.DirectionsStatus.OK) {
@@ -654,25 +654,41 @@ export default {
 
         if (!result) {
           console.error('Failed to get directions for location:', loc);
-          return;
+          return null;
         }
 
         const iconUrl = roleIcons[loc.user_role] || 'https://sky.iocky.com/i/2024/04/16/661d8558b2f2d.png';
-
-        const marker = new google.maps.Marker({
-          position: result.routes[0].legs[0].start_location, // 将标记的位置设置为最近的路上
-          map: this.map,
-          title: loc.username,
-          icon: {
+        let marker;
+        if (vm.markerPool.length > 0) {
+          marker = vm.markerPool.pop();
+          marker.setPosition(result.routes[0].legs[0].start_location);
+          marker.setTitle(loc.username || "Unknown");
+          marker.setIcon(null); // 重置图标属性
+          marker.setIcon({
             url: iconUrl,
             scaledSize: new google.maps.Size(40, 40),
             origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(0, 0)
-          }
-        });
+            anchor: new google.maps.Point(20, 20)
+          });
+        } else {
+          marker = new google.maps.Marker({
+            position: result.routes[0].legs[0].start_location,
+            map: this.map,
+            title: loc.username || "Unknown",
+            icon: {
+              url: iconUrl,
+              scaledSize: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(20, 20)
+            }
+          });
+        }
 
-        this.drivingMarkers.push(marker);
+        return marker;
       });
+
+      this.drivingMarkers = await Promise.all(markerPromises);
+      this.drivingMarkers = this.drivingMarkers.filter(marker => marker !== null);
 
       console.log('Driving markers updated:', this.drivingMarkers);
 
