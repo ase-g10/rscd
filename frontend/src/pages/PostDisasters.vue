@@ -17,7 +17,7 @@
         <p>No disasters to show.</p>
       </div>
     </div>
-    <Modal v-if="showModal" @close="showModal=false" :report="disasterReport" />
+    <Modal v-if="showModal" :report="disasterReport" @close="showModal=false"/>
   </div>
   </template>
 
@@ -50,8 +50,9 @@
       viewReport(disaster) {
           axios.get(`/etm/emergencyview/read_specific_log?disaster_id=${disaster.pk}`)
           .then(response => {
-              this.disasterReport = response.data;
+              this.disasterReport = response.data.message[0];
               this.showModal = true;
+              console.log('selected report: ' + response.data)
           })
           .catch(error => {
               console.error('There was an error fetching the disaster report:', error);
@@ -59,20 +60,24 @@
       },
     },
     components: {
-        Modal: {
-        props: ['disaster'],
-        template: `
-            <div class="modal-backdrop">
+    Modal: {
+    props: ['report'],
+    template: `
+        <div class="modal-backdrop" @click.self="$emit('close')">
             <div class="modal">
-                <h3>{{ report.title }} - Report</h3>
-                <p>{{ report.content }}</p>
-                <!-- More disaster details here -->
+                <h3>{{ report.fields.disaster_name }} - Report</h3>
+                <p>Description: {{ report.fields.description }}</p>
+                <p>Location: {{ report.fields.location }}</p>
+                <p>Type: {{ report.fields.type }}</p>
+                <p>Date: {{ report.fields.create_time }}</p>
+                <!-- Include additional details as needed -->
                 <button @click="$emit('close')">Close</button>
             </div>
-            </div>
-        `,
-        }
+        </div>
+    `,
     }
+}
+
   };
   </script>
 

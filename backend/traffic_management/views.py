@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from rest_framework import viewsets
+from rest_framework.authentication import BasicAuthentication
 from rest_framework.decorators import action
 from models.models import DrivingLocation, User
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -14,6 +15,9 @@ import joblib
 
 from tensorflow.keras.models import load_model
 import numpy as np
+
+from .CsrfExemptSessionAuthentication import CsrfExemptSessionAuthentication
+
 
 # logger = logging.getLogger(__name__)
 
@@ -114,6 +118,8 @@ def predict_location(loc):
 
 
 class TrafficView(viewsets.ViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
     @action(detail=False, methods=['get'])
     def get_driving_location(self, request):
         all_locations = DrivingLocation.objects.all()
@@ -122,7 +128,6 @@ class TrafficView(viewsets.ViewSet):
         time_threshold_drop = timezone.now() - timedelta(seconds=600)
 
         locations_list = []
-
         for loc in all_locations:
             if loc.time10 < time_threshold_drop:
                 loc.delete()
@@ -135,35 +140,26 @@ class TrafficView(viewsets.ViewSet):
 
                 loc.lat10, loc.lon10 = predicted_lat, predicted_lon
 
-                locations_list.append((predicted_lat, predicted_lon))
+                locations_list.append({
+                    'latitude': predicted_lat,
+                    'longitude': predicted_lon,
+                    'user_role': loc.user.role
+                })
             else:
-                locations_list.append((loc.lat10, loc.lon10))
+                locations_list.append({
+                    'latitude': loc.lat10,
+                    'longitude': loc.lon10,
+                    'user_role': loc.user.role
+                })
 
         print(f'Locations: {locations_list}')
 
         return JsonResponse({"status": "success", "locations": locations_list})
 
 
-        # for loc in all_locations:
-        #     try:
-        #         user = User.objects.get(username=loc.username)
-        #     except User.DoesNotExist:
-        #         user_role = 'public'
-        #     else:
-        #         user_role = user.role
-        #     locations_list.append({
-        #         "username": loc.username,
-        #         "latitude": loc.latitude,
-        #         "longitude": loc.longitude,
-        #         "user_role": user_role
-        #     })
-        # if locations_list is None or len(locations_list) == 0:
-        #     return JsonResponse({"status": "error", "message": "No location data available."})
-        #
-        # return JsonResponse({"status": "success", "locations": locations_list})
-
     @action(detail=False, methods=['post'])
     def save_driving_location(self, request):
+        print("Start save_driving_location")
         if not request.user.is_authenticated:
             return JsonResponse({"status": "error", "message": "User not authenticated."})
 

@@ -109,8 +109,8 @@ export default {
       currentLng: "",
       currentAddress: "",
       submitMessage: "",
-      directionsService: null, 
-      directionsRenderer: null, 
+      directionsService: null,
+      directionsRenderer: null,
       travelMode: 'WALKING',
       hasRoute: false,
       locationUpdateTimer: null,
@@ -129,7 +129,7 @@ export default {
       }
       this.startLocationFetching();
     });
-    
+
   },
   watch: {
     travelMode: {
@@ -615,7 +615,7 @@ export default {
         locations.push({ latitude: 53.352363840730185, longitude: -6.261097214897715, user_role: "default" });
         locations.push({ latitude: 53.36608042449805, longitude: -6.258274304906397, user_role: "rescue" });
         locations.push({ latitude: 53.348601826525176, longitude: -6.250799770399876, user_role: "army" });
-        locations.push({ latitude: 53.352695871981325, longitude: -6.269076223864162, user_role: undefined }); 
+        locations.push({ latitude: 53.352695871981325, longitude: -6.269076223864162, user_role: undefined });
 
 
         // 添加一个不符合格式的位置数据进行测试
@@ -623,15 +623,17 @@ export default {
 
         console.log('Mock New locations:', locations);
       }
-      
+
       if (!locations || locations.length === 0 || locations == undefined || locations == null) {
         console.log('No new locations to update');
         return;
       }
-      
+
       var service = new google.maps.DirectionsService();
 
       const markerPromises = locations.map(async (loc) => {
+        loc.latitude = parseFloat(loc.latitude);
+        loc.longitude = parseFloat(loc.longitude);
         if (typeof loc.latitude !== 'number' || typeof loc.longitude !== 'number') {
           console.error('Invalid location data:', loc);
           return null;
