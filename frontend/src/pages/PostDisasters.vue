@@ -47,16 +47,16 @@
             console.error('There was an error fetching the disasters:', error);
           });
       },
-    viewReport(disaster) {
-        axios.get(`/api/disasters/report/${disaster.id}`)
-        .then(response => {
-            this.disasterReport = response.data;
-            this.showModal = true;
-        })
-        .catch(error => {
-            console.error('There was an error fetching the disaster report:', error);
-        });
-    },
+      viewReport(disaster) {
+          axios.get(`/etm/emergencyview/read_specific_log?disaster_id=${disaster.pk}`)
+          .then(response => {
+              this.disasterReport = response.data;
+              this.showModal = true;
+          })
+          .catch(error => {
+              console.error('There was an error fetching the disaster report:', error);
+          });
+      },
     },
     components: {
         Modal: {
