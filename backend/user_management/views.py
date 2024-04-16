@@ -13,9 +13,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import warnings
 from sklearn.exceptions import DataConversionWarning
 warnings.filterwarnings(action='ignore', category=UserWarning)
+from traffic_management.CsrfExemptSessionAuthentication import CsrfExemptSessionAuthentication
+from rest_framework.authentication import BasicAuthentication
 
 
 class Authentication(viewsets.ViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     @action(detail=False, methods=['post'])
     def register(self, request):
         username = request.data.get("username")
@@ -103,6 +106,7 @@ class Auth2(viewsets.ViewSet):
 
 
 class UserInfo(viewsets.ViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     @action(detail=False, methods=['get'])
     def get_user_info(self, request):
         if request.user.is_authenticated:

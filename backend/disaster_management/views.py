@@ -13,9 +13,11 @@ from django.http import JsonResponse
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-
+from traffic_management.CsrfExemptSessionAuthentication import CsrfExemptSessionAuthentication
+from rest_framework.authentication import BasicAuthentication
 
 class DisasterView(viewsets.ViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     @action(detail=False, methods=['post', 'get'])
     def post_location(self, request, pk=None):
         try:
@@ -164,6 +166,7 @@ class DisasterView(viewsets.ViewSet):
 
 
 class DisasterModify(viewsets.ViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     @action(detail=False, methods=['post', 'get'])
     def write(self, request):
         try:
