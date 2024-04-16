@@ -50,8 +50,9 @@
       viewReport(disaster) {
           axios.get(`/etm/emergencyview/read_specific_log?disaster_id=${disaster.pk}`)
           .then(response => {
-              this.disasterReport = response.data;
+              this.disasterReport = response.data.message;
               this.showModal = true;
+              console.log(response.data)
           })
           .catch(error => {
               console.error('There was an error fetching the disaster report:', error);
