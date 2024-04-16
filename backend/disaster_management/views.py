@@ -175,14 +175,15 @@ class DisasterModify(viewsets.ViewSet):
             for tmp in Tmp:
                 tmp.verified_status = verified_status
                 tmp.save()
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.group_send)(
-                "alert_group",
-                {
-                    "type": "send.alert",
-                    "message": data,
-                }
-            )
+            if verified_status == '1':
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(
+                    "alert_group",
+                    {
+                        "type": "send.alert",
+                        "message": data,
+                    }
+                )
             return JsonResponse({"message": data})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
