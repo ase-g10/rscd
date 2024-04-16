@@ -10,6 +10,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from models.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
+import warnings
+from sklearn.exceptions import DataConversionWarning
+warnings.filterwarnings(action='ignore', category=UserWarning)
 
 
 class Authentication(viewsets.ViewSet):
@@ -47,6 +50,7 @@ class Authentication(viewsets.ViewSet):
         user = authenticate(request, username=user.username, password=password)
         if user is not None:
             login(request, user)
+            # return Response({"message": "User logged in successfully"}, status=status.HTTP_200_OK)
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             return Response({"access_token": access_token}, status=status.HTTP_200_OK)
