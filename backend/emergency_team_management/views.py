@@ -57,9 +57,11 @@ class EmergencyView(viewsets.ViewSet):
     @action(detail=False, methods=['post', 'get'])
     def read_specific_log(self, request):
         try:
-            data = request.data
-            disaster_name = data.get('disaster_name')
-            Tmp = Log.objects.filter(disaster_name=disaster_name)
+            data = request.GET
+            print(data)
+            id = data.get('disaster_id')
+            print(id)
+            Tmp = Log.objects.filter(id=id)
             new_Tmp = serializers.serialize('json', Tmp)
             return JsonResponse({"message": json.loads(new_Tmp)})
         except Exception as e:
