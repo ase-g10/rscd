@@ -87,6 +87,8 @@ INSTALLED_APPS = [
     'channels',
 ]
 
+ASGI_APPLICATION = 'backend.routing.application'
+
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.github.GithubOAuth2',
     'django.contrib.auth.backends.ModelBackend',
