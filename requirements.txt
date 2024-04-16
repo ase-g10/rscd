@@ -16,5 +16,6 @@ geopy~=2.4.1
 Faker~=24.3.0
 djangorestframework-simplejwt
 djangorestframework-simplejwt[crypto]
-channels
+channels==3.0.4
+channels-redis==4.2.0
 django-apscheduler
