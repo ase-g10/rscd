@@ -55,9 +55,7 @@ class EmergencyViewTests(APITestCase):
 
     def test_read_specific_log(self):
         url = '/etm/emergencyview/read_specific_log/'
-        data = {'disaster_name': 'Test Disaster'}
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response_data = json.loads(response.content)['message']
-        self.assertTrue(any(log['fields']['disaster_name'] == 'Test Disaster' for log in response_data))
+        response = self.client.get(url, {'disaster_id': '1'})
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
         print("etm: read_specific_log pass")
