@@ -122,6 +122,9 @@ export default {
             text: `terminate disaster successful!`,
             dangerouslySetInnerHtml: true,
           })
+          // re-render
+          const updatedData = this.disasterTable.data.filter(disaster => disaster.fields.name !== item.fields.name);
+          this.disasterTable.data = updatedData;
         }
 
       }catch (e) {

@@ -4,10 +4,10 @@
       <h1 class="text-xl font-semibold my-4">Post Disasters</h1>
       <div v-if="disasters.length">
         <div v-for="disaster in disasters" :key="disaster.id" class="mb-5">
-          <h2 class="text-lg font-bold">{{ disaster.name }} - {{ disaster.type }}</h2>
-          <p>Description: {{ disaster.description }}</p>
-          <p>Location: {{ disaster.location }}</p>
-          <p>Date: {{ disaster.date }}</p>
+          <h2 class="text-lg font-bold">{{ disaster.fields.disaster_name }} - {{ disaster.fields.type }}</h2>
+          <p>Description: {{ disaster.fields.description }}</p>
+          <p>Location: {{ disaster.fields.location }}</p>
+          <p>Date: {{ disaster.fields.create_time }}</p>
           <div>
             <button @click="viewReport(disaster)" class="btn btn-primary">View Report</button>
           </div>
@@ -38,9 +38,10 @@
     },
     methods: {
       fetchPostDisasters() {
-        axios.get('/api/disasters/post')
+        axios.get('/etm/emergencyview/read_all_logs/')
           .then(response => {
-            this.disasters = response.data;
+            this.disasters = response.data.message;
+            console.log(response.data)
           })
           .catch(error => {
             console.error('There was an error fetching the disasters:', error);
