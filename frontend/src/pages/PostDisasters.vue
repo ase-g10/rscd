@@ -52,7 +52,7 @@
           .then(response => {
               this.disasterReport = response.data.message[0];
               this.showModal = true;
-              console.log(response.data)
+              console.log('selected report: ' + response.data)
           })
           .catch(error => {
               console.error('There was an error fetching the disaster report:', error);
