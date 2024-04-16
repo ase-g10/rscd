@@ -99,14 +99,13 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
-#TODO: 这里要改成“ASE_Group10.urls”
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
@@ -218,4 +217,10 @@ AUTH_USER_MODEL = 'models.User'
 # Use ISO 8601 format for datetime fields.
 DATETIME_FORMAT = 'iso-8601'
 
-CSRF_TRUSTED_ORIGINS=['https://*.iocky.com']
+# CSRF_TRUSTED_ORIGINS=['https://*.iocky.com']
+CSRF_TRUSTED_ORIGINS=['https://localhost:8080']
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+

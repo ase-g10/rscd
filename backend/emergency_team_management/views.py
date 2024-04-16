@@ -6,8 +6,12 @@ from rest_framework.decorators import action
 from models.models import Disaster, Log
 from django.http import JsonResponse
 from django.core import serializers
+from traffic_management.CsrfExemptSessionAuthentication import CsrfExemptSessionAuthentication
+from rest_framework.authentication import BasicAuthentication
+
 # Create your views here.
 class EmergencyView(viewsets.ViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     @action(detail=False, methods=['post', 'get'])
     def response(self, request):
         try:

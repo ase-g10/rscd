@@ -84,7 +84,7 @@ export default {
           { field: "create_time", label: "Create Time" },
           { field: "update_time", label: "Update Time" },
           { field: 'navigation', label:"Navigation" },
-          { field: 'TerminateDisaster', label:"Terminate Disaster" }
+          { field: 'TerminateDisaster', label:"Terminate" }
         ]
       },
     };
