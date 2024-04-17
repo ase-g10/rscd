@@ -13,7 +13,12 @@
           </button>
           <div v-if="disaster.expanded" v-show="disaster.expanded" class="mt-3">
             <p><strong>Report Details:</strong></p>
-            <p>{{ disaster.report ? disaster.report.content : 'Loading...' }}</p>
+            <div v-if="disaster.report">
+              <p>Description: {{ disaster.report.fields.description }}</p>
+              <p>Location: {{ disaster.report.fields.location }}</p>
+              <p>Type: {{ disaster.report.fields.type }}</p>
+              <p>Date: {{ disaster.report.fields.create_time }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -58,7 +63,7 @@
         if (!disaster.report) {
           axios.get(`/etm/emergencyview/read_specific_log?disaster_id=${disaster.pk}`)
           .then(response => {
-              disaster.report = response.data.message;
+              disaster.report = response.data.message[0];
               disaster.expanded = !disaster.expanded; // Toggle after fetching the data
           })
           .catch(error => {
