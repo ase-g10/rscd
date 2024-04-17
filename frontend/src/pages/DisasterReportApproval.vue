@@ -48,6 +48,7 @@ export default {
         });
     },
     approveReport(report) {
+      console.log("aaaaaaaaaaaaaaaa",report)
       const postData = {
         latitude: report.fields.latitude,
         longitude: report.fields.longitude,

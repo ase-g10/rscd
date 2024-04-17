@@ -30,7 +30,8 @@ class DisasterView(viewsets.ViewSet):
             radius = data.get('radius')
             type = data.get('type')
             contact = data.get('contact')
-            imageUrl = "" if data.get('imageUrl') == None else data.get('imageUrl')
+            imageUrl = data.get('image_url')
+            print(imageUrl)
             disaster = Disaster()
             disaster.name = name
             disaster.description = description
@@ -132,7 +133,7 @@ class DisasterView(viewsets.ViewSet):
         def is_user_in_disaster_area(user_lat, user_lng):
             user_lat, user_lng = float(user_lat), float(user_lng)
             user_location = (user_lat, user_lng)
-            for disaster in Disaster.objects.filter(verified_status="1"):
+            for disaster in Disaster.objects.filter(is_onging="1"):
                 disaster_lat, disaster_lng, disaster_radius = map(float,
                                                                   [disaster.latitude, disaster.longitude,
                                                                    disaster.radius])

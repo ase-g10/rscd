@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4">
       <h1 class="text-xl font-semibold my-4">Post Disasters</h1>
       <div v-if="disasters.length">
-        <div v-for="disaster in disasters" :key="disaster.pk" class="mb-5">
+        <div v-for="disaster in disasters.slice().reverse()" :key="disaster.pk" class="mb-5">
           <h2 class="text-lg font-bold">{{ disaster.fields.disaster_name }} - {{ disaster.fields.type }}</h2>
           <p>Description: {{ disaster.fields.description }}</p>
           <p>Location: {{ disaster.fields.location }}</p>
@@ -14,10 +14,17 @@
           <div v-if="disaster.expanded" v-show="disaster.expanded" class="mt-3">
             <p><strong>Report Details:</strong></p>
             <div v-if="disaster.report">
+              <p>Disaster name: {{ disaster.report.fields.disaster_name }}</p>
               <p>Description: {{ disaster.report.fields.description }}</p>
+              <p>Latitude: {{ disaster.report.fields.latitude }}</p>
+              <p>Longitude: {{ disaster.report.fields.longitude }}</p>
               <p>Location: {{ disaster.report.fields.location }}</p>
+              <p>Radius: {{ disaster.report.fields.radius }}</p>
               <p>Type: {{ disaster.report.fields.type }}</p>
-              <p>Date: {{ disaster.report.fields.create_time }}</p>
+              <p>Create time: {{ disaster.report.fields.create_time }}</p>
+              <p>Update time: {{ disaster.report.fields.update_time }}</p>
+              <p>Responsible team: {{ disaster.report.fields.responsible_team }}</p>
+              <p>Image URL: {{ disaster.report.fields.image_url }}</p>
             </div>
           </div>
         </div>
