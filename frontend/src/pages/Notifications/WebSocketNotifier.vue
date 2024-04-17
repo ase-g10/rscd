@@ -22,7 +22,7 @@ export default {
   methods: {
     connectWebSocket() {
       // 建立WebSocket连接
-      this.ws = new WebSocket('ws://127.0.0.1:18351/ws/notifications/');
+      this.ws = new WebSocket('ws://150.136.184.118:18351/ws/notifications/');
 
       // 监听WebSocket连接打开事件
       this.ws.onopen = () => {
