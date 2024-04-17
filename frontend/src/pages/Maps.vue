@@ -588,10 +588,10 @@ export default {
       const vm = this;
       const roleIcons = {
         'firetruck': 'https://sky.iocky.com/i/2024/04/16/661d88f9c5821.png',
-        'ambulance': 'https://sky.iocky.com/i/2024/04/16/661d8908dbbfb.png',
+        'emergency_response_team': 'https://sky.iocky.com/i/2024/04/16/661d8908dbbfb.png',
         'police': 'https://sky.iocky.com/i/2024/04/16/661d89fae',
         'rescue': 'https://sky.iocky.com/i/2024/04/16/661d8a4c56ef5.png',
-        'admin': 'https://sky.iocky.com/i/2024/04/16/661d8a1c1e3e1.png',
+        'administrator': 'https://sky.iocky.com/i/2024/04/16/661d8a1c1e3e1.png',
         'public': 'https://sky.iocky.com/i/2024/04/16/661d8558b2f2d.png',
         'army': 'https://sky.iocky.com/i/2024/04/16/661d8b3b34626.png',
         // 其他角色...
