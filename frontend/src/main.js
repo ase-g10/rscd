@@ -5,8 +5,8 @@ import axios from "axios";
 import "./assets/css/tailwind.css";
 
 import rscdDashboard from "./plugins/rscdDashboard";
-
-// import Notification from "@kyvg/vue3-notification"; // 导入 notification 组件
+import WebSocketNotifier from "@/pages/Notifications/WebSocketNotifier";
+import Notification from "@kyvg/vue3-notification"; // 导入 notification 组件
 
 const app = createApp(App);
 
@@ -20,6 +20,5 @@ app.config.globalProperties.routerAppend = (path, pathToAppend) => {
 axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL;
 
 app.use(rscdDashboard); // 然后添加 rscdDashboard 插件
-// app.use(Notification); // 最后添加 notification 插件
-
+app.component("WebSocketNotifier", WebSocketNotifier);
 app.mount("#app");

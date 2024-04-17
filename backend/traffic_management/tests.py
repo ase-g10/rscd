@@ -1,7 +1,12 @@
+from datetime import timezone
+from random import random
+
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 import json
+from models.models import DrivingLocation, User
 
 class TrafficViewTests(APITestCase):
     def test_get_driving_location(self):
@@ -25,3 +30,4 @@ class TrafficViewTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         print('tm: save_driving_location pass')
+

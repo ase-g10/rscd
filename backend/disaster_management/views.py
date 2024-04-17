@@ -176,18 +176,20 @@ class DisasterModify(viewsets.ViewSet):
             longitude = data.get('longitude')
             verified_status = data.get('verified_status')
             Tmp = Disaster.objects.filter(latitude=latitude, longitude=longitude)
+            print(latitude, longitude, verified_status)
             for tmp in Tmp:
                 tmp.verified_status = verified_status
                 tmp.save()
-            if verified_status == '1':
-                channel_layer = get_channel_layer()
-                async_to_sync(channel_layer.group_send)(
-                    "alert_group",
-                    {
-                        "type": "send.alert",
-                        "message": data,
-                    }
-                )
+                tmp = serializers.serialize('json', [tmp])
+                if verified_status == '1':
+                    channel_layer = get_channel_layer()
+                    async_to_sync(channel_layer.group_send)(
+                        "alert_group",
+                        {
+                            "type": "send.alert",
+                            "message": json.loads(tmp),
+                        }
+                    )
             return JsonResponse({"message": data})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)

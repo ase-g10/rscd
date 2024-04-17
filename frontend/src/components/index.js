@@ -7,6 +7,7 @@ import Button from "./Button";
 import Card from "./Cards/Card.vue";
 import ChartCard from "./Cards/ChartCard.vue";
 import StatsCard from "./Cards/StatsCard.vue";
+import WebSocketNotifier  from "@/pages/Notifications/WebSocketNotifier";
 
 import SidebarPlugin from "./SidebarPlugin/index";
 
@@ -18,6 +19,7 @@ let components = {
   RSCDTable,
   DropDown,
   SidebarPlugin,
+  WebSocketNotifier
 };
 
 export default components;
