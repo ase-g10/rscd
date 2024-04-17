@@ -26,7 +26,7 @@
         <!-- 如果有 icons 路由，取消以下注释 -->
         <!-- <sidebar-link to="/icons" name="icons" icon="ti-pencil-alt2" /> -->
 
-        <sidebar-link to="/notifications" name="notifications" icon="ti-bell"  v-if="isLoggedIn" />
+        <!-- <sidebar-link to="/notifications" name="notifications" icon="ti-bell"  v-if="isLoggedIn" /> -->
         <sidebar-link to="/disaster-report-approval" name="disaster-report-approval" icon="ti-check-box"  v-if="isLoggedIn" />
         <sidebar-link to="/post-disasters" name="post-disasters" icon="ti-flag"  v-if="isLoggedIn" />
       </template>

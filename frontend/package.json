@@ -27,7 +27,7 @@
     "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-prettier": "5.1.0",
     "autoprefixer": "^10.4.16",
-    "cypress": "^13.6.4",
+    "cypress": "^13.7.3",
     "daisyui": "^4.4.17",
     "postcss": "^8.4.31",
     "sass": "1.56.2",

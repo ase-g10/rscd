@@ -34,7 +34,7 @@
           </div>
         </div>
 
-        
+
 
         <!-- Address with flex-auto to take up the remaining space -->
         <div class="flex-auto mb-4">
@@ -493,7 +493,7 @@ export default {
             dangerouslySetInnerHtml: true,
           });
         return;
-      }     
+      }
 
       const data = {
         name: this.disasterName,
@@ -504,17 +504,13 @@ export default {
         description: this.disasterDescription,
         contact: this.contactInfo,
         //TODO: Add image upload
-        image_url: "",
+        image_url: this.imageUrl,
       };
 
       if (this.userCircle) {
         data.latitude = this.userCircle.getCenter().lat();
         data.longitude = this.userCircle.getCenter().lng();
         data.radius = this.userCircle.getRadius();
-      }
-
-      if (this.imageUrl) {
-        data.image_url = this.imageUrl;
       }
 
       submitDisasterLocation(data)

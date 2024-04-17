@@ -54,10 +54,55 @@ class Log(models.Model):
 
 
 class DrivingLocation(models.Model):
-    username = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    create_time = models.DateTimeField(auto_now_add=True)
-    update_time = models.DateTimeField(auto_now=True)
-    is_disabled = models.BooleanField(default=False)
+    # username = models.CharField(max_length=255)
+    # latitude = models.FloatField()
+    # longitude = models.FloatField()
+    # create_time = models.DateTimeField(auto_now_add=True)
+    # update_time = models.DateTimeField(auto_now=True)
+    # is_disabled = models.BooleanField(default=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="locations")
+
+    # Defining latitude and longitude fields for 5 locations
+    lat1 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lon1 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    time1 = models.DateTimeField(null=True, blank=True)
+
+    lat2 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lon2 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    time2 = models.DateTimeField(null=True, blank=True)
+
+    lat3 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lon3 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    time3 = models.DateTimeField(null=True, blank=True)
+
+    lat4 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lon4 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    time4 = models.DateTimeField(null=True, blank=True)
+
+    lat5 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lon5 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    time5 = models.DateTimeField(null=True, blank=True)
+
+    lat6 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lon6 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    time6 = models.DateTimeField(null=True, blank=True)
+
+    lat7 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lon7 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    time7 = models.DateTimeField(null=True, blank=True)
+
+    lat8 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lon8 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    time8 = models.DateTimeField(null=True, blank=True)
+
+    lat9 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lon9 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    time9 = models.DateTimeField(null=True, blank=True)
+
+    lat10 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lon10 = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    time10 = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Locations for {self.user.username}"
 

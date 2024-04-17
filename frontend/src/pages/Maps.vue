@@ -9,7 +9,7 @@
             <p v-if="hasRoute">Total Distance: <span id="total" class="total-distance"></span></p>
             <div id="panel"></div>
           </div>
-          <div id="floating-panel" class="absolute top-0 left-0 z-10 m-10" v-if="hasRoute">
+          <div id="floating-panel" class="absolute top-0 left-0 z-10 m-10">
             <b>Mode of Travel:</b>
             <select id="mode" v-model="travelMode" class="select select-bordered select-sm">
               <!-- Adjusted for smaller size -->
@@ -66,6 +66,7 @@ import loadGoogleMapsScript from "@/utils/googleMapsLoader";
 import { getDisasterData } from "@/api/disaster";
 import { getDisasterSafePoint } from "@/api/disaster";
 import router from "@/router";
+import { updateDrivingLocation, getDrivingLocations } from "@/api/traffic";
 
 function mockGetDisasterSafePoint({ latitude, longitude }) {
   return new Promise((resolve, reject) => {
@@ -108,16 +109,26 @@ export default {
       currentLng: "",
       currentAddress: "",
       submitMessage: "",
-      directionsService: null, 
-      directionsRenderer: null, 
+      directionsService: null,
+      directionsRenderer: null,
       travelMode: 'WALKING',
       hasRoute: false,
+      locationUpdateTimer: null,
+      updateTimer: null,
+      drivingMarkers: [],
+      markerPool: [],
     };
   },
   async mounted() {
     console.log("Mounted - loading Google Maps Script");
     await loadGoogleMapsScript(this.initMap.bind(this));
     await this.loadDisasters();
+    this.$nextTick(() => {
+      if (this.travelMode === "DRIVING") {
+        this.startLocationUpdates();
+      }
+      this.startLocationFetching();
+    });
 
   },
   watch: {
@@ -129,6 +140,16 @@ export default {
         }
       },
       immediate: false,
+    },
+    travelMode(newMode) {
+      // When the travel mode changes to or from "DRIVING"
+      if (newMode === "DRIVING") {
+        console.log("Starting location updates...");
+        this.startLocationUpdates();
+      } else {
+        console.log("Stopping location updates...");
+        this.stopLocationUpdates();
+      }
     },
   },
   methods: {
@@ -494,6 +515,213 @@ export default {
           );
         }
       });
+    },
+    startLocationUpdates() {
+      // Start the periodic location updates
+      if (!this.locationUpdateTimer) {
+        this.locationUpdateTimer = setInterval(() => {
+          this.updateLocation();
+        }, 10000); // Update every 30 seconds
+      }
+    },
+    stopLocationUpdates() {
+      // Stop the periodic location updates
+      if (this.locationUpdateTimer) {
+        clearInterval(this.locationUpdateTimer);
+        this.locationUpdateTimer = null;
+      }
+    },
+    updateLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            // 成功获取位置，使用当前位置进行上报
+            const currentLat = position.coords.latitude;
+            const currentLng = position.coords.longitude;
+            const data = {
+              latitude: currentLat,
+              longitude: currentLng,
+            };
+            console.log("Current location updated directly", data);
+            this.sendLocationData(data);
+          },
+          () => {
+            // 获取位置失败，使用预设的固定位置进行上报
+            console.error('Failed to fetch current location, using address location instead');
+            const data = {
+              latitude: this.currentLat,
+              longitude: this.currentLng,
+            };
+            this.sendLocationData(data);
+          },
+          { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+    },
+    sendLocationData(data) {
+      console.log("Location updated", data);
+      updateDrivingLocation(data)
+        .then(response => {
+          console.log('Location update successful:', response);
+        })
+        .catch(error => {
+          console.error('Location update failed:', error);
+        });
+    },
+    startLocationFetching() {
+      this.updateTimer = setInterval(() => {
+        this.fetchDrivingLocations();
+      }, 1000);
+    },
+    fetchDrivingLocations() {
+      getDrivingLocations().then(response => {
+        const locations = response.data.locations;
+        console.log('Fetched locations:', response.data);
+        this.updateMarkers(locations);
+      }).catch(error => {
+        console.error('Failed to fetch locations:', error);
+      });
+    },
+    async updateMarkers(locations) {
+      const vm = this;
+      const roleIcons = {
+        'firetruck': 'https://sky.iocky.com/i/2024/04/16/661d88f9c5821.png',
+        'emergency_response_team': 'https://sky.iocky.com/i/2024/04/16/661d8908dbbfb.png',
+        'police': 'https://sky.iocky.com/i/2024/04/16/661d89fae',
+        'rescue': 'https://sky.iocky.com/i/2024/04/16/661d8a4c56ef5.png',
+        'administrator': 'https://sky.iocky.com/i/2024/04/16/661d8a1c1e3e1.png',
+        'public': 'https://sky.iocky.com/i/2024/04/16/661d8558b2f2d.png',
+        'army': 'https://sky.iocky.com/i/2024/04/16/661d8b3b34626.png',
+        // 其他角色...
+      };
+      // Remove existing markers
+      this.drivingMarkers.forEach(marker => {
+        marker.setMap(null);
+        vm.markerPool.push(marker); // 使用 vm 来访问 markerPool
+      });
+      this.drivingMarkers = [];
+      console.log('Driving markers cleared:', this.drivingMarkers);
+
+      console.log('New locations:', locations);
+      if (false) {
+        locations.push({ latitude: 53.355427961778176, longitude: -6.263842820866124, user_role: "firetruck" });
+        locations.push({ latitude: 53.36444248500757, longitude: -6.26897164340078, user_role: "firetruck" });
+        locations.push({ latitude: 53.34785944551918, longitude: -6.25956887847702, user_role: "ambulance" });
+        locations.push({ latitude: 53.35334802661926, longitude: -6.269516950547101, user_role: "ambulance" });
+        locations.push({ latitude: 53.35572672814882, longitude: -6.259175498778991, user_role: "police" });
+        locations.push({ latitude: 53.353055505056496, longitude: -6.262115244700755, user_role: "police" });
+        locations.push({ latitude: 53.352363840730185, longitude: -6.261097214897715, user_role: "default" });
+        locations.push({ latitude: 53.36608042449805, longitude: -6.258274304906397, user_role: "rescue" });
+        locations.push({ latitude: 53.348601826525176, longitude: -6.250799770399876, user_role: "army" });
+        locations.push({ latitude: 53.352695871981325, longitude: -6.269076223864162, user_role: undefined });
+
+
+        // 添加一个不符合格式的位置数据进行测试
+        locations.push({ lat: 53.350000, long: -6.260000 }); // 故意使用错误的键名以测试数据验证
+
+        console.log('Mock New locations:', locations);
+      }
+
+      if (!locations || locations.length === 0 || locations == undefined || locations == null) {
+        console.log('No new locations to update');
+        return;
+      }
+
+      var service = new google.maps.DirectionsService();
+
+      const markerPromises = locations.map(async (loc) => {
+        loc.latitude = parseFloat(loc.latitude);
+        loc.longitude = parseFloat(loc.longitude);
+        if (typeof loc.latitude !== 'number' || typeof loc.longitude !== 'number') {
+          console.error('Invalid location data:', loc);
+          return null;
+        }
+
+        let result = await new Promise(resolve => {
+          service.route({
+            origin: { lat: loc.latitude, lng: loc.longitude },
+            destination: { lat: loc.latitude, lng: loc.longitude },
+            travelMode: google.maps.TravelMode.DRIVING
+          }, function (result, status) {
+            if (status === google.maps.DirectionsStatus.OK) {
+              resolve(result);
+            } else {
+              console.error('Directions request failed due to ' + status);
+              resolve(null);
+            }
+          });
+        });
+
+        if (!result) {
+          console.error('Failed to get directions for location:', loc);
+          return null;
+        }
+
+        const iconUrl = roleIcons[loc.user_role] || 'https://sky.iocky.com/i/2024/04/16/661d8558b2f2d.png';
+        let marker;
+        if (vm.markerPool.length > 0) {
+          marker = vm.markerPool.pop();
+          marker.setPosition(result.routes[0].legs[0].start_location);
+          marker.setTitle(loc.username || "Unknown");
+          marker.setIcon(null); // 重置图标属性
+          marker.setIcon({
+            url: iconUrl,
+            scaledSize: new google.maps.Size(40, 40),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(20, 20)
+          });
+        } else {
+          marker = new google.maps.Marker({
+            position: result.routes[0].legs[0].start_location,
+            map: this.map,
+            title: loc.username || "Unknown",
+            icon: {
+              url: iconUrl,
+              scaledSize: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(20, 20)
+            }
+          });
+        }
+
+        return marker;
+      });
+
+      this.drivingMarkers = await Promise.all(markerPromises);
+      this.drivingMarkers = this.drivingMarkers.filter(marker => marker !== null);
+
+      console.log('Driving markers updated:', this.drivingMarkers);
+
+
+
+      // Add new markers
+      // locations.forEach(loc => {
+      //   if (typeof loc.latitude !== 'number' || typeof loc.longitude !== 'number') {
+      //     console.error('Invalid location data:', loc);
+      //     return;
+      //   }
+      //   const marker = new google.maps.Marker({
+      //     position: { lat: loc.latitude, lng: loc.longitude },
+      //     map: this.map,
+      //     title: loc.username,
+      //     icon : {
+      //       url: 'https://sky.iocky.com/i/2024/04/16/661d8558b2f2d.png',
+      //       scaledSize: new google.maps.Size(30, 30),
+      //       origin: new google.maps.Point(0, 0),
+      //       anchor: new google.maps.Point(0, 0)
+      //     }
+      //   });
+      //   this.drivingMarkers.push(marker);
+      // });
+      // console.log('Driving markers updated:', this.drivingMarkers);
+    },
+    beforeDestroy() {
+      if (this.updateTimer) {
+        clearInterval(this.updateTimer);
+      }
+      this.drivingMarkers.forEach(marker => marker.setMap(null));
     },
   },
 };

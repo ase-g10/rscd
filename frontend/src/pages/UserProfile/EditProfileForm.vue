@@ -122,6 +122,9 @@
 </template>
 
 <script>
+import { getUserInfo } from '../../api/user';
+
+
 export default {
   data() {
     return {
@@ -141,6 +144,14 @@ export default {
   methods: {
     updateProfile() {
       alert("Your data: " + JSON.stringify(this.user));
+    },
+    async fetchUserData() {
+      try {
+        const userData = await getUserInfo(); // Call the API
+        this.user = { ...this.user, ...userData }; // Merge API data with user data
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
     },
   },
 };

@@ -10,9 +10,15 @@ from rest_framework import status
 from rest_framework.response import Response
 from models.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
+import warnings
+from sklearn.exceptions import DataConversionWarning
+warnings.filterwarnings(action='ignore', category=UserWarning)
+from traffic_management.CsrfExemptSessionAuthentication import CsrfExemptSessionAuthentication
+from rest_framework.authentication import BasicAuthentication
 
 
 class Authentication(viewsets.ViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     @action(detail=False, methods=['post'])
     def register(self, request):
         username = request.data.get("username")
@@ -47,6 +53,7 @@ class Authentication(viewsets.ViewSet):
         user = authenticate(request, username=user.username, password=password)
         if user is not None:
             login(request, user)
+            # return Response({"message": "User logged in successfully"}, status=status.HTTP_200_OK)
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
             return Response({"access_token": access_token}, status=status.HTTP_200_OK)
@@ -99,6 +106,7 @@ class Auth2(viewsets.ViewSet):
 
 
 class UserInfo(viewsets.ViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     @action(detail=False, methods=['get'])
     def get_user_info(self, request):
         if request.user.is_authenticated:

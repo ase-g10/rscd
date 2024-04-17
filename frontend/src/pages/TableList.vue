@@ -1,6 +1,8 @@
 <template>
   <div>
+
     <div class="flex flex-wrap justify-between gap-4 mb-4">
+
       <card class="large-card">
         <template v-slot:title>
           <b class="text-center">{{ disasterTable.title }}</b>
@@ -48,8 +50,8 @@
       </card>
     </div>
 
-    <div class="map h-full flex-grow" id="map" ref="mapRef"></div>
 
+<div class="map h-full flex-grow" id="map" ref="mapRef"></div>
 
 
   </div>
@@ -84,7 +86,7 @@ export default {
           { field: "create_time", label: "Create Time" },
           { field: "update_time", label: "Update Time" },
           { field: 'navigation', label:"Navigation" },
-          { field: 'TerminateDisaster', label:"Terminate Disaster" }
+          { field: 'TerminateDisaster', label:"Terminate" }
         ]
       },
     };
@@ -122,6 +124,9 @@ export default {
             text: `terminate disaster successful!`,
             dangerouslySetInnerHtml: true,
           })
+          // re-render
+          const updatedData = this.disasterTable.data.filter(disaster => disaster.fields.name !== item.fields.name);
+          this.disasterTable.data = updatedData;
         }
 
       }catch (e) {

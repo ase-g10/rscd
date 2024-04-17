@@ -126,7 +126,7 @@ export default {
     };
   },
   methods: {
-    notifyVue(verticalAlign, horizontalAlign) {
+    notifyVue(verticalAlign, horizontalAlign, message) {
       const color = Math.floor(Math.random() * 4 + 1);
       this.$notify({
         component: NotificationTemplate,
@@ -135,7 +135,7 @@ export default {
         verticalAlign: verticalAlign,
         type: this.type[color],
         title: "Notification Title", // 这里设置通知标题
-        text: "This is a notification message", // 这里设置通知内容
+        text: message, // 这里设置通知内容
         dangerouslySetInnerHtml: true, // 如果你需要渲染 HTML，确保设置这个属性
       });
     },

@@ -30,3 +30,10 @@ export const userRegister = async (userData) => {
   }
   return response.data;
 };
+
+export const getUserInfo = async () => {
+  return service({
+    url: "/um/user_info/get_user_info/",
+    method: 'GET'
+  });
+};

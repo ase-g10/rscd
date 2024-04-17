@@ -13,9 +13,11 @@ from django.http import JsonResponse
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-
+from traffic_management.CsrfExemptSessionAuthentication import CsrfExemptSessionAuthentication
+from rest_framework.authentication import BasicAuthentication
 
 class DisasterView(viewsets.ViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     @action(detail=False, methods=['post', 'get'])
     def post_location(self, request, pk=None):
         try:
@@ -28,7 +30,8 @@ class DisasterView(viewsets.ViewSet):
             radius = data.get('radius')
             type = data.get('type')
             contact = data.get('contact')
-            imageUrl = "" if data.get('imageUrl') == None else data.get('imageUrl')
+            imageUrl = data.get('image_url')
+            print(imageUrl)
             disaster = Disaster()
             disaster.name = name
             disaster.description = description
@@ -130,7 +133,7 @@ class DisasterView(viewsets.ViewSet):
         def is_user_in_disaster_area(user_lat, user_lng):
             user_lat, user_lng = float(user_lat), float(user_lng)
             user_location = (user_lat, user_lng)
-            for disaster in Disaster.objects.filter(verified_status="1"):
+            for disaster in Disaster.objects.filter(is_onging="1"):
                 disaster_lat, disaster_lng, disaster_radius = map(float,
                                                                   [disaster.latitude, disaster.longitude,
                                                                    disaster.radius])
@@ -164,6 +167,7 @@ class DisasterView(viewsets.ViewSet):
 
 
 class DisasterModify(viewsets.ViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     @action(detail=False, methods=['post', 'get'])
     def write(self, request):
         try:
@@ -172,17 +176,20 @@ class DisasterModify(viewsets.ViewSet):
             longitude = data.get('longitude')
             verified_status = data.get('verified_status')
             Tmp = Disaster.objects.filter(latitude=latitude, longitude=longitude)
+            print(latitude, longitude, verified_status)
             for tmp in Tmp:
                 tmp.verified_status = verified_status
                 tmp.save()
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.group_send)(
-                "alert_group",
-                {
-                    "type": "send.alert",
-                    "message": data,
-                }
-            )
+                tmp = serializers.serialize('json', [tmp])
+                if verified_status == '1':
+                    channel_layer = get_channel_layer()
+                    async_to_sync(channel_layer.group_send)(
+                        "alert_group",
+                        {
+                            "type": "send.alert",
+                            "message": json.loads(tmp),
+                        }
+                    )
             return JsonResponse({"message": data})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)

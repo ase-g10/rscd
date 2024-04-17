@@ -1,14 +1,31 @@
 <template>
+  <div>
     <div class="container mx-auto px-4">
       <h1 class="text-xl font-semibold my-4">Post Disasters</h1>
       <div v-if="disasters.length">
-        <div v-for="disaster in disasters" :key="disaster.id" class="mb-5">
-          <h2 class="text-lg font-bold">{{ disaster.name }} - {{ disaster.type }}</h2>
-          <p>Description: {{ disaster.description }}</p>
-          <p>Location: {{ disaster.location }}</p>
-          <p>Date: {{ disaster.date }}</p>
-          <div>
-            <button @click="viewReport(disaster)" class="btn btn-primary">View Report</button>
+        <div v-for="disaster in disasters.slice().reverse()" :key="disaster.pk" class="mb-5">
+          <h2 class="text-lg font-bold">{{ disaster.fields.disaster_name }} - {{ disaster.fields.type }}</h2>
+          <p>Description: {{ disaster.fields.description }}</p>
+          <p>Location: {{ disaster.fields.location }}</p>
+          <p>Date: {{ disaster.fields.create_time }}</p>
+          <button @click="toggleReport(disaster)" class="btn btn-primary">
+            {{ disaster.expanded ? 'Hide Report' : 'View Report' }}
+          </button>
+          <div v-if="disaster.expanded" v-show="disaster.expanded" class="mt-3">
+            <p><strong>Report Details:</strong></p>
+            <div v-if="disaster.report">
+              <p>Disaster name: {{ disaster.report.fields.disaster_name }}</p>
+              <p>Description: {{ disaster.report.fields.description }}</p>
+              <p>Latitude: {{ disaster.report.fields.latitude }}</p>
+              <p>Longitude: {{ disaster.report.fields.longitude }}</p>
+              <p>Location: {{ disaster.report.fields.location }}</p>
+              <p>Radius: {{ disaster.report.fields.radius }}</p>
+              <p>Type: {{ disaster.report.fields.type }}</p>
+              <p>Create time: {{ disaster.report.fields.create_time }}</p>
+              <p>Update time: {{ disaster.report.fields.update_time }}</p>
+              <p>Responsible team: {{ disaster.report.fields.responsible_team }}</p>
+              <p>Image URL: {{ disaster.report.fields.image_url }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -16,19 +33,18 @@
         <p>No disasters to show.</p>
       </div>
     </div>
-    <Modal v-if="showModal" @close="showModal=false" :report="disasterReport" />
-  </template>
-  
+  </div>
+</template>
+
+
   <script>
   import axios from 'axios';
-  
+
   export default {
     name: 'PostDisasters',
     data() {
       return {
         disasters: [],
-        showModal: false,
-        disasterReport: null,
       };
     },
     created() {
@@ -36,64 +52,41 @@
     },
     methods: {
       fetchPostDisasters() {
-        axios.get('/api/disasters/post')
+        axios.get('/etm/emergencyview/read_all_logs/')
           .then(response => {
-            this.disasters = response.data;
+            // Initialize each disaster with an expanded flag and an empty report
+            this.disasters = response.data.message.map(disaster => ({
+              ...disaster,
+              expanded: false,
+              report: null
+            }));
+            console.log(response.data)
           })
           .catch(error => {
             console.error('There was an error fetching the disasters:', error);
           });
       },
-    viewReport(disaster) {
-        axios.get(`/api/disasters/report/${disaster.id}`)
-        .then(response => {
-            this.disasterReport = response.data;
-            this.showModal = true;
-        })
-        .catch(error => {
-            console.error('There was an error fetching the disaster report:', error);
-        });
-    },
-    },
-    components: {
-        Modal: {
-        props: ['disaster'],
-        template: `
-            <div class="modal-backdrop">
-            <div class="modal">
-                <h3>{{ report.title }} - Report</h3>
-                <p>{{ report.content }}</p>
-                <!-- More disaster details here -->
-                <button @click="$emit('close')">Close</button>
-            </div>
-            </div>
-        `,
+      toggleReport(disaster) {
+        if (!disaster.report) {
+          axios.get(`/etm/emergencyview/read_specific_log?disaster_id=${disaster.pk}`)
+          .then(response => {
+              disaster.report = response.data.message[0];
+              disaster.expanded = !disaster.expanded; // Toggle after fetching the data
+          })
+          .catch(error => {
+              console.error('There was an error fetching the disaster report:', error);
+          });
+        } else {
+          disaster.expanded = !disaster.expanded; // Toggle visibility if the report is already loaded
         }
+      },
     }
   };
+
   </script>
-  
+
   <style scoped>
   .container {
     max-width: 1200px;
   }
-    .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    }
-    .modal {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    max-width: 500px;
-    width: 100%;
-    }
   </style>
-  
