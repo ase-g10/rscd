@@ -1,5 +1,6 @@
+import random
 from datetime import timedelta
-
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -199,3 +200,32 @@ class TrafficView(viewsets.ViewSet):
         driving_location.save()
 
         return JsonResponse({"status": "success", "message": "Location saved successfully."})
+
+    @action(detail=False, methods=['post'])
+    def test_fake_data(self,request):
+        def create_driving_location(user_id):
+            User = get_user_model()
+
+            # Get the user with the given ID
+            user = User.objects.get(id=user_id)
+
+            # Generate random latitude and longitude near Trinity College Dublin
+            lat = random.uniform(53.3438 - 0.01, 53.3438 + 0.01)
+            lon = random.uniform(-6.2546 - 0.01, -6.2546 + 0.01)
+
+            # Use the current time
+            time = timezone.now()
+
+            # Create a new DrivingLocation object
+            driving_location = DrivingLocation.objects.create(
+                user=user,
+                lat10=lat,
+                lon10=lon,
+                time10=time,
+            )
+
+            return driving_location
+        user_ids = User.objects.values_list('id', flat=True)
+        for user_id in user_ids:
+            create_driving_location(user_id)
+        return JsonResponse({"status": "success", "message": "Fake data created successfully."})

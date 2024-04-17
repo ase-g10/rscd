@@ -46,7 +46,11 @@ export default {
     },
     showNotification(message) {
       console.log({body:message})
-      const bodyText = `Longitude: ${message.longitude}, Latitude: ${message.latitude}`;
+      let json = JSON.stringify(message)
+      //显示出message所有信息
+      // const bodyText = `${message.longitude}, Latitude: ${message.latitude}`;
+      const bodyText = json
+      console.log(bodyText)
       if ('Notification' in window && Notification.permission === 'granted') {
         window.alert(bodyText)
         console.log("here")
