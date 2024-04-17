@@ -1,6 +1,8 @@
 <template>
   <div>
+
     <div class="flex flex-wrap justify-between gap-4 mb-4">
+
       <card class="large-card">
         <template v-slot:title>
           <b class="text-center">{{ disasterTable.title }}</b>
@@ -48,8 +50,8 @@
       </card>
     </div>
 
-    <div class="map h-full flex-grow" id="map" ref="mapRef"></div>
 
+<div class="map h-full flex-grow" id="map" ref="mapRef"></div>
 
 
   </div>
