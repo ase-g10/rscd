@@ -1,7 +1,8 @@
 <template>
   <div :class="{ 'nav-open': $sidebar.showSidebar }">
-    <notifications></notifications>
     <router-view></router-view>
+    <notifications></notifications>
+    <WebSocketNotifier />
   </div>
 </template>
 
