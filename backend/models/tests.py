@@ -64,16 +64,16 @@ class ModelTests(TestCase):
         print("models: log pass")
 
     def test_create_driving_location(self):
-        username = "testdriver"
+        user = get_user_model().objects.create_user(username="testdriver", password="testpass123")
         latitude = 34.0522
         longitude = -118.2437
         driving_location = DrivingLocation.objects.create(
-            username=username,
-            latitude=latitude,
-            longitude=longitude,
+            user=user,
+            lat10=latitude,
+            lon10=longitude,
         )
-        self.assertEqual(driving_location.username, username)
-        self.assertEqual(driving_location.latitude, latitude)
-        self.assertEqual(driving_location.longitude, longitude)
+        self.assertEqual(driving_location.user, user)
+        self.assertEqual(driving_location.lat10, latitude)
+        self.assertEqual(driving_location.lon10, longitude)
         print("models: driving_location pass")
 
