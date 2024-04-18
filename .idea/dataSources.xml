@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
     <data-source source="LOCAL" name="db" uuid="f6f639b3-f0fc-4ede-b6e1-c53c03bf2228">
-      <driver-ref>sqlite.xerial</driver-ref>
+      <driver-ref>fd09bb85-195a-419a-87ae-aae80b7a124a</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:E:\OneDrive - Trinity College Dublin\PG study\Advanced Software Engineering\Group Project\test\rscd\backend\db.sqlite3</jdbc-url>

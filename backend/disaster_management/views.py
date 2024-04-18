@@ -133,7 +133,7 @@ class DisasterView(viewsets.ViewSet):
         def is_user_in_disaster_area(user_lat, user_lng):
             user_lat, user_lng = float(user_lat), float(user_lng)
             user_location = (user_lat, user_lng)
-            for disaster in Disaster.objects.filter(is_onging="1"):
+            for disaster in Disaster.objects.filter(is_onging="1", verified_status="1"):
                 disaster_lat, disaster_lng, disaster_radius = map(float,
                                                                   [disaster.latitude, disaster.longitude,
                                                                    disaster.radius])
