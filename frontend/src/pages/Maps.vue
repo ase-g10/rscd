@@ -573,7 +573,7 @@ export default {
     startLocationFetching() {
       this.updateTimer = setInterval(() => {
         this.fetchDrivingLocations();
-      }, 1000);
+      }, 10000);
     },
     fetchDrivingLocations() {
       getDrivingLocations().then(response => {
@@ -596,10 +596,12 @@ export default {
         'army': 'https://sky.iocky.com/i/2024/04/16/661d8b3b34626.png',
         // 其他角色...
       };
+      console.log('Markers to be cleared:', this.drivingMarkers, "markerpool:", this.markerPool);
       // Remove existing markers
       this.drivingMarkers.forEach(marker => {
         marker.setMap(null);
         vm.markerPool.push(marker); // 使用 vm 来访问 markerPool
+        console.log('Marker added to pool:', marker, "markerpool:", this.markerPool);
       });
       this.drivingMarkers = [];
       console.log('Driving markers cleared:', this.drivingMarkers);
