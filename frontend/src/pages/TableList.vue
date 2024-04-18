@@ -1,62 +1,39 @@
 <template>
   <div>
+    <div class="overflow-x-auto mb-8">
+      <table class="table-auto min-w-full bg-white ">
+        <thead>
+        <tr>
+          <th v-for="column in disasterTable.columns" :key="column.field" class="px-4 py-2">{{ column.label }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in disasterTable.data.slice().reverse()" :key="item.fields.name">
+          <td v-for="column in disasterTable.columns" :key="column.field" class=" border px-4 py-2 ">
+            <template v-if="column.field !== 'navigation' || column.field !== 'TerminateDisaster' ">
+              {{ item.fields[column.field] }}
+            </template>
 
-    <div class="flex flex-wrap justify-between gap-4 mb-4">
-
-      <card class="large-card">
-        <template v-slot:title>
-          <b class="text-center">{{ disasterTable.title }}</b>
-        </template>
-        <template v-slot:raw-content>
-          <div class="table-responsive-lg">
-            <table class="table">
-              <thead>
-              <tr>
-                <th v-for="column in disasterTable.columns" :key="column.field">{{ column.label }}</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="item in disasterTable.data" :key="item.fields.name">
-                <td v-for="column in disasterTable.columns" :key="column.field">
-                  <!-- Use a conditional to check for the navigation column -->
-                  <template v-if="column.field !== 'navigation' || column.field !== 'TerminateDisaster' ">
-                    {{ item.fields[column.field] }}
-                  </template>
-
-                  <template v-if="column.field === 'create_time' || column.field === 'update_time'">
-                    {{ item.fields[column.field] ? new Date(item.fields[column.field]).toLocaleString() : 'No time display' }}
-                  </template>
-
-                  <template v-else-if="column.field === 'navigation'">
-                  <!-- Add a clickable icon for navigation -->
-                  <div @click="navigateToDisasterAsync(item)" style="cursor: pointer;">
-                    <i>📍Show the Path</i>
-                  </div>
-                </template>
-
-                  <template v-else-if="column.field === 'TerminateDisaster'">
-
-                    <div @click="terminateDisasterAsync(item)" style="cursor: pointer;">
-                      <i>🔚 Terminate</i>
-                    </div>
-                  </template>
-
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </template>
-      </card>
+            <template v-if="column.field === 'navigation'">
+              <div @click="navigateToDisasterAsync(item)" style="cursor: pointer;">
+                <i>📍Show the Path</i>
+              </div>
+            </template>
+            <template v-if="column.field === 'TerminateDisaster'">
+              <div @click="terminateDisasterAsync(item)" style="cursor: pointer;">
+                <i>🔚 Terminate</i>
+              </div>
+            </template>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
 
-
-<div class="map h-full flex-grow" id="map" ref="mapRef"></div>
-
-
+    <div class="map h-full flex-grow" id="map" ref="mapRef"></div>
   </div>
-
 </template>
+
 
 <script>
 import loadGoogleMapsScript from "@/utils/googleMapsLoader";
